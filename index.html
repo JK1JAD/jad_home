@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JK1JAD · JAD Home</title>
+  <meta name="description" content="JK1JAD（ふじさわたけひこ）のGitHub Pagesホーム。黒×緑のJAD風デザインで、スクショ満載マニュアルを公開予定。" />
+  <style>
+    /* ===== Theme ===== */
+    :root{
+      --ink:#0b132b;      /* 背景の濃紺 */
+      --ink-2:#111827;    /* もう一段暗いところに */
+      --acc:#2a9d8f;      /* アクセントの青緑 */
+      --acc-2:#23867c;    /* ホバー用 */
+      --mut:#9ca3af;      /* サブテキスト */
+      --card:#111827;     /* カード背景 */
+      --border:#1f2937;   /* 枠線 */
+      --white:#e5e7eb;    /* 本文色 */
+      --shadow:0 8px 24px rgba(0,0,0,.35);
+      --radius:14px;
+      --radius-sm:10px;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
+      background: radial-gradient(1000px 600px at 15% -10%, #132041 0%, transparent 60%),
+                  linear-gradient(180deg, var(--ink) 0%, #0a1026 60%, #070d1e 100%);
+      color:var(--white);
+      line-height:1.6;
+      letter-spacing: .02em;
+    }
+
+    /* ===== Header / Navbar ===== */
+    .nav{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: saturate(160%) blur(6px);
+      background: linear-gradient(180deg, rgba(11,19,43,.8), rgba(11,19,43,.45));
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{
+      max-width:1100px; margin:0 auto; padding:12px 20px;
+      display:flex; align-items:center; gap:14px;
+    }
+    .logo{
+      display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--white);
+    }
+    .logo-mark{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--acc), #34d399); box-shadow:var(--shadow)}
+    .logo-text{font-weight:700}
+    .nav-links{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .link{color:var(--mut); text-decoration:none; padding:8px 10px; border-radius:10px}
+    .link:hover{color:#d1d5db; background:#0f172a}
+
+    /* ===== Hero ===== */
+    .hero{max-width:1100px; margin:28px auto 0; padding:28px 20px 10px}
+    .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:#c7ece7; background:rgba(42,157,143,.18); border:1px solid rgba(42,157,143,.4); padding:6px 10px; border-radius:999px}
+    .title{font-size:40px; font-weight:800; margin:14px 0 8px; letter-spacing:.01em}
+    .subtitle{color:var(--mut); max-width:760px}
+    .cta{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
+    .btn{appearance:none; border:1px solid transparent; background:var(--acc); color:#082a29; font-weight:700; padding:12px 16px; border-radius:12px; text-decoration:none; box-shadow:var(--shadow)}
+    .btn:hover{background:var(--acc-2); color:#061f1e}
+    .btn-ghost{background:transparent; color:#cfe9e6; border-color:#255e59}
+    .btn-ghost:hover{background:#0a1b1a}
+
+    /* ===== Sections / Cards ===== */
+    .section{max-width:1100px; margin:22px auto; padding:0 20px}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .card{grid-column: span 6; background:linear-gradient(180deg, rgba(17,24,39,.85), rgba(17,24,39,.65)); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    .card h3{margin:6px 0 8px}
+    .card p{color:var(--mut)}
+    .card a{color:#9ef7ec; text-decoration:none}
+    .card a:hover{text-decoration:underline}
+
+    .full{grid-column:1/-1}
+
+    /* ===== Footer ===== */
+    footer{border-top:1px solid var(--border); margin-top:34px}
+    .foot{max-width:1100px; margin:0 auto; padding:24px 20px; color:#93a4b5; font-size:14px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px){
+      .title{font-size:32px}
+      .card{grid-column: span 12}
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== NAV ===== -->
+  <nav class="nav" aria-label="メインナビゲーション">
+    <div class="nav-inner">
+      <a class="logo" href="#top">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-text">JK1JAD · JAD Home</span>
+      </a>
+      <div class="nav-links">
+        <a class="link" href="#about">概要</a>
+        <a class="link" href="#plan">構成</a>
+        <a class="link" href="#progress">進捗</a>
+        <a class="link" href="./" title="Repository">リポジトリ</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header id="top" class="hero">
+    <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
+    <h1 class="title">黒×緑の <span style="color:#9ef7ec">JAD</span> テーマでいこう。</h1>
+    <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者にも優しいけど、ところどころツッコミが刺さる仕様。容量はほどほどにね（JAD的お願い）。</p>
+    <div class="cta">
+      <a class="btn" href="#docs">📄 マニュアルへ（docs）</a>
+      <a class="btn btn-ghost" href="#images">🖼 スクショ置き場（images）</a>
+    </div>
+  </header>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="section">
+    <div class="grid">
+      <article class="card full">
+        <h3>🎯 プロジェクト概要</h3>
+        <p>目的は「<strong>GitHub Pages 公開マニュアル（JAD版）</strong>」の公開と保守。スクショは多め、笑いは適量、エラーは最小限（願望）。</p>
+      </article>
+      <article class="card">
+        <h3>🧭 ポリシー</h3>
+        <ul>
+          <li>クリック位置まで丁寧に（でも押し過ぎ注意）</li>
+          <li>スクショは <code>images/</code> に整頓</li>
+          <li>PDFは <code>docs/</code> へ。重い子は後でダイエット</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>📦 リポジトリ</h3>
+        <p><a href="https://github.com/JK1JAD/jad_home" target="_blank" rel="noopener">GitHub: JK1JAD/jad_home</a></p>
+        <p>READMEは真面目8：笑い2の黄金比（当社比）。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== PLAN ===== -->
+  <section id="plan" class="section">
+    <div class="grid">
+      <article class="card">
+        <h3 id="images">🖼 画像ディレクトリ</h3>
+        <p>スクショ等は <code>/images/</code> に。最初は <code>.gitkeep</code> を置いてフォルダだけ作ってもOK。</p>
+      </article>
+      <article class="card" id="docs">
+        <h3>📄 ドキュメント</h3>
+        <p>PDFや補足資料は <code>/docs/</code> へ。公開リンクは <code>https://jk1jad.github.io/jad_home/docs/ファイル名.pdf</code> で直リンク可能。</p>
+      </article>
+      <article class="card full">
+        <h3>🧩 トップページの編集</h3>
+        <p>この <code>index.html</code> を直接編集して、カードを増やしたり、色味を微調整してください。色は <code>:root</code> のカラーバリアブルを変更すると一括反映されます。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== PROGRESS ===== -->
+  <section id="progress" class="section">
+    <div class="grid">
+      <article class="card full">
+        <h3>📈 進捗ログ</h3>
+        <ul>
+          <li>✅ リポジトリ作成 / README もりもり版</li>
+          <li>✅ GitHub Pages 有効化（main / root）</li>
+          <li>✅ 黒×緑の JAD テーマ導入（いまココ）</li>
+          <li>⬜ images/ と docs/ を作成 & ファイル投入</li>
+          <li>⬜ マニュアル v1.4.1 を公開</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot">
+      <div>© <span id="y"></span> JK1JAD（ふじさわたけひこ） — Powered by JAD 📻</div>
+      <div><a class="link" href="#top">▲ トップへ戻る</a></div>
+    </div>
+  </footer>
+
+  <script>
+    // 年号を自動更新
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

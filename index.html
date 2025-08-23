@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JK1JAD · JAD Home</title>
-  <meta name="description" content="JK1JAD（ふじさわたけひこ）のGitHub Pagesホーム。黒×緑のJAD風デザインで、スクショ満載マニュアルを公開予定。" />
+  <meta name="description" content="JK1JAD（ふじさわたけひこ）のGitHub Pagesホーム。黒×緑のJAD風デザイン + ふじさわ節増量版。" />
   <style>
     /* ===== Theme ===== */
     :root{
@@ -19,6 +19,7 @@
       --shadow:0 8px 24px rgba(0,0,0,.35);
       --radius:14px;
       --radius-sm:10px;
+      --warning:#f59e0b;
     }
     html,body{height:100%}
     body{
@@ -32,19 +33,9 @@
     }
 
     /* ===== Header / Navbar ===== */
-    .nav{
-      position:sticky; top:0; z-index:10;
-      backdrop-filter: saturate(160%) blur(6px);
-      background: linear-gradient(180deg, rgba(11,19,43,.8), rgba(11,19,43,.45));
-      border-bottom:1px solid var(--border);
-    }
-    .nav-inner{
-      max-width:1100px; margin:0 auto; padding:12px 20px;
-      display:flex; align-items:center; gap:14px;
-    }
-    .logo{
-      display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--white);
-    }
+    .nav{position:sticky; top:0; z-index:10; backdrop-filter:saturate(160%) blur(6px); background:linear-gradient(180deg, rgba(11,19,43,.85), rgba(11,19,43,.45)); border-bottom:1px solid var(--border)}
+    .nav-inner{max-width:1100px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px}
+    .logo{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--white)}
     .logo-mark{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--acc), #34d399); box-shadow:var(--shadow)}
     .logo-text{font-weight:700}
     .nav-links{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
@@ -55,7 +46,7 @@
     .hero{max-width:1100px; margin:28px auto 0; padding:28px 20px 10px}
     .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:#c7ece7; background:rgba(42,157,143,.18); border:1px solid rgba(42,157,143,.4); padding:6px 10px; border-radius:999px}
     .title{font-size:40px; font-weight:800; margin:14px 0 8px; letter-spacing:.01em}
-    .subtitle{color:var(--mut); max-width:760px}
+    .subtitle{color:var(--mut); max-width:820px}
     .cta{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
     .btn{appearance:none; border:1px solid transparent; background:var(--acc); color:#082a29; font-weight:700; padding:12px 16px; border-radius:12px; text-decoration:none; box-shadow:var(--shadow)}
     .btn:hover{background:var(--acc-2); color:#061f1e}
@@ -73,11 +64,21 @@
 
     .full{grid-column:1/-1}
 
+    /* ===== Banter (ふじさわ節) ===== */
+    .banter{display:grid; grid-template-columns:1fr; gap:10px; margin-top:4px}
+    .bubble{position:relative; background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px}
+    .bubble strong{color:#d1fae5}
+
+    /* ===== Details (つまずきポイント) ===== */
+    details{background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px 14px}
+    details + details{margin-top:10px}
+    summary{cursor:pointer; font-weight:700; color:#d1fae5}
+    .warn{color:var(--warning)}
+
     /* ===== Footer ===== */
     footer{border-top:1px solid var(--border); margin-top:34px}
     .foot{max-width:1100px; margin:0 auto; padding:24px 20px; color:#93a4b5; font-size:14px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
 
-    /* ===== Responsive ===== */
     @media (max-width: 900px){
       .title{font-size:32px}
       .card{grid-column: span 12}
@@ -96,7 +97,7 @@
         <a class="link" href="#about">概要</a>
         <a class="link" href="#plan">構成</a>
         <a class="link" href="#progress">進捗</a>
-        <a class="link" href="./" title="Repository">リポジトリ</a>
+        <a class="link" href="https://github.com/JK1JAD/jad_home" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </nav>
@@ -104,11 +105,15 @@
   <!-- ===== HERO ===== -->
   <header id="top" class="hero">
     <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
-    <h1 class="title">黒×緑の <span style="color:#9ef7ec">JAD</span> テーマでいこう。</h1>
-    <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者にも優しいけど、ところどころツッコミが刺さる仕様。容量はほどほどにね（JAD的お願い）。</p>
+    <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
+    <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     <div class="cta">
       <a class="btn" href="#docs">📄 マニュアルへ（docs）</a>
       <a class="btn btn-ghost" href="#images">🖼 スクショ置き場（images）</a>
+    </div>
+    <div class="banter" aria-label="ふじさわ節コーナー">
+      <div class="bubble"><strong>ボケ：</strong> 「index.html を置けば、勝手にかっこよくなるんでしょ？」</div>
+      <div class="bubble"><strong>ツッコミ：</strong> 「素材は置いた。かっこよくするのは編集長（＝あなた）！」</div>
     </div>
   </header>
 
@@ -123,8 +128,8 @@
         <h3>🧭 ポリシー</h3>
         <ul>
           <li>クリック位置まで丁寧に（でも押し過ぎ注意）</li>
-          <li>スクショは <code>images/</code> に整頓</li>
-          <li>PDFは <code>docs/</code> へ。重い子は後でダイエット</li>
+          <li>画像は <code>images/</code> に整頓（家族写真は別フォルダ！）</li>
+          <li>PDFは <code>docs/</code> へ（重い子は後でダイエット）</li>
         </ul>
       </article>
       <article class="card">
@@ -140,15 +145,38 @@
     <div class="grid">
       <article class="card">
         <h3 id="images">🖼 画像ディレクトリ</h3>
-        <p>スクショ等は <code>/images/</code> に。最初は <code>.gitkeep</code> を置いてフォルダだけ作ってもOK。</p>
+        <p>スクショ等は <code>/images/</code> に。最初は <code>.gitkeep</code> を置いて空フォルダだけ用意しておくのもアリ。</p>
+        <details>
+          <summary>ここでつまずきがちなポイント（画像編）</summary>
+          <ul>
+            <li>ファイル名の <strong>大文字小文字は別物</strong>（Windowsと挙動が違うよ）。</li>
+            <li>日本語名は避けると吉（URLがのび太）。</li>
+            <li>PNGはほどほど、JPGやWebPで軽量化すると表示が速い。</li>
+          </ul>
+        </details>
       </article>
       <article class="card" id="docs">
         <h3>📄 ドキュメント</h3>
         <p>PDFや補足資料は <code>/docs/</code> へ。公開リンクは <code>https://jk1jad.github.io/jad_home/docs/ファイル名.pdf</code> で直リンク可能。</p>
+        <details>
+          <summary>ここでつまずきがちなポイント（PDF編）</summary>
+          <ul>
+            <li>ファイルサイズが大きいとスマホ勢が泣く（作者も泣く）。</li>
+            <li>日本語フォントは<strong>必ず埋め込み</strong>（文字化けは心が折れる）。</li>
+          </ul>
+        </details>
       </article>
       <article class="card full">
         <h3>🧩 トップページの編集</h3>
         <p>この <code>index.html</code> を直接編集して、カードを増やしたり、色味を微調整してください。色は <code>:root</code> のカラーバリアブルを変更すると一括反映されます。</p>
+        <details>
+          <summary><span class="warn">GitHub Pages「あるある」 3連発</span></summary>
+          <ol>
+            <li><strong>Not Found…</strong> → <em>index.html が無い/場所が違う</em>。ブランチとフォルダ設定（root or docs）を再確認。</li>
+            <li><strong>更新されない…</strong> → キャッシュの可能性。ハードリロード or 数十秒待機。</li>
+            <li><strong>画像が出ない…</strong> → パス違いが9割。<code>./images/xxx.png</code> で相対パスを。</li>
+          </ol>
+        </details>
       </article>
     </div>
   </section>
@@ -157,13 +185,13 @@
   <section id="progress" class="section">
     <div class="grid">
       <article class="card full">
-        <h3>📈 進捗ログ</h3>
+        <h3>📈 進捗ログ（QSO風）</h3>
         <ul>
-          <li>✅ リポジトリ作成 / README もりもり版</li>
-          <li>✅ GitHub Pages 有効化（main / root）</li>
-          <li>✅ 黒×緑の JAD テーマ導入（いまココ）</li>
-          <li>⬜ images/ と docs/ を作成 & ファイル投入</li>
-          <li>⬜ マニュアル v1.4.1 を公開</li>
+          <li>✅ 21:00 JST — リポジトリ作成 / README もりもり版</li>
+          <li>✅ 22:20 JST — GitHub Pages 有効化（main / root）</li>
+          <li>✅ 22:40 JST — 黒×緑 JAD テーマ導入（笑い強化）</li>
+          <li>⬜ images/ と docs/ を作成 & ファイル投入（CQ中）</li>
+          <li>⬜ マニュアル v1.4.1 を公開（59＋で行きたい）</li>
         </ul>
       </article>
     </div>
@@ -171,7 +199,7 @@
 
   <footer>
     <div class="foot">
-      <div>© <span id="y"></span> JK1JAD（ふじさわたけひこ） — Powered by JAD 📻</div>
+      <div>© <span id="y"></span> JK1JAD（ふじさわたけひこ） — Powered by JAD 📻 / 本サイトはキュウリの鮮度を保証しません。</div>
       <div><a class="link" href="#top">▲ トップへ戻る</a></div>
     </div>
   </footer>

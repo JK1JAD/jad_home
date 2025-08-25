@@ -83,17 +83,24 @@
       .title{font-size:32px}
       .card{grid-column: span 12}
     }
-　　 .cover-card{ display:flex; justify-content:center; margin:28px 0; }
+　　 /* ここを差し替え */
+.cover-card{ display:flex; justify-content:center; margin:28px 0; }
 .cover-card__inner{
   background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
   border:1px solid var(--border); border-radius:var(--radius); padding:16px;
   box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
 }
 .cover-card__inner:hover{ transform: translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.45); }
-.cover-card img{ width:min(780px, 92vw); height:auto; border-radius:12px; display:block; }
+/* ← ここ、フォールバックを足す */
+.cover-card img{
+  width:92vw;           /* まず幅を指定 */
+  max-width:780px;      /* 上限を設定（min()の代わり） */
+  height:auto; border-radius:12px; display:block;
+}
 .cover-card__caption{ display:flex; flex-direction:column; gap:4px; margin-top:10px; text-align:center; }
 .cover-card__caption strong{ color:#e6fffb; }
 .cover-card__caption span{ color:var(--mut); font-size:13px; }
+
 
   </style>
 </head>

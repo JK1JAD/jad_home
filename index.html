@@ -83,6 +83,18 @@
       .title{font-size:32px}
       .card{grid-column: span 12}
     }
+　　 .cover-card{ display:flex; justify-content:center; margin:28px 0; }
+.cover-card__inner{
+  background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
+  border:1px solid var(--border); border-radius:var(--radius); padding:16px;
+  box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
+}
+.cover-card__inner:hover{ transform: translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.45); }
+.cover-card img{ width:min(780px, 92vw); height:auto; border-radius:12px; display:block; }
+.cover-card__caption{ display:flex; flex-direction:column; gap:4px; margin-top:10px; text-align:center; }
+.cover-card__caption strong{ color:#e6fffb; }
+.cover-card__caption span{ color:var(--mut); font-size:13px; }
+
   </style>
 </head>
 <body>
@@ -101,11 +113,16 @@
       </div>
     </div>
   </nav>
-  　<div style="text-align:center; margin:20px 0;">
-  <img src="images/cover_sample.png" 
-       alt="表紙サンプル" width="400"
-       style="box-shadow:0 4px 12px rgba(0,0,0,0.5); border-radius:12px;">
-</div>
+  　<section class="cover-card">
+  <div class="cover-card__inner">
+    <img src="images/cover_sample.png" alt="表紙サンプル" loading="lazy" decoding="async">
+    <div class="cover-card__caption">
+      <strong>GitHub Pages マニュアル（JAD版）</strong>
+      <span>表紙サンプル / 黒×緑テーマ</span>
+    </div>
+  </div>
+</section>
+
 
   <!-- ===== HERO ===== -->
   <header id="top" class="hero">

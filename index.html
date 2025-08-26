@@ -25,11 +25,12 @@
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
-      background: radial-gradient(1000px 600px at 15% -10%, #132041 0%, transparent 60%),
-                  linear-gradient(180deg, var(--ink) 0%, #0a1026 60%, #070d1e 100%);
+      background:
+        radial-gradient(1000px 600px at 15% -10%, #132041 0%, transparent 60%),
+        linear-gradient(180deg, var(--ink) 0%, #0a1026 60%, #070d1e 100%);
       color:var(--white);
       line-height:1.6;
-      letter-spacing: .02em;
+      letter-spacing:.02em;
     }
 
     /* ===== Header / Navbar ===== */
@@ -41,6 +42,11 @@
     .nav-links{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
     .link{color:var(--mut); text-decoration:none; padding:8px 10px; border-radius:10px}
     .link:hover{color:#d1d5db; background:#0f172a}
+
+    /* === ナビ強化 === */
+    .nav a{ color:#b7c1d1; transition:color .2s ease, text-shadow .2s ease; }
+    .nav a:hover{ color:var(--acc); text-shadow:0 0 6px rgba(42,157,143,.45); }
+    .nav a.is-active{ color:#e9f5f3; border-bottom:2px solid var(--acc); padding-bottom:2px; }
 
     /* ===== Hero ===== */
     .hero{max-width:1100px; margin:28px auto 0; padding:28px 20px 10px}
@@ -61,19 +67,67 @@
     .card p{color:var(--mut)}
     .card a{color:#9ef7ec; text-decoration:none}
     .card a:hover{text-decoration:underline}
-
     .full{grid-column:1/-1}
 
-    /* ===== Banter (ふじさわ節) ===== */
+    /* ===== Banter ===== */
     .banter{display:grid; grid-template-columns:1fr; gap:10px; margin-top:4px}
     .bubble{position:relative; background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px}
     .bubble strong{color:#d1fae5}
 
-    /* ===== Details (つまずきポイント) ===== */
+    /* ===== Details ===== */
     details{background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px 14px}
     details + details{margin-top:10px}
     summary{cursor:pointer; font-weight:700; color:#d1fae5}
     .warn{color:var(--warning)}
+
+    /* ===== Cover (表紙カード) ===== */
+    .cover-card{ display:flex; justify-content:center; margin:32px auto; padding:0 20px; }
+    .cover-card__inner{
+      max-width:820px;
+      background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
+      border:1px solid var(--border); border-radius:var(--radius); padding:16px;
+      box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .cover-card__inner:hover{ transform: translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.45); }
+    .cover-card img{ width:100%; max-width:780px; height:auto; border-radius:12px; display:block; }
+    .cover-card__caption{ display:flex; flex-direction:column; gap:4px; margin-top:10px; text-align:center; }
+    .cover-card__caption strong{ color:#e6fffb; }
+    .cover-card__caption span{ color:var(--mut); font-size:13px; opacity:.9; }
+
+    /* ===== 右カラム 目次カード ===== */
+    .toc{
+      position: relative;
+      margin: 2rem 2rem 4rem;
+      padding: .5rem;
+      display: grid;
+      gap: 16px;
+      max-width: 520px;
+      margin-left: auto; /* 右へ寄せる */
+    }
+    .toc h2{
+      color:#cfe9e5;
+      letter-spacing:.1em;
+      font-weight:700;
+      font-size:1.25rem;
+      margin:.25rem 0 .5rem;
+    }
+    .toc-card{
+      display:flex; flex-direction:column; gap:6px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      padding:18px 20px;
+      color:#e6fbf7; text-decoration:none;
+      box-shadow: 0 6px 24px rgba(0,0,0,.25);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .toc-card span{ font-size:1.1rem; color: var(--acc); font-weight:700; }
+    .toc-card small{ color:#9ec7c1; }
+    .toc-card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(42,157,143,.55);
+      box-shadow: 0 10px 28px rgba(42,157,143,.18);
+    }
 
     /* ===== Footer ===== */
     footer{border-top:1px solid var(--border); margin-top:34px}
@@ -83,153 +137,11 @@
       .title{font-size:32px}
       .card{grid-column: span 12}
     }
-　　 /* ここを差し替え */
-.cover-card{ display:flex; justify-content:center; margin:28px 0; }
-.cover-card__inner{
-  background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
-  border:1px solid var(--border); border-radius:var(--radius); padding:16px;
-  box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
-}
-.cover-card__inner:hover{ transform: translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.45); }
-/* ← ここ、フォールバックを足す */
-.cover-card img{
-  width:92vw;           /* まず幅を指定 */
-  max-width:780px;      /* 上限を設定（min()の代わり） */
-  height:auto; border-radius:12px; display:block;
-}
-.cover-card__caption{ display:flex; flex-direction:column; gap:4px; margin-top:10px; text-align:center; }
-.cover-card__caption strong{ color:#e6fffb; }
-.cover-card__caption span{ color:var(--mut); font-size:13px; }
-.cover-card{ justify-content:center; margin:32px auto; padding:0 20px; }
-.cover-card__inner{ max-width:820px; }   /* カードの最大幅を固定 */
-.cover-card img{ width:100%; max-width:780px; }  /* 画像はカード幅にフィット */
-.cover-card__caption span{ opacity:.9; }
-<!-- ★★★ ここから：右カラム 目次カード ★★★ -->
-<aside class="toc">
-  <h2>前  〼</h2>
-  <a class="toc-card" href="#overview">
-    <span>第１章 概要</span>
-    <small>まずは電源投入…ではなく概観</small>
-  </a>
-  <a class="toc-card" href="#structure">
-    <span>第２章 構成</span>
-    <small>フォルダとファイルの配線図</small>
-  </a>
-  <a class="toc-card" href="#progress">
-    <span>第３章 進捗</span>
-    <small>本日のレポート：59＋</small>
-  </a>
-
-
-/* ==== 追加：ナビ強化 ==== */
-.nav a {
-  color: #b7c1d1;
-  transition: color .2s ease, text-shadow .2s ease;
-}
-.nav a:hover { color: var(--acc); text-shadow: 0 0 6px rgba(42,157,143,.45); }
-.nav a.is-active {
-  color: #e9f5f3;
-  border-bottom: 2px solid var(--acc);
-  padding-bottom: 2px;
-}
-
-/* ==== 追加：右カラム 目次カード ==== */
-.toc{
-  position: relative;
-  margin: 2rem 2rem 4rem;
-  padding: .5rem;
-  display: grid;
-  gap: 16px;
-  max-width: 520px;
-  /* 右側に寄せる */
-  margin-left: auto;
-}
-.toc h2{
-  color:#cfe9e5;
-  letter-spacing:.1em;
-  font-weight:700;
-  font-size:1.25rem;
-  margin: .25rem 0 .5rem;
-}
-.toc-card{
-  display:flex; flex-direction:column; gap:6px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:18px 20px;
-  color:#e6fbf7; text-decoration:none;
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.toc-card span{ font-size:1.1rem; color: var(--acc); font-weight:700; }
-.toc-card small{ color:#9ec7c1; }
-.toc-card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(42,157,143,.55);
-  box-shadow: 0 10px 28px rgba(42,157,143,.18);
-}
-
-/* ==== 追加：フッター ==== */
-footer{
-  margin-top: 64px;
-  padding: 24px 16px;
-  color:#9ca3af;
-  border-top:1px solid rgba(255,255,255,.06);
-  text-align:center;
-  background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.25));
-}
-footer small{ display:block; margin-top:6px; color:#7aaea7; }
-/* ==== 追加：ナビ強化 ==== */
-.nav a {
-  color: #b7c1d1;
-  transition: color .2s ease, text-shadow .2s ease;
-}
-.nav a:hover { color: var(--acc); text-shadow: 0 0 6px rgba(42,157,143,.45); }
-.nav a.is-active {
-  color: #e9f5f3;
-  border-bottom: 2px solid var(--acc);
-  padding-bottom: 2px;
-}
-
-/* ==== 追加：右カラム 目次カード ==== */
-.toc{
-  position: relative;
-  margin: 2rem 2rem 4rem;
-  padding: .5rem;
-  display: grid;
-  gap: 16px;
-  max-width: 520px;
-  margin-left: auto; /* 右へ寄せる */
-}
-.toc h2{
-  color:#cfe9e5;
-  letter-spacing:.1em;
-  font-weight:700;
-  font-size:1.25rem;
-  margin: .25rem 0 .5rem;
-}
-.toc-card{
-  display:flex; flex-direction:column; gap:6px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:18px 20px;
-  color:#e6fbf7; text-decoration:none;
-  box-shadow: 0 6px 24px rgba(0,0,0,.25);
-  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-}
-.toc-card span{ font-size:1.1rem; color: var(--acc); font-weight:700; }
-.toc-card small{ color:#9ec7c1; }
-.toc-card:hover{
-  transform: translateY(-2px);
-  border-color: rgba(42,157,143,.55);
-  box-shadow: 0 10px 28px rgba(42,157,143,.18);
-}
-
   </style>
 </head>
 <body>
-　 <!-- ===== NAV ===== -->
+
+  <!-- ===== NAV ===== -->
   <nav class="nav" aria-label="メインナビゲーション">
     <div class="nav-inner">
       <a class="logo" href="#top">
@@ -237,23 +149,24 @@ footer small{ display:block; margin-top:6px; color:#7aaea7; }
         <span class="logo-text">JK1JAD · JAD Home</span>
       </a>
       <div class="nav-links">
-        <a class="link" href="#about">概要</a>
+        <a class="link is-active" href="#about">概要</a>
         <a class="link" href="#plan">構成</a>
         <a class="link" href="#progress">進捗</a>
         <a class="link" href="https://github.com/JK1JAD/jad_home" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </nav>
-  　<section class="cover-card">
-  <div class="cover-card__inner">
-    <img src="images/cover_sample.png" alt="表紙サンプル" loading="lazy" decoding="async">
-    <div class="cover-card__caption">
-      <strong>GitHub Pages マニュアル（JAD版）</strong>
-      <span>表紙サンプル / 黒×緑テーマ</span>
-    </div>
-  </div>
-</section>
 
+  <!-- ===== COVER ===== -->
+  <section class="cover-card">
+    <div class="cover-card__inner">
+      <img src="images/cover_sample.png" alt="表紙サンプル" loading="lazy" decoding="async">
+      <div class="cover-card__caption">
+        <strong>GitHub Pages マニュアル（JAD版）</strong>
+        <span>表紙サンプル / 黒×緑テーマ</span>
+      </div>
+    </div>
+  </section>
 
   <!-- ===== HERO ===== -->
   <header id="top" class="hero">
@@ -269,6 +182,23 @@ footer small{ display:block; margin-top:6px; color:#7aaea7; }
       <div class="bubble"><strong>ツッコミ：</strong> 「素材は置いた。かっこよくするのは編集長（＝あなた）！」</div>
     </div>
   </header>
+
+  <!-- ===== 右カラム 目次カード ===== -->
+  <aside class="toc">
+    <h2>前 〼</h2>
+    <a class="toc-card" href="#about">
+      <span>第１章 概要</span>
+      <small>まずは電源投入…ではなく概観</small>
+    </a>
+    <a class="toc-card" href="#plan">
+      <span>第２章 構成</span>
+      <small>フォルダとファイルの配線図</small>
+    </a>
+    <a class="toc-card" href="#progress">
+      <span>第３章 進捗</span>
+      <small>本日のレポート：59＋</small>
+    </a>
+  </aside>
 
   <!-- ===== ABOUT ===== -->
   <section id="about" class="section">
@@ -350,6 +280,7 @@ footer small{ display:block; margin-top:6px; color:#7aaea7; }
     </div>
   </section>
 
+  <!-- ===== FOOTER ===== -->
   <footer>
     <div class="foot">
       <div>© <span id="y"></span> JK1JAD（ふじさわたけひこ） — Powered by JAD 📻 / 本サイトはキュウリの鮮度を保証しません。</div>

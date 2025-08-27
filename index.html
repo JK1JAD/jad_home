@@ -137,6 +137,40 @@
       .title{font-size:32px}
       .card{grid-column: span 12}
     }
+/* === 三兄弟の見た目（JAD追加） === */
+.hero-buttons { margin-top: 1.25rem; }
+.hero-buttons .catch {
+  text-align: center;
+  color: var(--acc);
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+}
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;          /* 三兄弟の“間”を確保 */
+  justify-content: center;
+}
+.button-group .btn {
+  display: inline-block;
+  padding: 0.7rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--acc);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.button-group .btn:hover {
+  background: var(--acc-2);
+  transform: translateY(-1px);
+}
+/* スマホで窮屈なら縦積みに */
+@media (max-width: 520px){
+  .button-group { flex-direction: column; align-items: stretch; }
+  .button-group .btn { text-align: center; }
+}
+/* === /JAD追加おわり === */
+
   </style>
 </head>
 <body>
@@ -169,7 +203,7 @@
   </section>
 
   <!-- ===== HERO ===== -->
-  <header id="top" class="hero">
+ <header id="top" class="hero">
     <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
@@ -182,6 +216,21 @@
       <div class="bubble"><strong>ツッコミ：</strong> 「素材は置いた。かっこよくするのは編集長（＝あなた）！」</div>
     </div>
   </header>
+
+  <!-- === 三兄弟：トップ限定ボタン群（JAD仕様） === -->
+<section class="hero-buttons">
+  <p class="catch">
+    どれにする？ → docs派？ images派？ それともスクショ付き完全版？
+  </p>
+  <div class="button-group jad-trio">
+    <a href="docs/" class="btn" title="劉備：堅実派マニュアル">マニュアルへ（docs）</a>
+    <a href="images/" class="btn" title="関羽：スクショは任せろ！">スクショ置き場（images）</a>
+    <a href="docs/github_pages_manual_latest.pdf" target="_blank" rel="noopener" class="btn" title="張飛：全部入り完全版！大暴れ！">
+      📑 スクショ付きPDF
+    </a>
+  </div>
+</section>
+　<!-- === /三兄弟ここまで === --> 
 
   <!-- ===== 右カラム 目次カード ===== -->
   <aside class="toc">

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDFアーカイブ | JK1JAD · JAD劇場</title>
+  <meta name="description" content="歴代スクショ付きPDFのアーカイブ。ふじさわ節の成長ログ。">
+  <style>
+    :root{
+      --ink:#0b132b;      /* 背景の濃紺（JAD標準） */
+      --ink-2:#111827;    /* もう一段暗め */
+      --acc:#2a9d8f;      /* アクセントの青緑 */
+      --acc-2:#23867c;    /* ホバー用 */
+      --mut:#9ca3af;      /* サブテキスト */
+      --card:#0f172a;     /* カード背景 */
+      --ring:rgba(42,157,143,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,var(--ink),var(--ink-2));
+      color:#e5e7eb; line-height:1.6;
+    }
+    a{color:var(--acc); text-decoration:none}
+    a:hover{color:#34d3c0}
+    .wrap{max-width:980px; margin:32px auto; padding:0 16px}
+    header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:24px}
+    .home{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border:1px solid var(--acc); border-radius:12px}
+    .home:hover{background:rgba(42,157,143,.08)}
+    h1{font-size:clamp(22px,4vw,28px); margin:0}
+    .tagline{color:var(--mut); font-size:14px; margin-top:4px}
+    .grid{display:grid; grid-template-columns:repeat( auto-fit, minmax(260px,1fr) ); gap:16px}
+    .card{
+      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,.25);
+      display:flex; flex-direction:column; gap:10px; position:relative;
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .card:hover{transform:translateY(-2px); border-color:var(--ring); box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .v{font-weight:700; letter-spacing:.2px}
+    .meta{font-size:13px; color:var(--mut)}
+    .notes{font-size:14px; color:#d1d5db}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, rgba(42,157,143,.18), rgba(42,157,143,.08));
+      color:#e6fffb; text-decoration:none; font-weight:600;
+    }
+    .btn:hover{background:linear-gradient(180deg, rgba(42,157,143,.28), rgba(42,157,143,.12)); border-color:var(--acc)}
+    .badge{position:absolute; top:12px; right:12px; font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--acc); color:#d1fae5}
+    .footer{margin:28px 0 8px; text-align:center; color:var(--mut); font-size:12px}
+    /* 隠しボケ（マウスオーバーでﾇｯと） */
+    .wink{border-bottom:1px dashed var(--acc); cursor:help}
+    .wink:hover::after{
+      content:"PDFは太る、リンクは軽い——ダウンロードは計画的に。";
+      position:absolute; transform:translateY(-110%); right:12px;
+      background:#04131a; color:#c7ffef; font-size:12px; padding:6px 8px; border-radius:8px;
+      border:1px solid var(--ring); white-space:nowrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📑 PDFアーカイブ</h1>
+        <div class="tagline">ふじさわ節の進化がここに。<span class="wink">（なつかしのv1.0も！）</span></div>
+      </div>
+      <a class="home" href="../">
+        ⬅ トップへ戻る
+      </a>
+    </header>
+
+    <!-- ▼ ここだけ編集：歴代PDFの配列。新しい順に上へ追加してください。 -->
+    <script>
+      const releases = [
+        // 例）{ ver:"Final", date:"2025-09-01", file:"manual_final.pdf", notes:"完成版。目次整備・誤字修正・軽量化。" },
+        { ver:"v1.4.1", date:"2025-08-20", file:"manual_v1.4.1.pdf", notes:"表紙ロゴ調整・著者/監修表記・紫キャプション。" },
+        { ver:"v1.0",   date:"2025-08-12", file:"manual_v1.0.pdf",   notes:"初公開の軽量版。まずは世に出すのが偉い！" }
+      ];
+      // 最新版（トップページの三兄弟ボタンからも使うと吉）
+      const LATEST_FILE = "manual_final.pdf"; // 運用：最新に差し替えるときはこのファイルを更新/置換
+    </script>
+
+    <section class="grid" id="cards"></section>
+
+    <div class="footer">
+      © JK1JAD · 藤澤局の成長ログ。更新はコミットログにも刻まれます📡
+    </div>
+  </div>
+
+  <script>
+    const $cards = document.getElementById('cards');
+    releases.forEach((r, idx) => {
+      const isLatest = r.file === LATEST_FILE;
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        ${isLatest ? `<div class="badge">LATEST</div>` : ``}
+        <div class="v">📕 ${r.ver}</div>
+        <div class="meta">公開日：${r.date}</div>
+        <div class="notes">${r.notes || ""}</div>
+        <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap">
+          <a class="btn" href="./${r.file}" download>
+            ⬇ ダウンロード
+          </a>
+          <a class="btn" href="./${r.file}" target="_blank" rel="noopener">
+            🔍 ブラウザで表示
+          </a>
+        </div>
+      `;
+      $cards.appendChild(card);
+    });
+  </script>
+</body>
+</html>

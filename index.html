@@ -3,343 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JK1JAD · JAD Home</title>
-  <meta name="description" content="JK1JAD（ふじさわたけひこ）のGitHub Pagesホーム。黒×緑のJAD風デザイン + ふじさわ節増量版。" />
+  <title>PDFアーカイブ | JK1JAD · JAD劇場</title>
+  <meta name="description" content="歴代スクショ付きPDFのアーカイブ。ふじさわ節の成長ログ。">
   <style>
-    /* ===== Theme ===== */
     :root{
-      --ink:#0b132b;      /* 背景の濃紺 */
-      --ink-2:#111827;    /* もう一段暗いところに */
+      --ink:#0b132b;      /* 背景の濃紺（JAD標準） */
+      --ink-2:#111827;    /* もう一段暗め */
       --acc:#2a9d8f;      /* アクセントの青緑 */
       --acc-2:#23867c;    /* ホバー用 */
       --mut:#9ca3af;      /* サブテキスト */
-      --card:#111827;     /* カード背景 */
-      --border:#1f2937;   /* 枠線 */
-      --white:#e5e7eb;    /* 本文色 */
-      --shadow:0 8px 24px rgba(0,0,0,.35);
-      --radius:14px;
-      --radius-sm:10px;
-      --warning:#f59e0b;
+      --card:#0f172a;     /* カード背景 */
+      --ring:rgba(42,157,143,.35);
     }
-    html,body{height:100%}
+    *{box-sizing:border-box}
     body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(1000px 600px at 15% -10%, #132041 0%, transparent 60%),
-        linear-gradient(180deg, var(--ink) 0%, #0a1026 60%, #070d1e 100%);
-      color:var(--white);
-      line-height:1.6;
-      letter-spacing:.02em;
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:linear-gradient(180deg,var(--ink),var(--ink-2));
+      color:#e5e7eb; line-height:1.6;
     }
-
-    /* ===== Header / Navbar ===== */
-    .nav{position:sticky; top:0; z-index:10; backdrop-filter:saturate(160%) blur(6px); background:linear-gradient(180deg, rgba(11,19,43,.85), rgba(11,19,43,.45)); border-bottom:1px solid var(--border)}
-    .nav-inner{max-width:1100px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; gap:14px}
-    .logo{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--white)}
-    .logo-mark{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--acc), #34d399); box-shadow:var(--shadow)}
-    .logo-text{font-weight:700}
-    .nav-links{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
-    .link{color:var(--mut); text-decoration:none; padding:8px 10px; border-radius:10px}
-    .link:hover{color:#d1d5db; background:#0f172a}
-
-    /* === ナビ強化 === */
-    .nav a{ color:#b7c1d1; transition:color .2s ease, text-shadow .2s ease; }
-    .nav a:hover{ color:var(--acc); text-shadow:0 0 6px rgba(42,157,143,.45); }
-    .nav a.is-active{ color:#e9f5f3; border-bottom:2px solid var(--acc); padding-bottom:2px; }
-
-    /* ===== Hero ===== */
-    .hero{max-width:1100px; margin:28px auto 0; padding:28px 20px 10px}
-    .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:#c7ece7; background:rgba(42,157,143,.18); border:1px solid rgba(42,157,143,.4); padding:6px 10px; border-radius:999px}
-    .title{font-size:40px; font-weight:800; margin:14px 0 8px; letter-spacing:.01em}
-    .subtitle{color:var(--mut); max-width:820px}
-    .cta{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
-    .btn{appearance:none; border:1px solid transparent; background:var(--acc); color:#082a29; font-weight:700; padding:12px 16px; border-radius:12px; text-decoration:none; box-shadow:var(--shadow)}
-    .btn:hover{background:var(--acc-2); color:#061f1e}
-    .btn-ghost{background:transparent; color:#cfe9e6; border-color:#255e59}
-    .btn-ghost:hover{background:#0a1b1a}
-
-    /* ===== Sections / Cards ===== */
-    .section{max-width:1100px; margin:22px auto; padding:0 20px}
-    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
-    .card{grid-column: span 6; background:linear-gradient(180deg, rgba(17,24,39,.85), rgba(17,24,39,.65)); border:1px solid var(--border); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
-    .card h3{margin:6px 0 8px}
-    .card p{color:var(--mut)}
-    .card a{color:#9ef7ec; text-decoration:none}
-    .card a:hover{text-decoration:underline}
-    .full{grid-column:1/-1}
-
-    /* ===== Banter ===== */
-    .banter{display:grid; grid-template-columns:1fr; gap:10px; margin-top:4px}
-    .bubble{position:relative; background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px}
-    .bubble strong{color:#d1fae5}
-
-    /* ===== Details ===== */
-    details{background:#0f172a; border:1px solid var(--border); border-radius:12px; padding:12px 14px}
-    details + details{margin-top:10px}
-    summary{cursor:pointer; font-weight:700; color:#d1fae5}
-    .warn{color:var(--warning)}
-
-    /* ===== Cover (表紙カード) ===== */
-    .cover-card{ display:flex; justify-content:center; margin:32px auto; padding:0 20px; }
-    .cover-card__inner{
-      max-width:820px;
-      background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.6));
-      border:1px solid var(--border); border-radius:var(--radius); padding:16px;
-      box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
+    a{color:var(--acc); text-decoration:none}
+    a:hover{color:#34d3c0}
+    .wrap{max-width:980px; margin:32px auto; padding:0 16px}
+    header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:24px}
+    .home{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border:1px solid var(--acc); border-radius:12px}
+    .home:hover{background:rgba(42,157,143,.08)}
+    h1{font-size:clamp(22px,4vw,28px); margin:0}
+    .tagline{color:var(--mut); font-size:14px; margin-top:4px}
+    .grid{display:grid; grid-template-columns:repeat( auto-fit, minmax(260px,1fr) ); gap:16px}
+    .card{
+      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px;
+      box-shadow:0 8px 30px rgba(0,0,0,.25);
+      display:flex; flex-direction:column; gap:10px; position:relative;
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
-    .cover-card__inner:hover{ transform: translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.45); }
-    .cover-card img{ width:100%; max-width:780px; height:auto; border-radius:12px; display:block; }
-    .cover-card__caption{ display:flex; flex-direction:column; gap:4px; margin-top:10px; text-align:center; }
-    .cover-card__caption strong{ color:#e6fffb; }
-    .cover-card__caption span{ color:var(--mut); font-size:13px; opacity:.9; }
-
-    /* ===== 右カラム 目次カード ===== */
-    .toc{
-      position: relative;
-      margin: 2rem 2rem 4rem;
-      padding: .5rem;
-      display: grid;
-      gap: 16px;
-      max-width: 520px;
-      margin-left: auto; /* 右へ寄せる */
+    .card:hover{transform:translateY(-2px); border-color:var(--ring); box-shadow:0 10px 40px rgba(0,0,0,.35)}
+    .v{font-weight:700; letter-spacing:.2px}
+    .meta{font-size:13px; color:var(--mut)}
+    .notes{font-size:14px; color:#d1d5db}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.1);
+      background:linear-gradient(180deg, rgba(42,157,143,.18), rgba(42,157,143,.08));
+      color:#e6fffb; text-decoration:none; font-weight:600;
     }
-    .toc h2{
-      color:#cfe9e5;
-      letter-spacing:.1em;
-      font-weight:700;
-      font-size:1.25rem;
-      margin:.25rem 0 .5rem;
+    .btn:hover{background:linear-gradient(180deg, rgba(42,157,143,.28), rgba(42,157,143,.12)); border-color:var(--acc)}
+    .badge{position:absolute; top:12px; right:12px; font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--acc); color:#d1fae5}
+    .footer{margin:28px 0 8px; text-align:center; color:var(--mut); font-size:12px}
+    /* 隠しボケ（マウスオーバーでﾇｯと） */
+    .wink{
+      border-bottom:1px dashed var(--acc);
+      cursor:help;
+      position:relative;   /* 吹き出しの基準 */
+      display:inline-block;/* ヒット範囲安定 */
     }
-    .toc-card{
-      display:flex; flex-direction:column; gap:6px;
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:18px 20px;
-      color:#e6fbf7; text-decoration:none;
-      box-shadow: 0 6px 24px rgba(0,0,0,.25);
-      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    .wink:hover::after{
+      content:"PDFは太る、リンクは軽い——ダウンロードは計画的に。";
+      position:absolute; transform:translateY(-110%); right:0;
+      background:#04131a; color:#c7ffef; font-size:12px; padding:6px 8px; border-radius:8px;
+      border:1px solid var(--ring); white-space:nowrap; z-index:1;
     }
-    .toc-card span{ font-size:1.1rem; color: var(--acc); font-weight:700; }
-    .toc-card small{ color:#9ec7c1; }
-    .toc-card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(42,157,143,.55);
-      box-shadow: 0 10px 28px rgba(42,157,143,.18);
-    }
-
-    /* ===== Footer ===== */
-    footer{border-top:1px solid var(--border); margin-top:34px}
-    .foot{max-width:1100px; margin:0 auto; padding:24px 20px; color:#93a4b5; font-size:14px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
-
-    @media (max-width: 900px){
-      .title{font-size:32px}
-      .card{grid-column: span 12}
-    }
-/* === 三兄弟の見た目（JAD追加） === */
-.hero-buttons { margin-top: 1.25rem; }
-.hero-buttons .catch {
-  text-align: center;
-  color: var(--acc);
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-}
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;          /* 三兄弟の“間”を確保 */
-  justify-content: center;
-}
-.button-group .btn {
-  display: inline-block;
-  padding: 0.7rem 1rem;
-  border-radius: 0.5rem;
-  background: var(--acc);
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-}
-.button-group .btn:hover {
-  background: var(--acc-2);
-  transform: translateY(-1px);
-}
-/* スマホで窮屈なら縦積みに */
-@media (max-width: 520px){
-  .button-group { flex-direction: column; align-items: stretch; }
-  .button-group .btn { text-align: center; }
-}
-/* === /JAD追加おわり === */
-
   </style>
 </head>
 <body>
-
-  <!-- ===== NAV ===== -->
-  <nav class="nav" aria-label="メインナビゲーション">
-    <div class="nav-inner">
-      <a class="logo" href="#top">
-        <span class="logo-mark" aria-hidden="true"></span>
-        <span class="logo-text">JK1JAD · JAD Home</span>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>📑 PDFアーカイブ</h1>
+        <div class="tagline">ふじさわ節の進化がここに。<span class="wink">（なつかしのv1.0も！）</span></div>
+      </div>
+      <a class="home" href="../" aria-label="トップへ戻る">
+        ⬅ トップへ戻る
       </a>
-      <div class="nav-links">
-        <a class="link is-active" href="#about">概要</a>
-        <a class="link" href="#plan">構成</a>
-        <a class="link" href="#progress">進捗</a>
-        <a class="link" href="https://github.com/JK1JAD/jad_home" target="_blank" rel="noopener">GitHub</a>
-      </div>
-    </div>
-  </nav>
+    </header>
 
-  <!-- ===== COVER ===== -->
-  <section class="cover-card">
-    <div class="cover-card__inner">
-      <img src="images/cover_sample.png" alt="表紙サンプル" loading="lazy" decoding="async">
-      <div class="cover-card__caption">
-        <strong>GitHub Pages マニュアル（JAD版）</strong>
-        <span>表紙サンプル / 黒×緑テーマ</span>
-      </div>
-    </div>
-  </section>
+    <!-- ▼ Releases 配列：新しい順で並べ替えられます（手動の順は気にしなくてOK） -->
+    <script>
+      const releases = [
+        // 例）{ ver:"Final", date:"2025-09-01", file:"manual_final.pdf", notes:"完成版。目次整備・誤字修正・軽量化。" },
+        { ver:"v1.4.1", date:"2025-08-20", file:"manual_v1.4.1.pdf", notes:"表紙ロゴ調整・著者/監修表記・紫キャプション。" },
+        { ver:"v1.0",   date:"2025-08-12", file:"manual_v1.0.pdf",   notes:"初公開の軽量版。まずは世に出すのが偉い！" }
+      ];
+      // 最新版（トップの三兄弟ボタンと連動させると運用ラク）
+      const LATEST_FILE = "manual_final.pdf"; // 実体があるPDF名にするのが推奨
+    </script>
 
-  <!-- ===== HERO ===== -->
- <header id="top" class="hero">
-    <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
-    <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
-    <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
-    <div class="cta">
-      <a class="btn" href="#docs">📄 マニュアルへ（docs）</a>
-      <a class="btn btn-ghost" href="#images">🖼 スクショ置き場（images）</a>
-    </div>
-    <div class="banter" aria-label="ふじさわ節コーナー">
-      <div class="bubble"><strong>ボケ：</strong> 「index.html を置けば、勝手にかっこよくなるんでしょ？」</div>
-      <div class="bubble"><strong>ツッコミ：</strong> 「素材は置いた。かっこよくするのは編集長（＝あなた）！」</div>
-    </div>
-  </header>
+    <section class="grid" id="cards"></section>
 
-  <!-- === 三兄弟：トップ限定ボタン群（JAD仕様） === -->
-<section class="hero-buttons">
-  <p class="catch">
-    どれにする？ → docs派？ images派？ それともスクショ付き完全版？
-  </p>
-  <div class="button-group jad-trio">
-    <a href="docs/" class="btn" title="劉備：堅実派マニュアル">マニュアルへ（docs）</a>
-    <a href="images/" class="btn" title="関羽：スクショは任せろ！">スクショ置き場（images）</a>
-    <a href="docs/github_pages_manual_latest.pdf" target="_blank" rel="noopener" class="btn" title="張飛：全部入り完全版！大暴れ！">
-      📑 スクショ付きPDF
-    </a>
+    <div class="footer">
+      © JK1JAD · 藤澤局の成長ログ。更新はコミットログにも刻まれます📡
+    </div>
   </div>
-</section>
-　<!-- === /三兄弟ここまで === --> 
-
-  <!-- ===== 右カラム 目次カード ===== -->
-  <aside class="toc">
-    <h2>前 〼</h2>
-    <a class="toc-card" href="#about">
-      <span>第１章 概要</span>
-      <small>まずは電源投入…ではなく概観</small>
-    </a>
-    <a class="toc-card" href="#plan">
-      <span>第２章 構成</span>
-      <small>フォルダとファイルの配線図</small>
-    </a>
-    <a class="toc-card" href="#progress">
-      <span>第３章 進捗</span>
-      <small>本日のレポート：59＋</small>
-    </a>
-  </aside>
-
-  <!-- ===== ABOUT ===== -->
-  <section id="about" class="section">
-    <div class="grid">
-      <article class="card full">
-        <h3>🎯 プロジェクト概要</h3>
-        <p>目的は「<strong>GitHub Pages 公開マニュアル（JAD版）</strong>」の公開と保守。スクショは多め、笑いは適量、エラーは最小限（願望）。</p>
-      </article>
-      <article class="card">
-        <h3>🧭 ポリシー</h3>
-        <ul>
-          <li>クリック位置まで丁寧に（でも押し過ぎ注意）</li>
-          <li>画像は <code>images/</code> に整頓（家族写真は別フォルダ！）</li>
-          <li>PDFは <code>docs/</code> へ（重い子は後でダイエット）</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h3>📦 リポジトリ</h3>
-        <p><a href="https://github.com/JK1JAD/jad_home" target="_blank" rel="noopener">GitHub: JK1JAD/jad_home</a></p>
-        <p>READMEは真面目8：笑い2の黄金比（当社比）。</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== PLAN ===== -->
-  <section id="plan" class="section">
-    <div class="grid">
-      <article class="card">
-        <h3 id="images">🖼 画像ディレクトリ</h3>
-        <p>スクショ等は <code>/images/</code> に。最初は <code>.gitkeep</code> を置いて空フォルダだけ用意しておくのもアリ。</p>
-        <details>
-          <summary>ここでつまずきがちなポイント（画像編）</summary>
-          <ul>
-            <li>ファイル名の <strong>大文字小文字は別物</strong>（Windowsと挙動が違うよ）。</li>
-            <li>日本語名は避けると吉（URLがのび太）。</li>
-            <li>PNGはほどほど、JPGやWebPで軽量化すると表示が速い。</li>
-          </ul>
-        </details>
-      </article>
-      <article class="card" id="docs">
-        <h3>📄 ドキュメント</h3>
-        <p>PDFや補足資料は <code>/docs/</code> へ。公開リンクは <code>https://jk1jad.github.io/jad_home/docs/ファイル名.pdf</code> で直リンク可能。</p>
-        <details>
-          <summary>ここでつまずきがちなポイント（PDF編）</summary>
-          <ul>
-            <li>ファイルサイズが大きいとスマホ勢が泣く（作者も泣く）。</li>
-            <li>日本語フォントは<strong>必ず埋め込み</strong>（文字化けは心が折れる）。</li>
-          </ul>
-        </details>
-      </article>
-      <article class="card full">
-        <h3>🧩 トップページの編集</h3>
-        <p>この <code>index.html</code> を直接編集して、カードを増やしたり、色味を微調整してください。色は <code>:root</code> のカラーバリアブルを変更すると一括反映されます。</p>
-        <details>
-          <summary><span class="warn">GitHub Pages「あるある」 3連発</span></summary>
-          <ol>
-            <li><strong>Not Found…</strong> → <em>index.html が無い/場所が違う</em>。ブランチとフォルダ設定（root or docs）を再確認。</li>
-            <li><strong>更新されない…</strong> → キャッシュの可能性。ハードリロード or 数十秒待機。</li>
-            <li><strong>画像が出ない…</strong> → パス違いが9割。<code>./images/xxx.png</code> で相対パスを。</li>
-          </ol>
-        </details>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== PROGRESS ===== -->
-  <section id="progress" class="section">
-    <div class="grid">
-      <article class="card full">
-        <h3>📈 進捗ログ（QSO風）</h3>
-        <ul>
-          <li>✅ 21:00 JST — リポジトリ作成 / README もりもり版</li>
-          <li>✅ 22:20 JST — GitHub Pages 有効化（main / root）</li>
-          <li>✅ 22:40 JST — 黒×緑 JAD テーマ導入（笑い強化）</li>
-          <li>⬜ images/ と docs/ を作成 & ファイル投入（CQ中）</li>
-          <li>⬜ マニュアル v1.4.1 を公開（59＋で行きたい）</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <div class="foot">
-      <div>© <span id="y"></span> JK1JAD（ふじさわたけひこ） — Powered by JAD 📻 / 本サイトはキュウリの鮮度を保証しません。</div>
-      <div><a class="link" href="#top">▲ トップへ戻る</a></div>
-    </div>
-  </footer>
 
   <script>
-    // 年号を自動更新
-    document.getElementById('y').textContent = new Date().getFullYear();
+    const $cards = document.getElementById('cards');
+
+    // YYYY-MM-DD として降順にソート（新しい日付が先頭）
+    releases.sort((a,b)=> (a.date < b.date ? 1 : -1));
+
+    // LATEST の保険：指定ファイルが見つからなければ先頭を最新扱い
+    const hasExplicitLatest = releases.some(r => r.file === LATEST_FILE);
+    const latestFileResolved = hasExplicitLatest ? LATEST_FILE : (releases[0]?.file ?? "");
+
+    releases.forEach((r, idx) => {
+      const isLatest = r.file === latestFileResolved || (!hasExplicitLatest && idx === 0);
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        ${isLatest ? `<div class="badge">LATEST</div>` : ``}
+        <div class="v">📕 ${r.ver}</div>
+        <div class="meta">公開日：<time datetime="${r.date}">${r.date}</time></div>
+        <div class="notes">${r.notes || ""}</div>
+        <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap">
+          <a class="btn" href="./${r.file}" download>
+            ⬇ ダウンロード
+          </a>
+          <a class="btn" href="./${r.file}" target="_blank" rel="noopener">
+            🔍 ブラウザで表示
+          </a>
+        </div>
+      `;
+      $cards.appendChild(card);
+    });
   </script>
+
+  <noscript style="display:block; text-align:center; color:#cbd5e1; padding:12px 0;">
+    ※JavaScriptが無効だと一覧が表示されません。
+  </noscript>
 </body>
 </html>

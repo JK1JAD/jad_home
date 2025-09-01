@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>第1章 概要 | オンラインマニュアル</title>
+<style>
+:root{ --ink:#0b132b; --ink2:#111827; --acc:#2a9d8f; --mut:#9ca3af; --bd:rgba(255,255,255,.08);}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1000px 420px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 14px}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:16px}
+@media (max-width:900px){ .layout{grid-template-columns:1fr} }
+.aside{position:sticky;top:12px;height:max-content;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--bd);border-radius:16px;padding:14px}
+.aside h2{margin:0 0 8px;font-size:16px}
+.aside a{display:block;padding:6px 8px;border-radius:8px;color:#d1d5db;text-decoration:none}
+.aside a:hover{background:rgba(255,255,255,.06)}
+.aside a.active{background:#0f2236;color:#b9f6e8;font-weight:700}
+.main{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--bd);border-radius:16px;padding:18px}
+.bread{font-size:12px;color:var(--mut);margin-bottom:6px}
+h1{margin:6px 0 12px;font-size:clamp(22px,3.2vw,30px)}
+h2{margin:18px 0 8px;font-size:18px}
+p{line-height:1.7}
+.note{border-left:3px solid var(--acc);background:#0f1f2b;padding:10px;border-radius:8px;margin:10px 0}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+a.btn{display:inline-block;padding:8px 12px;border-radius:10px;background:var(--acc);color:#062d2a;text-decoration:none;font-weight:700;box-shadow:0 4px 14px rgba(42,157,143,.35)}
+a.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.inline{color:#7dd3fc}
+code{background:#0b1a29;padding:2px 6px;border-radius:6px}
+.pre{background:#0b1a29;border:1px solid var(--bd);border-radius:10px;padding:12px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bread">📂 <a class="inline" href="../index.html">トップ</a> / <a class="inline" href="./index.html">オンラインマニュアル</a> / 第1章</div>
+
+  <div class="layout">
+    <!-- サイド目次 -->
+    <aside class="aside">
+      <h2>目次</h2>
+      <a class="active" href="./chap-01.html">第1章 概要</a>
+      <a href="./chap-02.html">第2章 構成</a>
+      <a href="./chap-03.html">第3章 進捗</a>
+      <!-- 章が増えたらこのリストに追記 -->
+    </aside>
+
+    <!-- 本文 -->
+    <main class="main">
+      <h1>第1章 概要</h1>
+      <p>ここではマニュアル全体像と用語をざっくり把握します。PDFは保存用、<b>docsは即読用</b>。三兄弟（PDF・docs・images）が連携して「読める・配れる・直せる」を実現します。</p>
+
+      <div class="note"><b>JADワンポイント：</b> 迷子になったら「トップ → docs → 第1章」にQSY。帰巣本能、発動！</div>
+
+      <h2>基本ディレクトリ</h2>
+      <div class="pre"><code>
+/ (ルート)  
+  ├─ index.html        ← トップ  
+  ├─ pdfs/             ← PDFアーカイブ  
+  ├─ docs/             ← いま読んでるオンライン本文  
+  └─ images/           ← スクショ置き場（本文・PDFの共通素材）
+      </code></div>
+
+      <h2>画像の参照例</h2>
+      <p>docsからimagesを参照する場合、相対パスは <code>../images/xxx.png</code> を使います。</p>
+
+      <h2>執筆ポリシー（ふじさわ節 3箇条）</h2>
+      <ol>
+        <li>最初の1画面で次に何をするか分かる。</li>
+        <li>スクショは<strong>赤矢印</strong>で「押す場所」を示す。</li>
+        <li>ボケは控えめに、ツッコミは的確に（※盛りたい時は最後にまとめて）。</li>
+      </ol>
+
+      <div class="nav">
+        <a class="btn" href="./index.html">目次へ戻る</a>
+        <a class="btn" href="./chap-02.html">次へ ▶ 第2章</a>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

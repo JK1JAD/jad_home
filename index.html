@@ -179,11 +179,21 @@ html{ scroll-behavior:smooth; }
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     <div class="cta">
       <div class="cta">
-  <a class="btn" href="pdfs/">📑 PDFアーカイブ</a>
-  <a class="btn" href="#docs">📘 マニュアルへ（docs）</a>
-  <a class="btn" href="#images">🖼 スクショ置き場（images）</a>
-　　　　
-  </div>
+  <!-- 三兄弟：置き換え用（A案・確実に遷移するアンカー） -->
+<nav class="links-row">
+  <a class="pill" href="pdfs/index.html">📘 PDFアーカイブ</a>
+  <a class="pill" href="docs/index.html">📗 マニュアルへ（docs）</a>
+  <a class="pill" href="images/">📁 置き場（images）</a>
+</nav>
+
+<style>
+.links-row{display:flex;gap:12px;flex-wrap:wrap}
+.pill{display:inline-block;padding:10px 14px;border-radius:999px;
+     background:#2a9d8f;color:#062d2a;font-weight:700;text-decoration:none;
+     box-shadow:0 4px 14px rgba(42,157,143,.35)}
+.pill:hover{filter:brightness(1.06);transform:translateY(-1px)}
+</style>
+
     <div class="banter" aria-label="ふじさわ節コーナー">
       <div class="bubble"><strong>ボケ：</strong> 「index.html を置けば、勝手にかっこよくなるんでしょ？」</div>
       <div class="bubble"><strong>ツッコミ：</strong> 「素材は置いた。かっこよくするのは編集長（＝あなた）！」</div>

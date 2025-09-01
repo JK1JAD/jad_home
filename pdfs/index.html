@@ -3,114 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PDFアーカイブ | JK1JAD · JAD劇場</title>
-  <meta name="description" content="歴代スクショ付きPDFのアーカイブ。ふじさわ節の成長ログ。">
+  <title>PDFアーカイブ | JK1JAD · JAD Home</title>
+  <meta name="description" content="JAD劇場・PDFアーカイブ。最新版・旧版・軽量版・分割版をまとめて保管。" />
   <style>
-    :root{
-      --ink:#0b132b;      /* 背景の濃紺（JAD標準） */
-      --ink-2:#111827;    /* もう一段暗め */
-      --acc:#2a9d8f;      /* アクセントの青緑 */
-      --acc-2:#23867c;    /* ホバー用 */
-      --mut:#9ca3af;      /* サブテキスト */
-      --card:#0f172a;     /* カード背景 */
-      --ring:rgba(42,157,143,.35);
-    }
+    :root{ --ink:#0b132b; --ink-2:#111827; --acc:#2a9d8f; --mut:#9ca3af; --ok:#22c55e; --chip:#334155; }
     *{box-sizing:border-box}
     body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:linear-gradient(180deg,var(--ink),var(--ink-2));
-      color:#e5e7eb; line-height:1.6;
+      margin:0; padding:40px 16px; color:#e5e7eb;
+      background:radial-gradient(1200px 500px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif;
     }
-    a{color:var(--acc); text-decoration:none}
-    a:hover{color:#34d3c0}
-    .wrap{max-width:980px; margin:32px auto; padding:0 16px}
-    header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:24px}
-    .home{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border:1px solid var(--acc); border-radius:12px}
-    .home:hover{background:rgba(42,157,143,.08)}
-    h1{font-size:clamp(22px,4vw,28px); margin:0}
-    .tagline{color:var(--mut); font-size:14px; margin-top:4px}
-    .grid{display:grid; grid-template-columns:repeat( auto-fit, minmax(260px,1fr) ); gap:16px}
-    .card{
-      background:var(--card); border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:16px;
-      box-shadow:0 8px 30px rgba(0,0,0,.25);
-      display:flex; flex-direction:column; gap:10px; position:relative;
-      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-    }
-    .card:hover{transform:translateY(-2px); border-color:var(--ring); box-shadow:0 10px 40px rgba(0,0,0,.35)}
-    .v{font-weight:700; letter-spacing:.2px}
-    .meta{font-size:13px; color:var(--mut)}
-    .notes{font-size:14px; color:#d1d5db}
+    .wrap{max-width:980px; margin:0 auto}
+    h1{font-size:clamp(24px,3.6vw,36px); margin:0 0 8px}
+    p.lead{color:var(--mut); margin:0 0 24px}
+    .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:16px 16px 14px; box-shadow:0 8px 24px rgba(0,0,0,0.25);}
+    .title{font-weight:700; margin:0 0 8px; display:flex; align-items:center; gap:8px}
+    .badge{font-size:12px; padding:2px 8px; border-radius:999px; background:var(--ok); color:#04130a; font-weight:700}
+    .meta{font-size:12px; color:var(--mut); margin:0 0 10px}
+    .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.1);
-      background:linear-gradient(180deg, rgba(42,157,143,.18), rgba(42,157,143,.08));
-      color:#e6fffb; text-decoration:none; font-weight:600;
+      appearance:none; border:none; cursor:pointer; text-decoration:none;
+      padding:8px 12px; border-radius:10px; font-weight:700; font-size:14px;
+      background:var(--acc); color:#062d2a; box-shadow:0 4px 14px rgba(42,157,143,.35);
+      transition:transform .06s ease, filter .2s ease;
     }
-    .btn:hover{background:linear-gradient(180deg, rgba(42,157,143,.28), rgba(42,157,143,.12)); border-color:var(--acc)}
-    .badge{position:absolute; top:12px; right:12px; font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--acc); color:#d1fae5}
-    .footer{margin:28px 0 8px; text-align:center; color:var(--mut); font-size:12px}
-    /* 隠しボケ（マウスオーバーでﾇｯと） */
-    .wink{border-bottom:1px dashed var(--acc); cursor:help}
-    .wink:hover::after{
-      content:"PDFは太る、リンクは軽い——ダウンロードは計画的に。";
-      position:absolute; transform:translateY(-110%); right:12px;
-      background:#04131a; color:#c7ffef; font-size:12px; padding:6px 8px; border-radius:8px;
-      border:1px solid var(--ring); white-space:nowrap;
-    }
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
+    .chip{font-size:12px; padding:2px 8px; border-radius:999px; background:var(--chip); color:#d1d5db}
+    hr{border:0; border-top:1px solid rgba(255,255,255,0.06); margin:24px 0}
+    .btm{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .bubble{background:var(--ink-2); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:12px 14px}
+    .bubble b{color:#f3f4f6}
+    a.inline{color:#7dd3fc}
+    .sect{font-weight:700; color:#c7d2fe; margin:8px 0 4px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div>
-        <h1>📑 PDFアーカイブ</h1>
-        <div class="tagline">ふじさわ節の進化がここに。<span class="wink">（なつかしのv1.0も！）</span></div>
-      </div>
-      <a class="home" href="../">
-        ⬅ トップへ戻る
-      </a>
-    </header>
+    <h1>PDFアーカイブ</h1>
+    <p class="lead">最新版・旧版・軽量版・分割版をまとめた「永久保存版置き場」です。</p>
 
-    <!-- ▼ ここだけ編集：歴代PDFの配列。新しい順に上へ追加してください。 -->
-    <script>
-      const releases = [
-        // 例）{ ver:"Final", date:"2025-09-01", file:"manual_final.pdf", notes:"完成版。目次整備・誤字修正・軽量化。" },
-        { ver:"v1.4.1", date:"2025-08-20", file:"manual_v1.4.1.pdf", notes:"表紙ロゴ調整・著者/監修表記・紫キャプション。" },
-        { ver:"v1.0",   date:"2025-08-12", file:"manual_v1.0.pdf",   notes:"初公開の軽量版。まずは世に出すのが偉い！" }
-      ];
-      // 最新版（トップページの三兄弟ボタンからも使うと吉）
-      const LATEST_FILE = "manual_final.pdf"; // 運用：最新に差し替えるときはこのファイルを更新/置換
-    </script>
-
-    <section class="grid" id="cards"></section>
-
-    <div class="footer">
-      © JK1JAD · 藤澤局の成長ログ。更新はコミットログにも刻まれます📡
-    </div>
-  </div>
-
-  <script>
-    const $cards = document.getElementById('cards');
-    releases.forEach((r, idx) => {
-      const isLatest = r.file === LATEST_FILE;
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.innerHTML = `
-        ${isLatest ? `<div class="badge">LATEST</div>` : ``}
-        <div class="v">📕 ${r.ver}</div>
-        <div class="meta">公開日：${r.date}</div>
-        <div class="notes">${r.notes || ""}</div>
-        <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap">
-          <a class="btn" href="./${r.file}" download>
-            ⬇ ダウンロード
-          </a>
-          <a class="btn" href="./${r.file}" target="_blank" rel="noopener">
-            🔍 ブラウザで表示
-          </a>
+    <div class="grid">
+      <!-- 最新版 -->
+      <section class="card">
+        <h2 class="title">GitHub Pages 公開マニュアル <span class="badge">おすすめ</span></h2>
+        <p class="meta">v1.4.1 · 2025-08-20 更新</p>
+        <div class="links">
+          <a class="btn" href="./manual_v1.4.1.pdf" download>PDFを開く / 保存</a>
+          <span class="chip">完全版</span>
         </div>
-      `;
-      $cards.appendChild(card);
-    });
-  </script>
+      </section>
+
+      <!-- 旧版（中間版） -->
+      <section class="card">
+        <h2 class="title">GitHub Pages 公開マニュアル</h2>
+        <p class="meta">v1.3 · 2025-08-13 更新</p>
+        <div class="links">
+          <a class="btn" href="./manual_v1.3.pdf" download>PDFを開く / 保存</a>
+          <span class="chip">中間版</span>
+        </div>
+      </section>
+
+      <!-- 初版 -->
+      <section class="card">
+        <h2 class="title">GitHub Pages 公開マニュアル</h2>
+        <p class="meta">v1.0 · 2025-08-10 初版</p>
+        <div class="links">
+          <a class="btn" href="./manual_v1.0.pdf" download>PDFを開く / 保存</a>
+          <span class="chip">記念アーカイブ</span>
+        </div>
+      </section>
+
+      <!-- 最新版ショートカット -->
+      <section class="card">
+        <h2 class="title">最新版ショートカット</h2>
+        <p class="meta">常に最新の1本にアクセス</p>
+        <div class="links">
+          <a class="btn" href="./manual_latest.pdf" download>PDFを開く / 保存</a>
+          <span class="chip">リンク集約</span>
+        </div>
+      </section>
+
+      <!-- 軽量版（将来追加予定） -->
+      <section class="card">
+        <h2 class="title">軽量版（モバイル向け）</h2>
+        <p class="meta">準備中</p>
+        <div class="links">
+          <a class="btn" href="./manual_light_v1.4.1.pdf" download>まだ置かれていません</a>
+          <span class="chip">軽量</span>
+        </div>
+      </section>
+
+      <!-- 分割版（将来追加予定） -->
+      <section class="card">
+        <h2 class="title">分割版</h2>
+        <p class="meta">準備中 · part1 / part2</p>
+        <div class="links">
+          <a class="btn" href="./manual_v1.4.1_part1.pdf" download>Part 1 (準備中)</a>
+          <a class="btn" href="./manual_v1.4.1_part2.pdf" download>Part 2 (準備中)</a>
+          <span class="chip">サイズ対策</span>
+        </div>
+      </section>
+    </div>
+
+    <hr>
+
+    <div class="sect">JAD劇場（ボケ／ツッコミ盛盛）</div>
+    <div class="btm">
+      <div class="bubble"><b>ボケ：</b>「v1.0さえあれば十分でしょ？ 歴史を感じるぜ〜」</div>
+      <div class="bubble"><b>ツッコミ：</b>「化石を展示するな！いまは<strong>v1.4.1</strong>でQSO開始だ！」</div>
+
+      <div class="bubble"><b>ボケ：</b>「軽量版ならポケットWi-Fiでも余裕っしょ。紙飛行機みたいに軽いもん！」</div>
+      <div class="bubble"><b>ツッコミ：</b>「飛ばすな！ちゃんとダウンロードして落ち着いて読め！」</div>
+
+      <div class="bubble"><b>ボケ：</b>「分割版で1日1パート、ダイエット計画いけるな！」</div>
+      <div class="bubble"><b>ツッコミ：</b>「勝手に痩せるな！まとめ読みで一気に栄養補給や！」</div>
+
+      <div class="bubble"><b>ボケ：</b>「latest って名前、ボスキャラ感あって強そう！」</div>
+      <div class="bubble"><b>ツッコミ：</b>「ゲームじゃない！ただの最新版ショートカットだ！」</div>
+
+      <div class="bubble"><b>ボケ：</b>「JADに任せれば全部読まなくても勝てる（？）」</div>
+      <div class="bubble"><b>ツッコミ：</b>「他力本願やめい！<b>読む→試す→成果をPDFに</b>で59＋だ！」</div>
+
+      <div class="bubble"><b>ボケ：</b>「アーカイブ集めたら図書館できるんじゃね？」</div>
+      <div class="bubble"><b>ツッコミ：</b>「お前が館長！貸出条件は『返却時に59＋レポート』だ！」</div>
+
+      <div class="bubble"><b>JAD：</b>「こちらJAD、すべてのPDFリンクに搬送波あり。クリックで交信開始！」</div>
+      <div class="bubble"><b>編集長（=あなた）：</b>「了解、最新版を先頭固定。読者誘導 QSP 完了！」</div>
+    </div>
+
+    <p class="meta" style="margin-top:18px">← <a class="inline" href="../index.html">トップへ戻る</a></p>
+  </div>
 </body>
 </html>

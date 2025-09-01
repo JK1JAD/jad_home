@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第2章 構成 | オンラインマニュアル</title>
+<style>
+/* 章1と同じCSS。省スペースのため最小差分でOK。必要なら章1から丸コピ推奨。 */
+:root{ --ink:#0b132b; --ink2:#111827; --acc:#2a9d8f; --mut:#9ca3af; --bd:rgba(255,255,255,.08);}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(1000px 420px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 14px}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:16px} @media (max-width:900px){ .layout{grid-template-columns:1fr} }
+.aside{position:sticky;top:12px;height:max-content;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--bd);border-radius:16px;padding:14px}
+.aside h2{margin:0 0 8px;font-size:16px}
+.aside a{display:block;padding:6px 8px;border-radius:8px;color:#d1d5db;text-decoration:none}
+.aside a:hover{background:rgba(255,255,255,.06)} .aside a.active{background:#0f2236;color:#b9f6e8;font-weight:700}
+.main{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--bd);border-radius:16px;padding:18px}
+.bread{font-size:12px;color:var(--mut);margin-bottom:6px}
+h1{margin:6px 0 12px;font-size:clamp(22px,3.2vw,30px)} h2{margin:18px 0 8px;font-size:18px}
+p{line-height:1.7} .pre{background:#0b1a29;border:1px solid var(--bd);border-radius:10px;padding:12px;overflow:auto}
+a.btn{display:inline-block;padding:8px 12px;border-radius:10px;background:var(--acc);color:#062d2a;text-decoration:none;font-weight:700;box-shadow:0 4px 14px rgba(42,157,143,.35)}
+a.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.inline{color:#7dd3fc} .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="bread">📂 <a class="inline" href="../index.html">トップ</a> / <a class="inline" href="./index.html">オンラインマニュアル</a> / 第2章</div>
+  <div class="layout">
+    <aside class="aside">
+      <h2>目次</h2>
+      <a href="./chap-01.html">第1章 概要</a>
+      <a class="active" href="./chap-02.html">第2章 構成</a>
+      <a href="./chap-03.html">第3章 進捗</a>
+    </aside>
+    <main class="main">
+      <h1>第2章 構成</h1>
+      <p>ここではサイト全体の配置ルールを決めます。三兄弟（PDF・docs・images）に加え、将来の「samples/」「assets/」なども拡張しやすくします。</p>
+
+      <h2>推奨パスと命名</h2>
+      <div class="pre"><code>
+/pdfs/manual_vX.Y.Z.pdf
+/docs/chap-XX.html
+/images/&lt;用途&gt;/&lt;番号&gt;_説明.png
+      </code></div>
+
+      <h2>リンクの基本</h2>
+      <ul>
+        <li>PDFアーカイブ → <code>../pdfs/index.html</code></li>
+        <li>オンライン本文トップ → <code>./index.html</code></li>
+        <li>画像参照（docs→images）→ <code>../images/…</code></li>
+      </ul>
+
+      <div class="nav">
+        <a class="btn" href="./chap-01.html">◀ 前へ 第1章</a>
+        <a class="btn" href="./chap-03.html">次へ ▶ 第3章</a>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

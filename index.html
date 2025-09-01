@@ -192,6 +192,21 @@ html{ scroll-behavior:smooth; }
      background:#2a9d8f;color:#062d2a;font-weight:700;text-decoration:none;
      box-shadow:0 4px 14px rgba(42,157,143,.35)}
 .pill:hover{filter:brightness(1.06);transform:translateY(-1px)}
+/* === 三兄弟ボタン：文字をど真ん中に === */
+.pill{
+  display: inline-flex;      /* 中身をフレックス化 */
+  align-items: center;       /* 垂直センター */
+  justify-content: center;   /* 水平センター */
+  min-height: 88px;          /* ボタンの背丈（72〜104pxで好み調整） */
+  padding: 0 28px;           /* 縦は0、横だけ余白 → 完全センター */
+  line-height: 1;            /* ベースラインのズレ防止 */
+  vertical-align: middle;    /* 並びの安定化 */
+  gap: 8px;                  /* アイコンと文字の間隔（任意） */
+}
+
+/* 先頭に📘などの絵文字を使っている場合の微調整（任意） */
+.pill .ico{ display:inline-block; line-height:1; transform: translateY(1px); }
+
 </style>
 
     <div class="banter" aria-label="ふじさわ節コーナー">

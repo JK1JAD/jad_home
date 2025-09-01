@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第3章 進捗 | オンラインマニュアル</title>
+<style>
+/* 章1と同等CSS（簡略） */
+:root{ --ink:#0b132b; --ink2:#111827; --acc:#2a9d8f; --mut:#9ca3af; --bd:rgba(255,255,255,.08);}
+*{box-sizing:border-box} body{margin:0;background:radial-gradient(1000px 420px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 14px}
+.layout{display:grid;grid-template-columns:280px 1fr;gap:16px} @media (max-width:900px){ .layout{grid-template-columns:1fr} }
+.aside{position:sticky;top:12px;height:max-content;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--bd);border-radius:16px;padding:14px}
+.aside h2{margin:0 0 8px;font-size:16px}
+.aside a{display:block;padding:6px 8px;border-radius:8px;color:#d1d5db;text-decoration:none}
+.aside a:hover{background:rgba(255,255,255,.06)} .aside a.active{background:#0f2236;color:#b9f6e8;font-weight:700}
+.main{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--bd);border-radius:16px;padding:18px}
+.bread{font-size:12px;color:var(--mut);margin-bottom:6px}
+h1{margin:6px 0 12px;font-size:clamp(22px,3.2vw,30px)} h2{margin:18px 0 8px;font-size:18px}
+p{line-height:1.7}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;margin:8px 0 14px}
+.tbl th,.tbl td{border-bottom:1px solid var(--bd);padding:8px 10px;text-align:left}
+.tbl th{color:#cdd1d6;font-weight:700}
+a.btn{display:inline-block;padding:8px 12px;border-radius:10px;background:var(--acc);color:#062d2a;text-decoration:none;font-weight:700;box-shadow:0 4px 14px rgba(42,157,143,.35)}
+a.btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.inline{color:#7dd3fc} .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="bread">📂 <a class="inline" href="../index.html">トップ</a> / <a class="inline" href="./index.html">オンラインマニュアル</a> / 第3章</div>
+  <div class="layout">
+    <aside class="aside">
+      <h2>目次</h2>
+      <a href="./chap-01.html">第1章 概要</a>
+      <a href="./chap-02.html">第2章 構成</a>
+      <a class="active" href="./chap-03.html">第3章 進捗</a>
+    </aside>
+    <main class="main">
+      <h1>第3章 進捗（本日のレポート：59＋）</h1>
+      <p>更新ログとToDoを管理します。**章末に貼ると、チームでの情報共有が爆速**になります。</p>
+
+      <h2>更新ログ</h2>
+      <table class="tbl">
+        <thead><tr><th>日付</th><th>更新内容</th><th>担当</th></tr></thead>
+        <tbody>
+          <tr><td>2025-09-01</td><td>PDFアーカイブ刷新（おすすめ/旧版/軽量/分割の枠）</td><td>ふじさわ & JAD</td></tr>
+          <tr><td>2025-09-01</td><td>docs 章テンプレ導入（1〜3章）</td><td>ふじさわ & JAD</td></tr>
+        </tbody>
+      </table>
+
+      <h2>ToDo（次の一手）</h2>
+      <ul>
+        <li>第1章にスクショを差し込み（赤矢印入り）</li>
+        <li>第2章に「三兄弟リンク確認チェックリスト」を追記</li>
+        <li>第4章「トラブルシューティング」を新設</li>
+      </ul>
+
+      <div class="nav">
+        <a class="btn" href="./chap-02.html">◀ 前へ 第2章</a>
+        <a class="btn" href="./index.html">目次へ戻る</a>
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

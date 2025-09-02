@@ -1,147 +1,100 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
- <head>
-  <!-- 最初の1ペイント目から黒で塗りつぶす（白チカ防止の最短手） -->
-  <style>
-    /* まずは固定値で確実に効かせる */
-    html, body { background:#0b132b; margin:0; }
-  </style>
-  <!-- ここから下に既存の meta / title / 既存の <style> が続く -->
+  <!-- 先塗り（白チカ防止） -->
+  <style>html, body { background:#0b132b; margin:0; }</style>
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PDFアーカイブ | JK1JAD · JAD Home</title>
-  <meta name="description" content="JAD劇場・PDFアーカイブ。最新版・旧版・軽量版・分割版をまとめて保管。" />
+  <title>PDFアーカイブ | JK1JAD - JAD Home</title>
+
+  <!-- 既存の全体CSS（:root など） -->
+
+  <!-- （※ PDFアーカイブ専用CSSは head に置くのがベター。下記を入れてなければ追記） -->
   <style>
-    :root{ --ink:#0b132b; --ink-2:#111827; --acc:#2a9d8f; --mut:#9ca3af; --ok:#22c55e; --chip:#334155; }
-    *{box-sizing:border-box}
-    body{
-      margin:0; padding:40px 16px; color:#e5e7eb;
-      background:radial-gradient(1200px 500px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif;
-    }
-    .wrap{max-width:980px; margin:0 auto}
-    h1{font-size:clamp(24px,3.6vw,36px); margin:0 0 8px}
-    p.lead{color:var(--mut); margin:0 0 24px}
-    .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:16px 16px 14px; box-shadow:0 8px 24px rgba(0,0,0,0.25);}
-    .title{font-weight:700; margin:0 0 8px; display:flex; align-items:center; gap:8px}
-    .badge{font-size:12px; padding:2px 8px; border-radius:999px; background:var(--ok); color:#04130a; font-weight:700}
-    .meta{font-size:12px; color:var(--mut); margin:0 0 10px}
-    .links{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .btn{
-      appearance:none; border:none; cursor:pointer; text-decoration:none;
-      padding:8px 12px; border-radius:10px; font-weight:700; font-size:14px;
-      background:var(--acc); color:#062d2a; box-shadow:0 4px 14px rgba(42,157,143,.35);
-      transition:transform .06s ease, filter .2s ease;
-    }
-    .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
-    .chip{font-size:12px; padding:2px 8px; border-radius:999px; background:var(--chip); color:#d1d5db}
-    hr{border:0; border-top:1px solid rgba(255,255,255,0.06); margin:24px 0}
-    .btm{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .bubble{background:var(--ink-2); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:12px 14px}
-    .bubble b{color:#f3f4f6}
-    a.inline{color:#7dd3fc}
-    .sect{font-weight:700; color:#c7d2fe; margin:8px 0 4px}
+    .pdf-archive{max-width:980px;margin:0 auto;padding:40px 16px;}
+    .pdf-archive .lead{color:#cbd5e1;margin:.5rem 0 1.5rem}
+    .pdf-archive h1{font-size:1.8rem;margin:0 0 .75rem}
+    .pdf-archive h2{font-size:1.4rem;margin:2rem 0 .75rem}
+    .pdf-archive .badge{font-size:.75rem;border:1px solid #22c55e;padding:.1rem .4rem;border-radius:.5rem}
+    .pdf-archive .badge.new{border-color:#22c55e}
+    .pdf-archive .ver{font-size:.9rem;color:#93c5fd;margin-left:.25rem}
+    .pdf-archive .meta{font-size:.9rem;color:#94a3b8;margin:.25rem 0 .75rem}
+    .pdf-archive .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .pdf-archive .card{background:#0f172a;border:1px solid #1f2937;border-radius:16px;padding:16px}
+    .pdf-archive .note{color:#9ca3af;font-size:.9rem;margin:.5rem 0 0}
+    .pdf-archive .actions{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0 .25rem}
+    .pdf-archive .btn{display:inline-block;padding:.5rem .8rem;border-radius:.75rem;border:1px solid #2a9d8f}
+    .pdf-archive .btn.primary{background:#2a9d8f;border-color:#2a9d8f;color:#0b132b;font-weight:600}
+    .pdf-archive .list{margin:.25rem 0 .25rem;padding-left:1rem}
+    .pdf-archive .list li{margin:.25rem 0}
+    .pdf-archive nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+    .pdf-archive nav.jump a{font-size:.9rem;opacity:.9}
+    .pdf-archive .back{margin:24px 0 0}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>PDFアーカイブ</h1>
-    <p class="lead">最新版・旧版・軽量版・分割版をまとめた「永久保存版置き場」です。</p>
+  <main>
+    <!-- ===== PDF ARCHIVE / JAD版 ===== -->
+    <section class="pdf-archive" id="top">
+      <nav class="jump">
+        <a href="#latest">最新版</a>
+        <a href="#old">旧版</a>
+        <a href="#extras">分割・軽量</a>
+        <a href="/index.html">トップへ戻る</a>
+      </nav>
 
-    <div class="grid">
-      <!-- 最新版 -->
-      <section class="card">
-        <h2 class="title">GitHub Pages 公開マニュアル <span class="badge">おすすめ</span></h2>
-        <p class="meta">v1.4.1 · 2025-08-20 更新</p>
-        <div class="links">
-          <a class="btn" href="./manual_v1.4.1.pdf" download>PDFを開く / 保存</a>
-          <span class="chip">完全版</span>
-        </div>
-      </section>
+      <h1>PDFアーカイブ</h1>
+      <p class="lead">JAD劇場の記録置き場。最新版→旧版→分割・軽量の順で並べています。</p>
 
-      <!-- 旧版（中間版） -->
-      <section class="card">
-        <h2 class="title">GitHub Pages 公開マニュアル</h2>
-        <p class="meta">v1.3 · 2025-08-13 更新</p>
-        <div class="links">
-          <a class="btn" href="./manual_v1.3.pdf" download>PDFを開く / 保存</a>
-          <span class="chip">中間版</span>
-        </div>
-      </section>
+      <h2 id="latest">最新版 <span class="badge new">NEW</span></h2>
+      <div class="grid">
+        <article class="card">
+          <h3>GitHub Pages 公開マニュアル <span class="ver">v1.4.1</span></h3>
+          <p class="meta">更新日：2025-08-20（例） / 完全版</p>
+          <div class="actions">
+            <a class="btn primary" href="/pdfs/manual_v1.4.1.pdf" download>PDFを開く</a>
+            <a class="btn" href="#extras">分割・軽量を見る</a>
+          </div>
+          <p class="note">日本語フォント埋め込み済み。スクショ豊富、初心者にも優しい“ふじさわ節”。</p>
+        </article>
+      </div>
 
-      <!-- 初版 -->
-      <section class="card">
-        <h2 class="title">GitHub Pages 公開マニュアル</h2>
-        <p class="meta">v1.0 · 2025-08-10 初版</p>
-        <div class="links">
-          <a class="btn" href="./manual_v1.0.pdf" download>PDFを開く / 保存</a>
-          <span class="chip">記念アーカイブ</span>
-        </div>
-      </section>
+      <h2 id="old">旧版</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>GitHub Pages 公開マニュアル <span class="ver">v1.0</span></h3>
+          <p class="meta">更新日：2025-08-10（例） / 旧版</p>
+          <div class="actions">
+            <a class="btn" href="/pdfs/manual_v1.0.pdf" download>PDFを開く</a>
+          </div>
+          <p class="note">初期リリース版。歴史資料枠（アーカイブ目的）。</p>
+        </article>
+      </div>
 
-      <!-- 最新版ショートカット -->
-      <section class="card">
-        <h2 class="title">最新版ショートカット</h2>
-        <p class="meta">常に最新の1本にアクセス</p>
-        <div class="links">
-          <a class="btn" href="./manual_latest.pdf" download>PDFを開く / 保存</a>
-          <span class="chip">リンク集約</span>
-        </div>
-      </section>
+      <h2 id="extras">分割・軽量</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>分割版（章ごと）</h3>
+          <ul class="list">
+            <li><a href="/pdfs/parts/manual_v1.4.1_part1.pdf" download>第1章（Part1）</a></li>
+            <li><a href="/pdfs/parts/manual_v1.4.1_part2.pdf" download>第2章（Part2）</a></li>
+            <li><a href="/pdfs/parts/manual_v1.4.1_part3.pdf" download>第3章（Part3）</a></li>
+          </ul>
+          <p class="note">容量制限に優しい章別配布。</p>
+        </article>
+        <article class="card">
+          <h3>軽量版</h3>
+          <ul class="list">
+            <li><a href="/pdfs/manual_v1.4.1_light.pdf" download>軽量版（画像圧縮）</a></li>
+          </ul>
+          <p class="note">速いが、文字が少し粗く見える場合あり。</p>
+        </article>
+      </div>
 
-      <!-- 軽量版（将来追加予定） -->
-      <section class="card">
-        <h2 class="title">軽量版（モバイル向け）</h2>
-        <p class="meta">準備中</p>
-        <div class="links">
-          <a class="btn" href="./manual_light_v1.4.1.pdf" download>まだ置かれていません</a>
-          <span class="chip">軽量</span>
-        </div>
-      </section>
-
-      <!-- 分割版（将来追加予定） -->
-      <section class="card">
-        <h2 class="title">分割版</h2>
-        <p class="meta">準備中 · part1 / part2</p>
-        <div class="links">
-          <a class="btn" href="./manual_v1.4.1_part1.pdf" download>Part 1 (準備中)</a>
-          <a class="btn" href="./manual_v1.4.1_part2.pdf" download>Part 2 (準備中)</a>
-          <span class="chip">サイズ対策</span>
-        </div>
-      </section>
-    </div>
-
-    <hr>
-
-    <div class="sect">JAD劇場（ボケ／ツッコミ盛盛）</div>
-    <div class="btm">
-      <div class="bubble"><b>ボケ：</b>「v1.0さえあれば十分でしょ？ 歴史を感じるぜ〜」</div>
-      <div class="bubble"><b>ツッコミ：</b>「化石を展示するな！いまは<strong>v1.4.1</strong>でQSO開始だ！」</div>
-
-      <div class="bubble"><b>ボケ：</b>「軽量版ならポケットWi-Fiでも余裕っしょ。紙飛行機みたいに軽いもん！」</div>
-      <div class="bubble"><b>ツッコミ：</b>「飛ばすな！ちゃんとダウンロードして落ち着いて読め！」</div>
-
-      <div class="bubble"><b>ボケ：</b>「分割版で1日1パート、ダイエット計画いけるな！」</div>
-      <div class="bubble"><b>ツッコミ：</b>「勝手に痩せるな！まとめ読みで一気に栄養補給や！」</div>
-
-      <div class="bubble"><b>ボケ：</b>「latest って名前、ボスキャラ感あって強そう！」</div>
-      <div class="bubble"><b>ツッコミ：</b>「ゲームじゃない！ただの最新版ショートカットだ！」</div>
-
-      <div class="bubble"><b>ボケ：</b>「JADに任せれば全部読まなくても勝てる（？）」</div>
-      <div class="bubble"><b>ツッコミ：</b>「他力本願やめい！<b>読む→試す→成果をPDFに</b>で59＋だ！」</div>
-
-      <div class="bubble"><b>ボケ：</b>「アーカイブ集めたら図書館できるんじゃね？」</div>
-      <div class="bubble"><b>ツッコミ：</b>「お前が館長！貸出条件は『返却時に59＋レポート』だ！」</div>
-
-      <div class="bubble"><b>JAD：</b>「こちらJAD、すべてのPDFリンクに搬送波あり。クリックで交信開始！」</div>
-      <div class="bubble"><b>編集長（=あなた）：</b>「了解、最新版を先頭固定。読者誘導 QSP 完了！」</div>
-    </div>
-
-    <p class="meta" style="margin-top:18px">← <a class="inline" href="../index.html">トップへ戻る</a></p>
-  </div>
+      <p class="back"><a href="#top">▲ ページ上部へ</a></p>
+    </section>
+    <!-- ===== /PDF ARCHIVE ===== -->
+  </main>
 </body>
 </html>

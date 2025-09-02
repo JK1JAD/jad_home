@@ -72,7 +72,51 @@
 
 /* もしカード背景が暗くて文字が沈む時はこれもONに */
 .pdf-archive .card { background:#0f172a; color:#cbd5e1; }
- </style>
+/* ==== Contrast Rescue v2 (dark) ==== */
+:root { color-scheme: dark; }  /* フォーム類も暗色前提 */
+
+.pdf-archive { color:#e2e8f0; } /* 本文を明るく */
+.pdf-archive h1,
+.pdf-archive h2,
+.pdf-archive h3 { color:#f1f5f9; } /* 見出しさらに明るく */
+.pdf-archive .meta,
+.pdf-archive .note { color:#94a3b8; } /* 補足は控えめに */
+
+/* リンクの可読性＆状態差 */
+.pdf-archive a { color:#5ad5c8; text-decoration:none; }
+.pdf-archive a:hover { color:#7fe6db; text-decoration:underline; }
+.pdf-archive a:visited { color:#86efac; }
+
+/* ボタン：埋没防止。プレーンは枠＋明テキスト、主ボタンは反転 */
+.pdf-archive .btn {
+  border:1px solid #5ad5c8;
+  color:#e2e8f0;
+  background:transparent;
+}
+.pdf-archive .btn.primary {
+  background:#2a9d8f;
+  border-color:#2a9d8f;
+  color:#08121f;   /* #000より少し持ち上げてコントラスト確保 */
+  font-weight:700;
+}
+
+/* バッジ/チップ内の文字も沈みがちなので明るく統一 */
+.pdf-archive .badge,
+.pdf-archive .chip,
+.pdf-archive .tag { color:#e2e8f0; }
+
+/* “黒/紺で直書き”されているものを強制救出 */
+.pdf-archive [style*="color:#000"],
+.pdf-archive [style*="color: #000"] { color:#e2e8f0 !important; }
+.pdf-archive [style*="color:#111827"],
+.pdf-archive [style*="color:#334155"] { color:#cbd5e1 !important; }
+
+/* 表の文字なども継承で明るく */
+.pdf-archive :is(p,li,span,small,strong,em,code,th,td,dt,dd,label){
+  color:inherit;
+}
+
+  </style>
 </head>
 <body>
   <main>

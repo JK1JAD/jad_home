@@ -31,7 +31,48 @@
     .pdf-archive nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
     .pdf-archive nav.jump a{font-size:.9rem;opacity:.9}
     .pdf-archive .back{margin:24px 0 0}
-  </style>
+  　/* ==== PDFアーカイブ：色設計（暗色用） ==== */
+/* ベース文字：落ち着いた明度でコントラストAA～AAA */
+.pdf-archive { color:#cbd5e1; }                 /* 本文 */
+.pdf-archive h1,.pdf-archive h2,.pdf-archive h3 { color:#e5e7eb; }  /* 見出し強め */
+.pdf-archive .meta,.pdf-archive .note { color:#94a3b8; }            /* 補足・注釈 */
+
+/* リンク：ブランドの青緑を軸に、状態ごとに差を付ける */
+.pdf-archive a { color:#2a9d8f; text-decoration:none; }
+.pdf-archive a:hover { color:#3db7a8; text-decoration:underline; }  /* ちょい明るく */
+.pdf-archive a:visited { color:#22c55e; }                           /* 既読は緑寄り */
+
+/* ジャンプナビの視認性アップ */
+.pdf-archive nav.jump a { 
+  font-weight:600; 
+  border-bottom:1px dotted currentColor; 
+  padding-bottom:2px;
+}
+
+/* ボタン：主ボタン=反転、準ボタン=枠のみ */
+.pdf-archive .btn { 
+  border:1px solid #2a9d8f; 
+  color:#2a9d8f; 
+  background:transparent; 
+}
+.pdf-archive .btn.primary { 
+  background:#2a9d8f; 
+  border-color:#2a9d8f; 
+  color:#0b132b;           /* 背景と反転で強コントラスト */
+  font-weight:600;
+}
+
+/* キーボード操作の見える化（アクセシビリティ） */
+.pdf-archive a:focus-visible,
+.pdf-archive .btn:focus-visible {
+  outline:2px dashed currentColor;
+  outline-offset:3px;
+  border-radius:8px;
+}
+
+/* もしカード背景が暗くて文字が沈む時はこれもONに */
+.pdf-archive .card { background:#0f172a; color:#cbd5e1; }
+ </style>
 </head>
 <body>
   <main>

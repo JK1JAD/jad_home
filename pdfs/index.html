@@ -3,20 +3,6 @@
 <head
   <!-- 先塗り（白チカ防止） -->
   <style>html, body { background:#0b132b; margin:0; }</style>
-　　.scroll-note {
-  margin-top: 6px;
-  font-size: 16px;           /* 少し大きめ */
-  color: var(--acc);         /* 青緑のアクセントカラー */
-  text-align: center;
-  font-weight: 600;          /* 太字で目立たせる */
-  animation: blink 1.6s infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PDFアーカイブ | JK1JAD - JAD Home</title>
@@ -44,7 +30,21 @@
     .pdf-archive nav.jump a{font-size:.9rem;opacity:.9}
     .pdf-archive .back{margin:24px 0 0}
   　/* ==== PDFアーカイブ：色設計（暗色用） ==== */
-/* ベース文字：落ち着いた明度でコントラストAA～AAA */
+　　/* === scroll-note 最終指定（強め） === */
+.pdf-archive .scroll-note{
+  margin-top: 6px;
+  font-size: 16px !important;   /* 勝たせる */
+  color: var(--acc) !important;  /* 勝たせる */
+  text-align: center;
+  font-weight: 600;
+  animation: blink 1.6s infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:.6}
+  50%{opacity:1}
+}
+
+    /* ベース文字：落ち着いた明度でコントラストAA～AAA */
 .pdf-archive { color:#cbd5e1; }                 /* 本文 */
 .pdf-archive h1,.pdf-archive h2,.pdf-archive h3 { color:#e5e7eb; }  /* 見出し強め */
 .pdf-archive .meta,.pdf-archive .note { color:#94a3b8; }            /* 補足・注釈 */

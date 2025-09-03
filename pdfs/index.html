@@ -3,6 +3,19 @@
 <head
   <!-- 先塗り（白チカ防止） -->
   <style>html, body { background:#0b132b; margin:0; }</style>
+　　.scroll-note {
+  margin-top: 6px;
+  font-size: 16px;           /* 少し大きめ */
+  color: var(--acc);         /* 青緑のアクセントカラー */
+  text-align: center;
+  font-weight: 600;          /* 太字で目立たせる */
+  animation: blink 1.6s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -137,6 +150,8 @@ html {
 
       <h1>PDFアーカイブ</h1>
       <p class="lead">JAD劇場の記録置き場。最新版→旧版→分割・軽量の順で並べています。</p>
+　　　　<h1>GitHub Pages マニュアル（JAD版）</h1>
+　　　　<p class="scroll-note">↓ 下にスクロール ↓</p>
 
       <h2 id="latest">最新版 <span class="badge new">NEW</span></h2>
       <div class="grid">

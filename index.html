@@ -181,12 +181,13 @@ html{ scroll-behavior:smooth; }
   </section>
 　　
   <!-- ===== HERO ===== -->
+ <a href="#three-buttons" class="scroll-down"><三兄弟へQSY ▽/a>
   <header id="top" class="hero">
     <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
-    <div class="cta">
-      <div class="cta">
+    
+      <div id="three-buttons" class="cta">
   <!-- 三兄弟：置き換え用（A案・確実に遷移するアンカー） -->
 <nav class="links-row">
   <a class="pill" href="pdfs/index.html">📘 PDFアーカイブ</a>
@@ -332,5 +333,22 @@ html{ scroll-behavior:smooth; }
     // 年号を自動更新
     document.getElementById('y').textContent = new Date().getFullYear();
   </script>
+<script>
+(() => {
+  const HEADER_OFFSET_PX = 0; // 固定ヘッダーがあれば高さをここに
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const hash = a.getAttribute('href');
+    if (!hash || hash === '#') return;
+    const target = document.querySelector(hash);
+    if (!target) return;
+    e.preventDefault();
+    const y = Math.max(0, target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX);
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    history.pushState(null, '', hash);
+  });
+})();
+</script>
 </body>
 </html>

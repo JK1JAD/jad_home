@@ -187,12 +187,34 @@ html{ scroll-behavior:smooth; }
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     
       <div id="three-buttons" class="cta">
-  <!-- 三兄弟：置き換え用（A案・確実に遷移するアンカー） -->
-<nav class="links-row">
-  <a class="pill" href="pdfs/index.html">📘 PDFアーカイブ</a>
-  <a class="pill" href="docs/index.html">📗 マニュアルへ（docs）</a>
-  <a class="pill" href="images/">📁 置き場（images）</a>
-</nav>
+  <!-- JAD三姉妹：PDFアーカイブ / マニュアルへ / 置き場 -->
+  <div class="btn-group">
+    <!-- 長女：PDFアーカイブ -->
+    <a href="pdfs/index.html" class="pill btn jad-tip" data-color="purple"
+       data-tooltip="💜 アーカイブ姉さん
+“歴史を刻む、みんなのメモリーメーカー”
+『忘れ物は私にお任せ！CQアーカイブ、59＋！』">
+      PDFアーカイブ
+    </a>
+
+    <!-- 次女：マニュアルへ -->
+    <a href="docs/index.html" class="pill btn jad-tip" data-color="emerald"
+       data-tooltip="💚 マニュアルちゃん
+“真面目な勉強家、だけどツッコミ担当”
+『ページ迷子？大丈夫！ここに手順書あるよ〜！』">
+      マニュアルへ
+    </a>
+
+    <!-- 三女：置き場（images） -->
+    <a href="images/" class="pill btn jad-tip" data-color="red"
+       data-tooltip="❤️ 置き場っ子
+“甘えん坊だけど頼れる末っ子”
+『ここに全部置いといたからね！好きに持ってって♡』">
+      置き場
+    </a>
+  </div>
+</div>
+
 
 <style>
 .links-row{display:flex;gap:12px;flex-wrap:wrap}
@@ -214,6 +236,65 @@ html{ scroll-behavior:smooth; }
 
 /* 先頭に📘などの絵文字を使っている場合の微調整（任意） */
 .pill .ico{ display:inline-block; line-height:1; transform: translateY(1px); }
+/* === JAD三姉妹ツールチップ ======================= */
+.jad-tip{
+  position:relative;
+  --tip-bg:#0b132b;     /* 背景（濃紺） */
+  --tip-fg:#e5fff7;     /* 文字（淡ミント） */
+  --tip-br:#2a9d8f;     /* 枠色（JADグリーン） */
+}
+
+/* 吹き出し本体 */
+.jad-tip::after{
+  content: attr(data-tooltip);
+  position:absolute;
+  left:50%;
+  bottom:calc(100% + 10px);
+  transform:translateX(-50%);
+  min-width:220px; max-width:320px;
+  padding:10px 12px;
+  font-size:14px; line-height:1.45;
+  color:var(--tip-fg);
+  background:var(--tip-bg);
+  border:1px solid var(--tip-br);
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  white-space:pre-wrap;          /* 改行をそのまま表示 */
+  pointer-events:none;
+  opacity:0; visibility:hidden;
+  transition:opacity .15s ease, transform .15s ease, visibility .15s;
+  z-index:50;
+}
+
+/* 三角 */
+.jad-tip::before{
+  content:"";
+  position:absolute;
+  left:50%; bottom:100%;
+  transform:translateX(-50%);
+  border:8px solid transparent;
+  border-top-color:var(--tip-br);
+  filter:drop-shadow(0 -1px 0 var(--tip-bg));
+  opacity:0; visibility:hidden;
+  transition:opacity .15s ease;
+}
+
+/* ホバー＆表示中 */
+.jad-tip:hover::after,
+.jad-tip.is-tipshow::after{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(-2px); }
+.jad-tip:hover::before,
+.jad-tip.is-tipshow::before{ opacity:1; visibility:visible; }
+
+/* カラー別（担当色） */
+.jad-tip[data-color="purple"]{ --tip-br:#8b5cf6; }   /* 長女 */
+.jad-tip[data-color="emerald"]{ --tip-br:#10b981; }  /* 次女 */
+.jad-tip[data-color="red"]{ --tip-br:#ef4444; }      /* 三女 */
+
+/* アクセシビリティ（Tabで表示） */
+.jad-tip:focus-visible{ outline:2px dashed var(--tip-br); outline-offset:6px; }
+.jad-tip:focus-visible::after,
+.jad-tip:focus-visible::before{ opacity:1; visibility:visible; }
+/* ================================================ */
 
 </style>
 
@@ -349,5 +430,42 @@ html{ scroll-behavior:smooth; }
   });
 })();
 </script>
+<script>
+/* === JAD三姉妹ツールチップ：タップ対応 ================= */
+(function(){
+  const tips = document.querySelectorAll('.jad-tip');
+  let hideTimer = null;
+
+  function showTip(el){
+    clearTimeout(hideTimer);
+    tips.forEach(t=>t.classList.remove('is-tipshow'));
+    el.classList.add('is-tipshow');
+    hideTimer = setTimeout(()=> el.classList.remove('is-tipshow'), 2000); // 2秒で自動消灯
+  }
+
+  tips.forEach(el=>{
+    // 1回目タップ＝ツールチップ表示、2回目タップ＝通常遷移
+    el.addEventListener('click', function(e){
+      if(!el.classList.contains('is-tipshow')){
+        e.preventDefault();     // まずは見せる
+        showTip(el);
+      }
+      // 既に表示中ならそのまま遷移/動作
+    }, {passive:false});
+
+    // キーボード操作でも見えるように
+    el.addEventListener('focus', ()=> el.classList.add('is-tipshow'));
+    el.addEventListener('blur',  ()=> el.classList.remove('is-tipshow'));
+  });
+
+  // 外側タップで閉じる
+  document.addEventListener('click', (ev)=>{
+    if(!ev.target.closest('.jad-tip')){
+      tips.forEach(t=>t.classList.remove('is-tipshow'));
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

@@ -191,30 +191,20 @@ html{ scroll-behavior:smooth; }
   <div class="btn-group">
     <!-- 長女：PDFアーカイブ -->
     <a href="pdfs/index.html" class="pill btn jad-tip" data-color="purple"
-       data-tooltip="💜 アーカイブ姉さん
-“歴史を刻む、みんなのメモリーメーカー”
-『忘れ物は私にお任せ！CQアーカイブ、59＋！』">
-      PDFアーカイブ
-    </a>
-
+   data-tips="💜 アーカイブ姉さん｜“歴史を刻む、みんなのメモリーメーカー”｜『忘れ物は私にお任せ！CQアーカイブ、59＋！』">
+  <span class="ico">🎤</span> PDFアーカイブ
+</a>
     <!-- 次女：マニュアルへ -->
     <a href="docs/index.html" class="pill btn jad-tip" data-color="emerald"
-       data-tooltip="💚 マニュアルちゃん
-“真面目な勉強家、だけどツッコミ担当”
-『ページ迷子？大丈夫！ここに手順書あるよ〜！』">
-      マニュアルへ
-    </a>
-
-    <!-- 三女：置き場（images） -->
-    <a href="images/" class="pill btn jad-tip" data-color="red"
-       data-tooltip="❤️ 置き場っ子
-“甘えん坊だけど頼れる末っ子”
-『ここに全部置いといたからね！好きに持ってって♡』">
-      置き場
-    </a>
+   data-tips="💚 マニュアルちゃん｜“真面目な勉強家、だけどツッコミ担当”｜『迷子？だいじょうぶ、ここが手順のホームだよ！』">
+  <span class="ico">📒</span> マニュアルへ
+</a>
+　　<!-- 三女：置き場（images） -->
+   <a href="images/" class="pill btn jad-tip" data-color="red"
+   data-tips="❤️ 置き場っ子｜“甘えん坊だけど頼れる末っ子”｜『ここに全部置いといたからね！好きに持ってって♡』">
+  <span class="ico">🧺</span> 置き場
+</a>
   </div>
-</div>
-
 
 <style>
 .links-row{display:flex;gap:12px;flex-wrap:wrap}
@@ -295,6 +285,11 @@ html{ scroll-behavior:smooth; }
 .jad-tip:focus-visible::after,
 .jad-tip:focus-visible::before{ opacity:1; visibility:visible; }
 /* ================================================ */
+/* --- アイドル風アイコン & ちょい浮き --- */
+.pill .ico{ display:inline-block; line-height:1; transform:translateY(1px); margin-right:.4em; }
+.btn.jad-tip{ transition: transform .15s ease; }
+.btn.jad-tip:hover{ transform: translateY(-1px); }
+.btn.jad-tip:active{ transform: translateY(0); }
 
 </style>
 
@@ -431,37 +426,48 @@ html{ scroll-behavior:smooth; }
 })();
 </script>
 <script>
-/* === JAD三姉妹ツールチップ：タップ対応 ================= */
+/* === JAD三姉妹ツールチップ：タップ対応 + セリフ回転 ================= */
 (function(){
-  const tips = document.querySelectorAll('.jad-tip');
+  const tipsEls = document.querySelectorAll('.jad-tip');
   let hideTimer = null;
 
+  function parseTips(el){
+    const raw = el.getAttribute('data-tips') || '';
+    const list = raw.split('｜').map(s=>s.trim()).filter(Boolean);
+    return list.length ? list : [el.getAttribute('data-tooltip') || ''];
+  }
+  function setNextLine(el){
+    const list = parseTips(el);
+    const i = parseInt(el.dataset.tipIdx || '0', 10) || 0;
+    el.setAttribute('data-tooltip', list[i] || '');
+    el.dataset.tipIdx = ((i + 1) % list.length).toString();
+  }
   function showTip(el){
     clearTimeout(hideTimer);
-    tips.forEach(t=>t.classList.remove('is-tipshow'));
+    tipsEls.forEach(t=>t.classList.remove('is-tipshow'));
+    setNextLine(el);
     el.classList.add('is-tipshow');
-    hideTimer = setTimeout(()=> el.classList.remove('is-tipshow'), 2000); // 2秒で自動消灯
+    hideTimer = setTimeout(()=> el.classList.remove('is-tipshow'), 2000);
   }
 
-  tips.forEach(el=>{
-    // 1回目タップ＝ツールチップ表示、2回目タップ＝通常遷移
+  tipsEls.forEach(el=>{
+    el.dataset.tipIdx = el.dataset.tipIdx || '0';
     el.addEventListener('click', function(e){
       if(!el.classList.contains('is-tipshow')){
-        e.preventDefault();     // まずは見せる
+        e.preventDefault();
         showTip(el);
       }
-      // 既に表示中ならそのまま遷移/動作
     }, {passive:false});
-
-    // キーボード操作でも見えるように
-    el.addEventListener('focus', ()=> el.classList.add('is-tipshow'));
+    el.addEventListener('focus', ()=>{
+      setNextLine(el);
+      el.classList.add('is-tipshow');
+    });
     el.addEventListener('blur',  ()=> el.classList.remove('is-tipshow'));
   });
 
-  // 外側タップで閉じる
   document.addEventListener('click', (ev)=>{
     if(!ev.target.closest('.jad-tip')){
-      tips.forEach(t=>t.classList.remove('is-tipshow'));
+      tipsEls.forEach(t=>t.classList.remove('is-tipshow'));
     }
   });
 })();

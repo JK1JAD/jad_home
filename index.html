@@ -6,6 +6,46 @@
   <style>
     /* まずは固定値で確実に効かせる */
     html, body { background:#0b132b; margin:0; }
+  #jad-line{
+      margin-top: .8rem;
+      padding: .75rem 1rem;
+      border: 1px solid #2a9d8f33;
+      background: #0b132b;
+      color: #e5f7f5;
+      border-radius: .6rem;
+      font-size: .95rem;
+      display: none;
+    }
+    #jad-line.show{ display:block; }
+
+    .jad-tip:focus-visible::after{
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%; transform: translateX(-50%);
+      bottom: calc(100% + 8px);
+      padding: .4rem .6rem;
+      background: #111827; color:#fff; border-radius: .5rem;
+      white-space: pre-wrap; max-width: 24rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+ /* === ここから追記分 === */
+#jad-line {
+  transition: opacity 0.3s ease-in-out;
+}
+#jad-line.show {
+  display: block;
+  opacity: 1;
+}
+#jad-line.hide {
+  opacity: 0;
+}
+
+/* もし姉妹ごとに色を変えたければ、class名で指定可能 */
+#jad-line.purple { border-color: #9d4edd; }
+#jad-line.emerald { border-color: #2a9d8f; }
+#jad-line.amber { border-color: #f59e0b; }
+
   </style>
   <!-- ここから下に既存の meta / title / 既存の <style> が続く -->
 
@@ -186,25 +226,30 @@ html{ scroll-behavior:smooth; }
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     
-      <div id="three-buttons" class="cta">
-  <!-- JAD三姉妹：PDFアーカイブ / マニュアルへ / 置き場 -->
-  <div class="btn-group">
-    <!-- 長女：PDFアーカイブ -->
-    <a href="pdfs/index.html" class="pill btn jad-tip" data-color="purple"
-   data-tips="💜 アーカイブ姉さん｜“歴史を刻む、みんなのメモリーメーカー”｜『忘れ物は私にお任せ！CQアーカイブ、59＋！』">
-  <span class="ico">🎤</span> PDFアーカイブ
-</a>
-    <!-- 次女：マニュアルへ -->
-    <a href="docs/index.html" class="pill btn jad-tip" data-color="emerald"
-   data-tips="💚 マニュアルちゃん｜“真面目な勉強家、だけどツッコミ担当”｜『迷子？だいじょうぶ、ここが手順のホームだよ！』">
-  <span class="ico">📒</span> マニュアルへ
-</a>
-　　<!-- 三女：置き場（images） -->
-   <a href="images/" class="pill btn jad-tip" data-color="red"
-   data-tips="❤️ 置き場っ子｜“甘えん坊だけど頼れる末っ子”｜『ここに全部置いといたからね！好きに持ってって♡』">
-  <span class="ico">🧺</span> 置き場
-</a>
-  </div>
+     <div class="btn-group">
+  <!-- 長女：PDFアーカイブ -->
+  <a href="/pdfs/" class="btn jad-tip" data-color="purple"
+     data-tooltip="💜 アーカイブ姉さん『忘れ物は私にお任せ！』"
+     data-line="“歴史は毎日増量中。今日は何を保存する？”" tabindex="0">
+    PDFアーカイブ
+  </a>
+
+  <!-- 次女：マニュアル -->
+  <a href="/docs/manual.html" class="btn jad-tip" data-color="emerald"
+     data-tooltip="💚 マニュアルちゃん『真面目だけどツッコミ担当』"
+     data-line="“迷子になったら目次へQSY、OK？”" tabindex="0">
+    マニュアルへ
+  </a>
+
+  <!-- 三女：ホーム -->
+  <a href="/home/" class="btn jad-tip" data-color="amber"
+     data-tooltip="💛 ホームっ子『おかえりなさいの第一声』"
+     data-line="“今日もFBな交信いってみよー！”" tabindex="0">
+    ホーム
+  </a>
+</div>
+<div id="jad-line" role="status" aria-live="polite"></div>
+
 
 <style>
 .links-row{display:flex;gap:12px;flex-wrap:wrap}
@@ -471,6 +516,37 @@ html{ scroll-behavior:smooth; }
     }
   });
 })();
+</script>
+<script>
+document.addEventListener('click', function(e){
+  const a = e.target.closest('.jad-tip');
+  if(!a) return;
+
+  const line = a.getAttribute('data-line');
+  if(!line) return; // data-line が無いなら何もしない
+
+  // ページ遷移もしたい？ → 先にセリフを出してから遷移
+  // すぐ遷移すると読めないので、0.8秒だけ見せる
+  const targetHref = a.getAttribute('href');
+
+  const panel = document.getElementById('jad-line');
+  if(panel){
+    panel.textContent = line;
+    panel.classList.add('show');
+  }
+
+  // 既存のデフォルト動作を止めて、少し間を置いて遷移
+  e.preventDefault();
+  setTimeout(()=>{ window.location.href = targetHref; }, 800);
+});
+
+// モバイルの「ホバー問題」対策（タップでツールチップを一瞬見せたいなら任意で）
+document.querySelectorAll('.jad-tip').forEach(el=>{
+  el.addEventListener('touchstart', ()=> {
+    el.classList.add('touching');
+    setTimeout(()=> el.classList.remove('touching'), 500);
+  }, {passive:true});
+});
 </script>
 
 </body>

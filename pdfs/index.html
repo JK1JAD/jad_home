@@ -1,238 +1,184 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head
+<head>
   <!-- 先塗り（白チカ防止） -->
   <style>html, body { background:#0b132b; margin:0; }</style>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PDFアーカイブ | JK1JAD - JAD Home</title>
 
-  <!-- 既存の全体CSS（:root など） -->
-  <!-- （※ PDFアーカイブ専用CSSは head に置くのがベター。下記を入れてなければ追記） -->
+  <!-- このページ単体で完結する基本変数 -->
   <style>
-    .pdf-archive{max-width:980px;margin:0 auto;padding:40px 16px;}
-    .pdf-archive .lead{color:#cbd5e1;margin:.5rem 0 1.5rem}
-    .pdf-archive h1{font-size:1.8rem;margin:0 0 .75rem}
-    .pdf-archive h2{font-size:1.4rem;margin:2rem 0 .75rem}
-    .pdf-archive .badge{font-size:.75rem;border:1px solid #22c55e;padding:.1rem .4rem;border-radius:.5rem}
-    .pdf-archive .badge.new{border-color:#22c55e}
-    .pdf-archive .ver{font-size:.9rem;color:#93c5fd;margin-left:.25rem}
-    .pdf-archive .meta{font-size:.9rem;color:#94a3b8;margin:.25rem 0 .75rem}
-    .pdf-archive .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-    .pdf-archive .card{background:#0f172a;border:1px solid #1f2937;border-radius:16px;padding:16px}
-    .pdf-archive .note{color:#9ca3af;font-size:.9rem;margin:.5rem 0 0}
-    .pdf-archive .actions{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0 .25rem}
-    .pdf-archive .btn{display:inline-block;padding:.5rem .8rem;border-radius:.75rem;border:1px solid #2a9d8f}
-    .pdf-archive .btn.primary{background:#2a9d8f;border-color:#2a9d8f;color:#0b132b;font-weight:600}
-    .pdf-archive .list{margin:.25rem 0 .25rem;padding-left:1rem}
-    .pdf-archive .list li{margin:.25rem 0}
-    .pdf-archive nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-    .pdf-archive nav.jump a{font-size:.9rem;opacity:.9}
-    .pdf-archive .back{margin:24px 0 0}
-  　/* ==== PDFアーカイブ：色設計（暗色用） ==== */
-　　/* === scroll-note 最終指定（強め） === */
-.pdf-archive .scroll-note{
-  margin-top: 6px;
-  font-size: 16px !important;   /* 勝たせる */
-  color: var(--acc) !important;  /* 勝たせる */
-  text-align: center;
-  font-weight: 600;
-  animation: blink 1.6s infinite;
-}
-@keyframes blink {
-  0%,100%{opacity:.6}
-  50%{opacity:1}
-}
+    :root{
+      --ink:#0b132b; --ink2:#111827;
+      --acc:#2a9d8f; --acc-2:#3db7a8;
+      --mut:#94a3b8; --bd:rgba(255,255,255,.08);
+      color-scheme:dark;
+    }
+    *{box-sizing:border-box}
+    body{
+      color:#e2e8f0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif;
+      background:radial-gradient(1000px 420px at 20% -10%, #0f1c2f 0, var(--ink) 40%, #0b1224 100%);
+      margin:0;
+    }
 
-    /* ベース文字：落ち着いた明度でコントラストAA～AAA */
-.pdf-archive { color:#cbd5e1; }                 /* 本文 */
-.pdf-archive h1,.pdf-archive h2,.pdf-archive h3 { color:#e5e7eb; }  /* 見出し強め */
-.pdf-archive .meta,.pdf-archive .note { color:#94a3b8; }            /* 補足・注釈 */
+    .wrap{max-width:1000px;margin:0 auto;padding:24px 14px}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));
+      border:1px solid var(--bd);border-radius:16px;padding:18px
+    }
 
-/* リンク：ブランドの青緑を軸に、状態ごとに差を付ける */
-.pdf-archive a { color:#2a9d8f; text-decoration:none; }
-.pdf-archive a:hover { color:#3db7a8; text-decoration:underline; }  /* ちょい明るく */
-.pdf-archive a:visited { color:#22c55e; }                           /* 既読は緑寄り */
+    .bread{font-size:12px;color:var(--mut);margin-bottom:10px}
+    .bread a{color:#7fe6db;text-decoration:none}
+    .bread a:hover{text-decoration:underline}
 
-/* ジャンプナビの視認性アップ */
-.pdf-archive nav.jump a { 
-  font-weight:600; 
-  border-bottom:1px dotted currentColor; 
-  padding-bottom:2px;
-}
+    h1{margin:6px 0 14px;font-size:clamp(22px,3.2vw,30px);color:#f1f5f9}
+    h2{margin:18px 0 10px;font-size:clamp(18px,2.4vw,22px);color:#f1f5f9}
+    h3{margin:8px 0 8px;font-size:clamp(16px,2vw,19px);color:#f1f5f9}
+    p{line-height:1.7;margin:8px 0 14px}
 
-/* ボタン：主ボタン=反転、準ボタン=枠のみ */
-.pdf-archive .btn { 
-  border:1px solid #2a9d8f; 
-  color:#2a9d8f; 
-  background:transparent; 
-}
-.pdf-archive .btn.primary { 
-  background:#2a9d8f; 
-  border-color:#2a9d8f; 
-  color:#0b132b;           /* 背景と反転で強コントラスト */
-  font-weight:600;
-}
+    /* セクション本体 */
+    .pdf-archive{max-width:980px;margin:0 auto;padding:24px 0}
+    .lead{color:#cbd5e1;margin:.5rem 0 1.5rem}
+    .meta{font-size:.9rem;color:#94a3b8;margin:.25rem 0 .75rem}
+    .ver{font-size:.9rem;color:#93c5fd;margin-left:.25rem}
+    .badge{font-size:.75rem;border:1px solid #22c55e;padding:.1rem .4rem;border-radius:.5rem}
+    .badge.new{border-color:#22c55e}
 
-/* キーボード操作の見える化（アクセシビリティ） */
-.pdf-archive a:focus-visible,
-.pdf-archive .btn:focus-visible {
-  outline:2px dashed currentColor;
-  outline-offset:3px;
-  border-radius:8px;
-}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+    .note{color:#9ca3af;font-size:.9rem;margin:.5rem 0 0}
 
-/* もしカード背景が暗くて文字が沈む時はこれもONに */
-.pdf-archive .card { background:#0f172a; color:#cbd5e1; }
-/* ==== Contrast Rescue v2 (dark) ==== */
-:root { color-scheme: dark; }  /* フォーム類も暗色前提 */
+    /* ナビ＆リンク */
+    nav.jump{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+    nav.jump a{
+      font-size:.9rem;opacity:.95;color:#5ad5c8;text-decoration:none;
+      border-bottom:1px dotted currentColor;padding-bottom:2px
+    }
+    nav.jump a:hover{color:#7fe6db}
 
-.pdf-archive { color:#e2e8f0; } /* 本文を明るく */
-.pdf-archive h1,
-.pdf-archive h2,
-.pdf-archive h3 { color:#f1f5f9; } /* 見出しさらに明るく */
-.pdf-archive .meta,
-.pdf-archive .note { color:#94a3b8; } /* 補足は控えめに */
+    a{color:#5ad5c8;text-decoration:none}
+    a:hover{color:#7fe6db;text-decoration:underline}
+    a:visited{color:#86efac}
 
-/* リンクの可読性＆状態差 */
-.pdf-archive a { color:#5ad5c8; text-decoration:none; }
-.pdf-archive a:hover { color:#7fe6db; text-decoration:underline; }
-.pdf-archive a:visited { color:#86efac; }
+    /* ボタン */
+    .btn{display:inline-block;padding:.5rem .8rem;border-radius:.75rem;border:1px solid #5ad5c8;color:#e2e8f0;background:transparent}
+    .btn:hover{filter:brightness(1.06);transform:translateY(-1px);transition:.18s ease}
+    .btn.primary{background:var(--acc);border-color:var(--acc);color:#08121f;font-weight:700}
+    .btn.ghost{border-color:#7fe6db;color:#7fe6db}
 
-/* ボタン：埋没防止。プレーンは枠＋明テキスト、主ボタンは反転 */
-.pdf-archive .btn {
-  border:1px solid #5ad5c8;
-  color:#e2e8f0;
-  background:transparent;
-}
-.pdf-archive .btn.primary {
-  background:#2a9d8f;
-  border-color:#2a9d8f;
-  color:#08121f;   /* #000より少し持ち上げてコントラスト確保 */
-  font-weight:700;
-}
+    /* リスト */
+    ul.list{list-style:disc;padding-left:1.2rem;margin:.25rem 0 .25rem}
+    ul.list li{margin:.25rem 0}
 
-/* バッジ/チップ内の文字も沈みがちなので明るく統一 */
-.pdf-archive .badge,
-.pdf-archive .chip,
-.pdf-archive .tag { color:#e2e8f0; }
+    /* スクロール誘導 */
+    .scroll-note{
+      margin-top:6px;
+      font-size:16px;font-weight:600;text-align:center;
+      color:var(--acc);animation:blink 1.6s infinite
+    }
+    @keyframes blink{0%,100%{opacity:.6}50%{opacity:1}}
 
-/* “黒/紺で直書き”されているものを強制救出 */
-.pdf-archive [style*="color:#000"],
-.pdf-archive [style*="color: #000"] { color:#e2e8f0 !important; }
-.pdf-archive [style*="color:#111827"],
-.pdf-archive [style*="color:#334155"] { color:#cbd5e1 !important; }
+    /* アクセシビリティ */
+    a:focus-visible,.btn:focus-visible{
+      outline:2px dashed currentColor;outline-offset:3px;border-radius:8px
+    }
 
-/* 表の文字なども継承で明るく */
-.pdf-archive :is(p,li,span,small,strong,em,code,th,td,dt,dd,label){
-  color:inherit;
-}
-html {
-  scroll-behavior: smooth;
-}
-
+    html{scroll-behavior:smooth}
+    footer{max-width:1000px;margin:12px auto 36px;padding:0 14px}
   </style>
 </head>
 <body>
   <a id="top" aria-hidden="true"></a>
   <div class="wrap">
-    <!-- ここから既存のヘッダーやナビが始まる -->
- 　
-　<main>
-    <!-- ===== PDF ARCHIVE / JAD版 ===== -->
-    <section class="pdf-archive" id="top">
-      <nav class="jump">
-        <a href="#latest">最新版</a>
-        <a href="#old">旧版</a>
-        <a href="#extras">分割・軽量</a>
-        <a href="../index.html">トップへ戻る</a>
-      </nav>
-　　　　<h1>GitHub Pages マニュアル（JAD版）</h1>
-　　　　<p class="scroll-note">↓ 下にスクロール ↓</p>
-      <h1>PDFアーカイブ</h1>
-      <p class="lead">JAD劇場の記録置き場。最新版→旧版→分割・軽量の順で並べています。</p>
-　　　　
+    <div class="bread">📂 <a href="../index.html">トップ</a> / PDFアーカイブ</div>
 
-      <h2 id="latest">最新版 <span class="badge new">NEW</span></h2>
-      <div class="grid">
-        <article class="card">
-          <h3>GitHub Pages 公開マニュアル <span class="ver">v1.4.1</span></h3>
-          <p class="meta">更新日：2025-08-20（例） / 完全版</p>
-          <div class="actions">
-            <a class="btn primary" href="manual_v1.4.1.pdf" target="_blank" rel="noopener">PDFを開く</a>
-            <a href="../index.html">トップへ戻る</a>
-          </div>
-          <p class="note">日本語フォント埋め込み済み。スクショ豊富、初心者にも優しい“ふじさわ節”。</p>
-        </article>
-      </div>
+    <main class="card">
+      <section class="pdf-archive" id="top-section">
+        <nav class="jump">
+          <a href="#latest">最新版</a>
+          <a href="#old">旧版</a>
+          <a href="#extras">分割・軽量</a>
+          <a href="../index.html">トップへ戻る</a>
+        </nav>
 
-      <!-- 旧版 -->
-<h2 id="old">旧版</h2>
-<div class="grid">
-  <article class="card">
-    <h3>GitHub Pages 公開マニュアル <span class="ver">v1.0</span></h3>
-    <p class="meta">発行日：2025-08-10（例） / 旧版</p>
-    <div class="actions">
-      <!-- 先頭スラッシュを消す！ -->
-      <a class="btn" href="manual_v1.0.pdf" download>PDFを取得</a>
-    </div>
-    <p class="note">初期リリース版。歴史資料枠（アーカイブ目的）。</p>
-  </article>
+        <h1>PDFアーカイブ</h1>
+        <h2>GitHub Pages マニュアル（JAD版）</h2>
+        <p class="scroll-note">↓ 下にスクロール ↓</p>
+        <p class="lead">JAD劇場の記録置き場。最新版 → 旧版 → 分割・軽量の順で並べています。</p>
 
-  <article class="card">
-    <h3>v1.3</h3>
-    <ul class="list">
-      <li><a href="manual_v1.3.pdf" target="_blank" rel="noopener">v1.3 を開く</a></li>
-    </ul>
-  </article>
+        <!-- 最新版 -->
+        <h2 id="latest">最新版 <span class="badge new">NEW</span></h2>
+        <div class="grid">
+          <article class="card">
+            <h3>GitHub Pages 公開マニュアル <span class="ver">v1.4.1</span></h3>
+            <p class="meta">更新日：2025-08-20（例） / 完全版</p>
+            <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0 .25rem">
+              <a class="btn primary" href="manual_v1.4.1.pdf" target="_blank" rel="noopener">PDFを開く</a>
+              <a class="btn ghost" href="../index.html">トップへ戻る</a>
+            </div>
+            <p class="note">日本語フォント埋め込み済み。スクショ豊富、初心者にも優しい“ふじさわ節”。</p>
+          </article>
+        </div>
 
-  <article class="card">
-    <h3>v1.4.1（単体）</h3>
-    <ul class="list">
-      <li><a href="manual_v1.4.1.pdf" target="_blank" rel="noopener">v1.4.1 を開く</a></li>
-      <li><a href="manual_latest.pdf" target="_blank" rel="noopener">latest（別名）</a></li>
-    </ul>
-  </article>
-</div>
+        <!-- 旧版 -->
+        <h2 id="old">旧版</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>GitHub Pages 公開マニュアル <span class="ver">v1.0</span></h3>
+            <p class="meta">発行日：2025-08-10（例） / 旧版</p>
+            <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0 .25rem">
+              <a class="btn" href="manual_v1.0.pdf" download>PDFを取得</a>
+            </div>
+            <p class="note">初期リリース版。歴史資料枠（アーカイブ目的）。</p>
+          </article>
 
-
-      <h2 id="extras">分割・軽量</h2>
-      <div class="grid">
-        <article class="card">
-          <h3>分割版（章ごと）</h3>
-          <ul class="list">
+          <article class="card">
+            <h3>v1.3</h3>
             <ul class="list">
-  <li><a href="manual_v1.4.1_part01.pdf" target="_blank" rel="noopener">Part1（p1–3）</a></li>
-  <li><a href="manual_v1.4.1_part02.pdf" target="_blank" rel="noopener">Part2（p4–6）</a></li>
-  <li><a href="manual_v1.4.1_part03.pdf" target="_blank" rel="noopener">Part3（p7–9）</a></li>
-</ul>
-<article class="card">
+              <li><a href="manual_v1.3.pdf" target="_blank" rel="noopener">v1.3 を開く</a></li>
+            </ul>
+          </article>
 
-  <p class="note">画像を整理して容量を軽減した版（画質はそのまま）。</p>
-</article>
-<article class="card">
-  <h3>v1.4.1（軽量版）</h3>
-  <ul class="list">
-    <li>
-      <a href="manual_v1.4.1_light.pdf" target="_blank" rel="noopener">
-        manual_v1.4.1_light.pdf
-      </a>
-    </li>
-  </ul>
-  <p class="note">画像を整理して容量を軽減した版（画質はそのまま）。</p>
-</article>
+          <article class="card">
+            <h3>v1.4.1（単体）</h3>
+            <ul class="list">
+              <li><a href="manual_v1.4.1.pdf" target="_blank" rel="noopener">v1.4.1 を開く</a></li>
+              <li><a href="manual_latest.pdf" target="_blank" rel="noopener">latest（別名）</a></li>
+            </ul>
+          </article>
+        </div>
 
-          <p class="note">容量制限に優しい章別配布。</p>
-   
+        <!-- 分割・軽量 -->
+        <h2 id="extras">分割・軽量</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>分割版（章ごと）</h3>
+            <ul class="list">
+              <li><a href="manual_v1.4.1_part01.pdf" target="_blank" rel="noopener">Part1（p1–3）</a></li>
+              <li><a href="manual_v1.4.1_part02.pdf" target="_blank" rel="noopener">Part2（p4–6）</a></li>
+              <li><a href="manual_v1.4.1_part03.pdf" target="_blank" rel="noopener">Part3（p7–9）</a></li>
+            </ul>
+            <p class="note">配布しやすい章別構成。</p>
+          </article>
 
-    </section>
-    <!-- ===== /PDF ARCHIVE ===== -->
-  </main>
- <footer>
-  <a class="btn ghost" href="#top">トップへ戻る</a>
-</footer>
+          <article class="card">
+            <h3>v1.4.1（軽量版）</h3>
+            <ul class="list">
+              <li><a href="manual_v1.4.1_light.pdf" target="_blank" rel="noopener">manual_v1.4.1_light.pdf</a></li>
+            </ul>
+            <p class="note">画像最適化で容量を軽減（画質は維持）。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
 
+  <footer>
+    <div class="wrap">
+      <a class="btn ghost" href="#top">▲ トップへ戻る</a>
+    </div>
+  </footer>
 </body>
-
-         
 </html>

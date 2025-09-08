@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JAD 全国ボボマップ（SVGインタラクティブ）</title>
+  <style>
+    :root{
+      --ink:#0b132b;    /* 背景の濃紺（JADテーマ） */
+      --acc:#2a9d8f;    /* アクセント */
+      --mut:#94a3b8;    /* サブテキスト */
+      --c-beccho:#60a5fa; /* べっちょ系：水色 */
+      --c-mara:#34d399;   /* まら系：緑 */
+      --c-bobo:#f472b6;   /* ぼぼ系：ピンク */
+      --c-hojin:#fb923c;  /* ほーじん系：オレンジ */
+      --c-common:#d1d5db; /* 共通：グレー */
+      --card:#111827;     /* パネル背景 */
+      --ring:#22d3ee;     /* フォーカスリング */
+    }
+    html,body{background:var(--ink);color:#e5e7eb;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:32px 16px}
+    h1{margin:4px 0 12px;font-size:clamp(22px,3.6vw,34px);line-height:1.2}
+    .lead{color:var(--mut);margin-bottom:20px}
+    .panel{background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:16px}
+    .grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .mapbox{position:relative;min-height:520px;display:grid;place-items:center}
+    .mapbox svg{max-width:100%;height:auto}
+
+    /* 地図の配色（カテゴリ別クラス） */
+    .cat-beccho path.prefecture{fill:var(--c-beccho)}
+    .cat-mara    path.prefecture{fill:var(--c-mara)}
+    .cat-bobo    path.prefecture{fill:var(--c-bobo)}
+    .cat-hojin   path.prefecture{fill:var(--c-hojin)}
+    .cat-common  path.prefecture{fill:var(--c-common)}
+    /* 個別塗り分け時は <path class="prefecture cat-bobo"> のように複数クラスでもOK */
+
+    /* 県境線の視認性 */
+    .mapbox .stroke { fill:none; stroke:#0f172a; stroke-width:.8; opacity:.7 }
+    .mapbox .prefecture{stroke:#0f172a;stroke-width:.6;cursor:pointer;transition:transform .1s ease, filter .1s ease}
+    .mapbox .prefecture:hover{filter:brightness(1.06)}
+    .mapbox .prefecture:focus{outline:none;filter:brightness(1.08) drop-shadow(0 0 0.8rem rgba(34,211,238,.25))}
+
+    /* レジェンド */
+    .legend{display:grid;gap:8px}
+    .legend .card{background:#0f172a;border-radius:12px;padding:12px}
+    .legend h3{margin:0 0 8px;font-size:16px;color:#e2e8f0}
+    .legend ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+    .legend li{display:grid;grid-template-columns:16px 1fr;gap:10px;align-items:center;font-size:14px;color:#cbd5e1}
+    .swatch{width:16px;height:16px;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset}
+    .s-beccho{background:var(--c-beccho)}
+    .s-mara{background:var(--c-mara)}
+    .s-bobo{background:var(--c-bobo)}
+    .s-hojin{background:var(--c-hojin)}
+    .s-common{background:var(--c-common)}
+
+    .note{color:var(--mut);font-size:12px;margin-top:10px}
+
+    /* ツールチップ */
+    .tip{position:absolute;pointer-events:none;background:#111827;color:#e5e7eb;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translate(-50%,-120%);min-width:160px}
+    .tip b{color:#fff}
+
+    /* フッター */
+    footer{margin-top:20px;color:var(--mut);font-size:12px}
+    a{color:#8be9d8}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:#0b132b;border:1px solid #0ea5a5;color:#c7fffb;border-radius:8px;padding:2px 6px;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>JAD 全国ボボマップ <small style="font-size:.6em;color:var(--mut)">（SVGインタラクティブ）</small></h1>
+    <p class="lead">都道府県ごとに、代表的な俗称・方言の“系統”を色分け。マウスオーバーで県名と語を表示します。<br>※ 初期データは仮配置です。<span class="kbd">dialectMap</span> を編集して即反映できます。</p>
+
+    <div class="panel grid">
+      <div class="mapbox" id="mapbox">
+        <div id="tooltip" class="tip" style="display:none"></div>
+        <!-- ここに japan.svg を読み込んで差し込む -->
+      </div>
+
+      <aside class="legend">
+        <div class="card">
+          <h3>凡例（系統）</h3>
+          <ul>
+            <li><span class="swatch s-beccho"></span><span>べっちょ系（東北〜北海道など）</span></li>
+            <li><span class="swatch s-mara"></span><span>まら系（主に関西・中部の一部）</span></li>
+            <li><span class="swatch s-bobo"></span><span>ぼぼ系（中国・四国・九州の一部）</span></li>
+            <li><span class="swatch s-hojin"></span><span>ほーじん系（沖縄方言）</span></li>
+            <li><span class="swatch s-common"></span><span>共通/混在（ちんちん・まんこ 等）</span></li>
+          </ul>
+          <p class="note">※ 表現は民俗・方言資料に基づく俗称。学術用語ではありません。地域・世代で差があります。</p>
+        </div>
+        <div class="card">
+          <h3>編集方法</h3>
+          <ul style="gap:8px">
+            <li>1) <span class="kbd">/images/japan.svg</span> を配置（都道府県 <span class="kbd">id</span> を持つSVG推奨）</li>
+            <li>2) 下の <span class="kbd">dialectMap</span> を編集（県コード→系統・語彙）</li>
+            <li>3) 保存してリロードで反映</li>
+          </ul>
+          <p class="note">SVGの都道府県要素に <span class="kbd">id="pref-01"</span>（01=北海道 … 47=沖縄）か、<span class="kbd">data-name</span>/<span class="kbd">title</span> を付与してください。</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      監修：JAD（JK1JAD）／ CC-BY的ノリでどうぞ。ソースは適宜更新・注釈歓迎。
+    </footer>
+  </div>
+
+  <script>
+    // ==========================
+    // 1) 初期データ：都道府県→系統・語彙
+    //   code: JIS順 01…47
+    //   cat : beccho | mara | bobo | hojin | common
+    //   term: 代表語（例） — 正確性は地域差あり。編集してOK！
+    // ==========================
+    const dialectMap = {
+      1:{cat:'beccho', term:'べっちょ（女）/ まら（男）'}, // 北海道
+      2:{cat:'beccho', term:'べっちょ（女）'}, // 青森
+      3:{cat:'beccho', term:'べっちょ（女）/ めっぱ'}, // 岩手
+      4:{cat:'beccho', term:'べっちょ（女）'}, // 宮城
+      5:{cat:'beccho', term:'べっちょ（女）/ まんだ'}, // 秋田
+      6:{cat:'beccho', term:'べっちょ（女）'}, // 山形
+      7:{cat:'common', term:'おめこ系（古語・混在）'}, // 福島
+      8:{cat:'common', term:'混在'}, // 茨城
+      9:{cat:'common', term:'混在'}, // 栃木
+      10:{cat:'common', term:'おめこ系（古語残存）'}, // 群馬
+      11:{cat:'common', term:'（標準）ちんちん/まんこ'}, // 埼玉
+      12:{cat:'common', term:'（標準）'}, // 千葉
+      13:{cat:'common', term:'（標準）'}, // 東京
+      14:{cat:'common', term:'（標準）'}, // 神奈川
+      15:{cat:'beccho', term:'めっこ/べっこ'}, // 新潟
+      16:{cat:'common', term:'混在'}, // 富山
+      17:{cat:'common', term:'混在'}, // 石川
+      18:{cat:'mara', term:'まら（男）'}, // 福井
+      19:{cat:'mara', term:'まら（男）/ まんまん（女）'}, // 山梨
+      20:{cat:'mara', term:'まら（男）/ まんまん（女）'}, // 長野
+      21:{cat:'common', term:'ちんぽこ'}, // 岐阜
+      22:{cat:'common', term:'ちんちん（熱い=あっつい）※混同注意'}, // 静岡
+      23:{cat:'common', term:'ちんちん/ちんぽ（名古屋圏）'}, // 愛知
+      24:{cat:'mara', term:'まら/ちんちん'}, // 三重
+      25:{cat:'mara', term:'まら/ちんちん'}, // 滋賀
+      26:{cat:'mara', term:'まら/おめこ系残存'}, // 京都
+      27:{cat:'mara', term:'ちんちん/まら'}, // 大阪
+      28:{cat:'mara', term:'まら'}, // 兵庫
+      29:{cat:'mara', term:'まら'}, // 奈良
+      30:{cat:'mara', term:'まら'}, // 和歌山
+      31:{cat:'bobo', term:'ぼぼ（女）'}, // 鳥取
+      32:{cat:'bobo', term:'ぼぼ（女）'}, // 島根
+      33:{cat:'bobo', term:'ぼぼ（女）'}, // 岡山
+      34:{cat:'bobo', term:'ぼぼ（女）'}, // 広島
+      35:{cat:'bobo', term:'ぼぼ（女）※山口は地域差大'}, // 山口
+      36:{cat:'bobo', term:'ぼぼ（女）'}, // 徳島
+      37:{cat:'bobo', term:'ぼぼ（女）'}, // 香川
+      38:{cat:'bobo', term:'ぼぼ（女）'}, // 愛媛
+      39:{cat:'bobo', term:'ぼぼ（女）/ まんこ系'}, // 高知
+      40:{cat:'bobo', term:'ぼぼ（女）'}, // 福岡
+      41:{cat:'bobo', term:'ぼぼ（女）'}, // 佐賀
+      42:{cat:'bobo', term:'ぼぼ（女）'}, // 長崎
+      43:{cat:'bobo', term:'ぼぼ（女）'}, // 熊本
+      44:{cat:'bobo', term:'ぼぼ（女）'}, // 大分
+      45:{cat:'bobo', term:'ぼぼ（女）'}, // 宮崎
+      46:{cat:'mara', term:'びんたま（睾丸）/ まら'}, // 鹿児島
+      47:{cat:'hojin', term:'ほーじん（男）/ ほーじら（女）'} // 沖縄
+    };
+
+    // 都道府県コード → 名称（JIS順）
+    const prefNames = {
+      1:'北海道',2:'青森',3:'岩手',4:'宮城',5:'秋田',6:'山形',7:'福島',8:'茨城',9:'栃木',10:'群馬',11:'埼玉',12:'千葉',13:'東京',14:'神奈川',15:'新潟',16:'富山',17:'石川',18:'福井',19:'山梨',20:'長野',21:'岐阜',22:'静岡',23:'愛知',24:'三重',25:'滋賀',26:'京都',27:'大阪',28:'兵庫',29:'奈良',30:'和歌山',31:'鳥取',32:'島根',33:'岡山',34:'広島',35:'山口',36:'徳島',37:'香川',38:'愛媛',39:'高知',40:'福岡',41:'佐賀',42:'長崎',43:'熊本',44:'大分',45:'宮崎',46:'鹿児島',47:'沖縄'
+    };
+
+    // 2) SVG読み込み
+    async function loadSVG(){
+      const box = document.getElementById('mapbox');
+      try{
+        const res = await fetch('/images/japan.svg'); // ルート直下にサイトがある前提
+        if(!res.ok) throw new Error('SVGが見つかりません。/images/japan.svg を配置してください。');
+        const svgText = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgText,'image/svg+xml');
+        const svg = doc.documentElement;
+
+        // アクセシビリティ
+        svg.setAttribute('role','img');
+        svg.setAttribute('aria-label','日本地図（都道府県）');
+
+        // 県パスへクラスとタブフォーカス付与
+        // 条件：id="pref-01".."pref-47" または data-code="01" 等を想定
+        const candidates = svg.querySelectorAll('[id^="pref-"], [id^="JP"], [data-code], path, g');
+        candidates.forEach(el=>{
+          const id = el.getAttribute('id')||'';
+          const dataCode = el.getAttribute('data-code')||'';
+          let code = null;
+          let isPref = false;
+
+          const m = id.match(/pref-(\d{2})/);
+          if(m){ code = parseInt(m[1],10); isPref = true; }
+          else if(dataCode){ code = parseInt(dataCode,10); isPref = true; }
+          // Fallback: SimpleMaps style id="JP01" → code=01
+          if(!isPref && id.startsWith('JP') && id.length>=4){ code = parseInt(id.slice(2,4),10); isPref = true; }
+
+          // <title>に県名しかないSVGもあるので、pref名から推定する処理も追加可
+          if(isPref && code>=1 && code<=47){
+            el.classList.add('prefectue','prefectur','prefect'); // ゆるい互換（誤植対策）
+            el.classList.add('prefecture');
+            el.setAttribute('tabindex','0');
+
+            const map = dialectMap[code] || {cat:'common', term:'（データ未設定）'};
+            el.classList.add('cat-'+map.cat);
+
+            // データ属性
+            el.setAttribute('data-code', String(code).padStart(2,'0'));
+            el.setAttribute('data-name', prefNames[code]||'');
+            el.setAttribute('data-term', map.term||'');
+
+            // イベント
+            el.addEventListener('mousemove', onHover);
+            el.addEventListener('mouseenter', onEnter);
+            el.addEventListener('mouseleave', onLeave);
+            el.addEventListener('focus', onEnter);
+            el.addEventListener('blur', onLeave);
+            el.addEventListener('keydown', (ev)=>{
+              if(ev.key==='Enter' || ev.key===' '){
+                const r = el.getBoundingClientRect();
+                showTip(r.left + r.width/2, r.top + window.scrollY, el);
+              }
+            });
+          }
+        });
+
+        box.prepend(svg);
+      }catch(err){
+        box.innerHTML = `<div style="color:#fca5a5">${err.message}</div>`;
+        console.error(err);
+      }
+    }
+
+    // 3) Tooltip ハンドラ
+    const tip = document.getElementById('tooltip');
+    function onEnter(e){
+      const el = e.currentTarget;
+      const r = el.getBoundingClientRect();
+      showTip(e.pageX || (r.left + r.width/2 + window.scrollX), e.pageY || (r.top + window.scrollY), el);
+    }
+    function onHover(e){ showTip(e.pageX, e.pageY, e.currentTarget); }
+    function onLeave(){ tip.style.display='none'; }
+
+    function showTip(x, y, el){
+      const name = el.getAttribute('data-name')||'県名不明';
+      const term = el.getAttribute('data-term')||'（未設定）';
+      tip.innerHTML = `<b>${name}</b><br>${term}`;
+      tip.style.left = x + 'px';
+      tip.style.top  = y + 'px';
+      tip.style.display = 'block';
+    }
+
+    // 4) 初期化
+    loadSVG();
+  </script>
+</body>
+</html>

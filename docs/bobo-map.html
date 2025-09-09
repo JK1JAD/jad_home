@@ -55,6 +55,52 @@
   </style>
 </head>
 <body>
+  <!-- ▼▼ ここから：地図コンテナ + 最低限の見える化CSS ▼▼ -->
+<section class="map-section" style="max-width:980px;margin:24px auto;">
+  <!-- 地図が入る箱 -->
+  <div id="mapbox"
+       style="background:#0b132b;border-radius:12px;padding:12px;min-height:420px;"></div>
+</section>
+
+<style>
+  /* 真っ黒対策：SVGの塗り/線を強制上書き */
+  #mapbox svg { width:100%; height:auto; display:block; }
+  #mapbox svg path, #mapbox svg polygon, #mapbox svg rect{
+    fill:#f4d03f !important;            /* 明るい黄 */
+    stroke:#0f172a !important;          /* 濃い線 */
+    stroke-width:.6 !important;
+    vector-effect:non-scaling-stroke;
+  }
+</style>
+
+<script>
+(async function loadSVG(){
+  const box = document.getElementById('mapbox');
+  try{
+    // ← 画像の実体は /jad_home/images/japan.svg（＝ docs からは 1個上）
+    const res = await fetch('../images/japan.svg', { cache:'no-store' });
+    if(!res.ok) throw new Error('SVG取得エラー: ' + res.status);
+
+    const svgText = await res.text();
+    const parser  = new DOMParser();
+    const doc     = parser.parseFromString(svgText, 'image/svg+xml');
+    const svg     = doc.documentElement;
+
+    svg.removeAttribute('display');
+    svg.removeAttribute('visibility');
+    svg.style.display = 'block';
+    svg.style.background = 'transparent';
+
+    box.innerHTML = '';
+    box.appendChild(svg);
+  }catch(err){
+    console.error(err);
+    box.innerHTML = '<p style="color:#fca5a5">地図の読み込みに失敗しました。</p>';
+  }
+})();
+</script>
+<!-- ▲▲ ここまで貼る ▲▲ -->
+
   <div class="wrap">
     <h1>JAD 全国ボボマップ <small style="font-size:.6em;color:var(--mut)">（SVGインタラクティブ）</small></h1>
     <p class="lead">都道府県ごとに、代表的な俗称・方言の“系統”を色分け。マウスオーバーで県名と語を表示します。<br>※ 初期データは仮配置です。<span class="kbd">dialectMap</span> を編集して即反映できます。</p>

@@ -83,7 +83,7 @@
     async function loadSVG(){
       const box=document.getElementById('mapbox');
       try{
-        const res=await fetch('/jad_home/images/japan.svg');
+        const res = await fetch('./images/japan.svg');
         if(!res.ok) throw new Error('SVGが見つかりません。');
         const svgText=await res.text();
         const parser=new DOMParser();

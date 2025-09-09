@@ -77,49 +77,57 @@
 </style>
 
 <script>
-function mountSVG(svgText){
-  const box = document.getElementById('mapbox');
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(svgText, 'image/svg+xml');
-  const svg = doc.documentElement;
-  svg.removeAttribute('display');
-  svg.removeAttribute('visibility');
-  svg.style.display = 'block';
-  svg.style.background = 'transparent';
-  box.innerHTML = '';
-  box.appendChild(svg);
-}
+<!-- 地図が入る箱 -->
+<div id="mapbox"
+     style="max-width:980px;margin:24px auto;background:#0b132b;border-radius:12px;padding:12px;min-height:420px;">
+  <span id="probe" style="color:#9ca3af">loading…</span>
+</div>
 
-async function loadSVG(){
-  const box = document.getElementById('mapbox');
-  if(!box){
-    console.error('#mapbox が見つかりません');
-    return;
+<style>
+  /* 真っ黒対策（強制上書き） */
+  #mapbox svg{width:100%;height:auto;display:block;}
+  #mapbox svg path,#mapbox svg polygon,#mapbox svg rect{
+    fill:#f4d03f !important; stroke:#0f172a !important; stroke-width:.6 !important;
+    vector-effect:non-scaling-stroke;
   }
-  try{
-    // docs/ から1つ上 → /images/japan.svg
-    const url = '../images/japan.svg';
-    const res = await fetch(url, { cache:'no-store' });
-    if(!res.ok) throw new Error('fetch失敗 '+res.status);
-    const text = await res.text();
-    mountSVG(text);
-  }catch(e){
-    console.warn('fetch方式が失敗。<object>でフォールバックします:', e);
-    // フォールバック（必ず見える方式）
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const box = document.getElementById('mapbox');
+  const probe = document.getElementById('probe');
+  if (probe) probe.textContent = 'JS alive ✅';   // ← JSが走ってるか目印
+
+  const url = '../images/japan.svg';              // ← 位置はコレで正解
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const svgText = await res.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const svg = doc.documentElement;
+
+    svg.removeAttribute('display');
+    svg.removeAttribute('visibility');
+    svg.style.display = 'block';
+    svg.style.background = 'transparent';
+
+    box.innerHTML = '';          // probeを消す
+    box.appendChild(svg);        // ← ここで#mapboxに地図を突入
+  } catch (e) {
+    box.innerHTML = `<p style="color:#fca5a5">地図の読み込みに失敗: ${e.message}</p>`;
+    // フォールバック（最終手段）
     const obj = document.createElement('object');
     obj.type = 'image/svg+xml';
-    obj.data = '../images/japan.svg';
+    obj.data = url;
     obj.style.width = '100%';
     obj.style.display = 'block';
-    const box = document.getElementById('mapbox');
-    box.innerHTML = '';
     box.appendChild(obj);
   }
-}
-
-// DOMができてから実行（重要！）
-document.addEventListener('DOMContentLoaded', loadSVG);
+});
 </script>
+
 <!-- ▲▲ ここまで ▲▲ -->
 
 

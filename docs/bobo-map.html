@@ -55,57 +55,73 @@
   </style>
 </head>
 <body>
-  <!-- ▼▼ ここから：地図コンテナ + 最低限の見える化CSS ▼▼ -->
+<!-- ▼▼ 地図セクション：これ丸ごと貼り替え ▼▼ -->
 <section class="map-section" style="max-width:980px;margin:24px auto;">
-  <!-- 地図が入る箱 -->
+  <!-- 地図が入る箱（必須） -->
   <div id="mapbox"
        style="background:#0b132b;border-radius:12px;padding:12px;min-height:420px;"></div>
-</section>
-<!-- ▼ 地図を表示するコンテナ -->
-<div id="mapbox" style="max-width:900px; margin:0 auto; background:#0b132b; min-height:420px;">
-  <!-- JSが成功すればこの中にSVGが入る -->
-</div>
 
-  <style>
-  /* 真っ黒対策：SVGの塗り/線を強制上書き */
-  #mapbox svg { width:100%; height:auto; display:block; }
-  #mapbox svg path, #mapbox svg polygon, #mapbox svg rect{
-    fill:#f4d03f !important;            /* 明るい黄 */
-    stroke:#0f172a !important;          /* 濃い線 */
+  <!-- 一時テスト：必ず見えるかの確認用。表示できたらこの <img> は消してOK -->
+  <img src="../images/japan.svg" alt="test" width="720" style="display:block;margin:12px auto;">
+</section>
+
+<!-- 真っ黒対策（強制上書き） -->
+<style>
+  #mapbox svg{width:100%;height:auto;display:block;}
+  #mapbox svg path,#mapbox svg polygon,#mapbox svg rect{
+    fill:#f4d03f !important;          /* 明るい黄 */
+    stroke:#0f172a !important;        /* 濃い線 */
     stroke-width:.6 !important;
     vector-effect:non-scaling-stroke;
   }
 </style>
 
 <script>
-(async function loadSVG(){
+function mountSVG(svgText){
   const box = document.getElementById('mapbox');
-  try{
-    // ← 画像の実体は /jad_home/images/japan.svg（＝ docs からは 1個上）
-    const res = await fetch('../images/japan.svg', { cache:'no-store' });
-    if(!res.ok) throw new Error('SVG取得エラー: ' + res.status);
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgText, 'image/svg+xml');
+  const svg = doc.documentElement;
+  svg.removeAttribute('display');
+  svg.removeAttribute('visibility');
+  svg.style.display = 'block';
+  svg.style.background = 'transparent';
+  box.innerHTML = '';
+  box.appendChild(svg);
+}
 
-    const svgText = await res.text();
-    const parser  = new DOMParser();
-    const doc     = parser.parseFromString(svgText, 'image/svg+xml');
-    const svg     = doc.documentElement;
-
-    svg.removeAttribute('display');
-    svg.removeAttribute('visibility');
-    svg.style.display = 'block';
-    svg.style.background = 'transparent';
-
-    box.innerHTML = '';
-    box.appendChild(svg);
-  }catch(err){
-    console.error(err);
-    box.innerHTML = '<p style="color:#fca5a5">地図の読み込みに失敗しました。</p>';
+async function loadSVG(){
+  const box = document.getElementById('mapbox');
+  if(!box){
+    console.error('#mapbox が見つかりません');
+    return;
   }
-})();
-</script>
-　　<img src="../images/japan.svg" alt="test" width="720">
+  try{
+    // docs/ から1つ上 → /images/japan.svg
+    const url = '../images/japan.svg';
+    const res = await fetch(url, { cache:'no-store' });
+    if(!res.ok) throw new Error('fetch失敗 '+res.status);
+    const text = await res.text();
+    mountSVG(text);
+  }catch(e){
+    console.warn('fetch方式が失敗。<object>でフォールバックします:', e);
+    // フォールバック（必ず見える方式）
+    const obj = document.createElement('object');
+    obj.type = 'image/svg+xml';
+    obj.data = '../images/japan.svg';
+    obj.style.width = '100%';
+    obj.style.display = 'block';
+    const box = document.getElementById('mapbox');
+    box.innerHTML = '';
+    box.appendChild(obj);
+  }
+}
 
-  <!-- ▲▲ ここまで貼る ▲▲ -->
+// DOMができてから実行（重要！）
+document.addEventListener('DOMContentLoaded', loadSVG);
+</script>
+<!-- ▲▲ ここまで ▲▲ -->
+
 
   <div class="wrap">
     <h1>JAD 全国ボボマップ <small style="font-size:.6em;color:var(--mut)">（SVGインタラクティブ）</small></h1>

@@ -61,8 +61,12 @@
   <div id="mapbox"
        style="background:#0b132b;border-radius:12px;padding:12px;min-height:420px;"></div>
 </section>
+<!-- ▼ 地図を表示するコンテナ -->
+<div id="mapbox" style="max-width:900px; margin:0 auto; background:#0b132b; min-height:420px;">
+  <!-- JSが成功すればこの中にSVGが入る -->
+</div>
 
-<style>
+  <style>
   /* 真っ黒対策：SVGの塗り/線を強制上書き */
   #mapbox svg { width:100%; height:auto; display:block; }
   #mapbox svg path, #mapbox svg polygon, #mapbox svg rect{
@@ -99,7 +103,9 @@
   }
 })();
 </script>
-<!-- ▲▲ ここまで貼る ▲▲ -->
+　　<img src="../images/japan.svg" alt="test" width="720">
+
+  <!-- ▲▲ ここまで貼る ▲▲ -->
 
   <div class="wrap">
     <h1>JAD 全国ボボマップ <small style="font-size:.6em;color:var(--mut)">（SVGインタラクティブ）</small></h1>

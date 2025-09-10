@@ -62,7 +62,7 @@
        style="background:#0b132b;border-radius:12px;padding:12px;min-height:420px;"></div>
 
   <!-- 一時テスト：必ず見えるかの確認用。表示できたらこの <img> は消してOK -->
-  <img src="../images/japan.svg" alt="test" width="720" style="display:block;margin:12px auto;">
+  
 </section>
 
 <!-- 真っ黒対策（強制上書き） -->
@@ -81,6 +81,7 @@
 <div id="mapbox"
      style="max-width:980px;margin:24px auto;background:#0b132b;border-radius:12px;padding:12px;min-height:420px;">
   <span id="probe" style="color:#9ca3af">loading…</span>
+
 </div>
 
 <style>
@@ -199,5 +200,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showTip(x,y,el){const name=el.getAttribute('data-name')||'県名不明';const term=el.getAttribute('data-term')||'（未設定）';tip.innerHTML='<b>'+name+'</b><br>'+term;tip.style.left=x+'px';tip.style.top=y+'px';tip.style.display='block';}
     loadSVG();
   </script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const probe = document.getElementById('probe');
+  if (probe) probe.textContent = 'JS alive ✅';
+  // …fetch('../images/japan.svg') 以降…
+});
+
 </body>
 </html>

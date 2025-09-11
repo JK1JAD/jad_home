@@ -2,180 +2,78 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JAD 全国ボボマップ（SVGインタラクティブ）</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ぼぼマップ | JK1JAD</title>
   <style>
-    :root{
-      --ink:#0b132b; --acc:#2a9d8f; --mut:#94a3b8;
-      --c-beccho:#60a5fa; --c-mara:#34d399; --c-bobo:#f472b6;
-      --c-hojin:#fb923c; --c-common:#d1d5db; --card:#111827; --ring:#22d3ee;
+    :root { --ink:#0b132b; --acc:#2a9d8f; --mut:#94a3b8; --y:#d6c420; }
+    html,body{margin:0;background:#0b132b;color:#e5e7eb;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;}
+    .wrap{max-width:980px;margin:24px auto;padding:16px}
+    .frame{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:12px}
+    .header{display:flex;justify-content:space-between;align-items:center;margin:8px 0 12px}
+    .legend{font-size:.9rem;color:var(--mut)}
+    .stage{width:100%;aspect-ratio:4/3;display:block}
+    .stage > svg{width:100%;height:100%}
+
+    /* ← 埋め込んだSVGに効くデフォルト塗り（黄色×黒線） */
+    .stage svg path{
+      fill:var(--y);
+      stroke:#000;
+      stroke-width:1.2;
+      vector-effect:non-scaling-stroke;
     }
-    html,body{background:var(--ink);color:#e5e7eb;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP",sans-serif}
-    .wrap{max-width:1100px;margin:0 auto;padding:32px 16px}
-    h1{margin:4px 0 12px;font-size:clamp(22px,3.6vw,34px);line-height:1.2}
-    .lead{color:var(--mut);margin-bottom:20px}
-    .panel{background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:16px}
-    .grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
-    .mapbox{position:relative;min-height:520px;display:grid;place-items:center}
-    .mapbox svg{max-width:100%;height:auto;display:block}
-    /* 塗り分け */
-    .cat-beccho path.prefecture{fill:var(--c-beccho)}
-    .cat-mara    path.prefecture{fill:var(--c-mara)}
-    .cat-bobo    path.prefecture{fill:var(--c-bobo)}
-    .cat-hojin   path.prefecture{fill:var(--c-hojin)}
-    .cat-common  path.prefecture{fill:var(--c-common)}
-    /* 線とホバー */
-    .mapbox .stroke{fill:none;stroke:#0f172a;stroke-width:.8;opacity:.7}
-    .mapbox .prefecture{stroke:#0f172a;stroke-width:.6;cursor:pointer;transition:transform .1s ease, filter .1s ease}
-    .mapbox .prefecture:hover{filter:brightness(1.06)}
-    .mapbox .prefecture:focus{outline:none;filter:brightness(1.08) drop-shadow(0 0 0.8rem rgba(34,211,238,.25))}
-    /* 凡例 */
-    .legend{display:grid;gap:8px}
-    .legend .card{background:#0f172a;border-radius:12px;padding:12px}
-    .legend h3{margin:0 0 8px;font-size:16px;color:#e2e8f0}
-    .legend ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-    .legend li{display:grid;grid-template-columns:16px 1fr;gap:10px;align-items:center;font-size:14px;color:#cbd5e1}
-    .swatch{width:16px;height:16px;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.25) inset}
-    .s-beccho{background:var(--c-beccho)} .s-mara{background:var(--c-mara)}
-    .s-bobo{background:var(--c-bobo)}   .s-hojin{background:var(--c-hojin)}
-    .s-common{background:var(--c-common)}
-    .note{color:var(--mut);font-size:12px;margin-top:10px}
-    a{color:#8be9d8}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:#0b132b;border:1px solid #0ea5a5;color:#c7fffb;border-radius:8px;padding:2px 6px;font-size:12px}
-    /* 強制可視化（デバッグ用）— 必要なければ削除OK */
-    .force-visible path,.force-visible polygon,.force-visible rect{
-      fill:#f4d03f !important; stroke:#0f172a !important; stroke-width:.6 !important; vector-effect:non-scaling-stroke;
-    }
-    /* ツールチップ */
-    .tip{position:absolute;pointer-events:none;background:#111827;color:#e5e7eb;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.4;box-shadow:0 10px 30px rgba(0,0,0,.35);transform:translate(-50%,-120%);min-width:160px;display:none}
-    .tip b{color:#fff}
+    /* ホバーでちょい発光 */
+    .stage svg path:hover{ filter:brightness(1.08); cursor:pointer; }
+
+    /* 枠・凡例（既に出ているとのことなので念のため） */
+    .box{border:1px dashed #334155;border-radius:8px;padding:8px;margin-top:8px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>JAD 全国ボボマップ <small style="font-size:.6em;color:var(--mut)">（SVGインタラクティブ）</small></h1>
-    <p class="lead">都道府県ごとに、代表的な俗称・方言の“系統”を色分け。マウスオーバーで県名と語を表示します。<br>※ 初期データは仮配置です。<span class="kbd">dialectMap</span> を編集して即反映できます。</p>
-
-    <div class="panel grid">
-      <!-- ★ 唯一の地図コンテナ（IDは1つだけ！） -->
-      <div class="mapbox" id="mapbox">
-        <span id="probe" style="color:#9ca3af">loading…</span>
-        <div id="tooltip" class="tip"></div>
-      </div>
-
-      <aside class="legend">
-        <div class="card">
-          <h3>凡例（系統）</h3>
-          <ul>
-            <li><span class="swatch s-beccho"></span><span>べっちょ系（東北〜北海道など）</span></li>
-            <li><span class="swatch s-mara"></span><span>まら系（主に関西・中部の一部）</span></li>
-            <li><span class="swatch s-bobo"></span><span>ぼぼ系（中国・四国・九州の一部）</span></li>
-            <li><span class="swatch s-hojin"></span><span>ほーじん系（沖縄方言）</span></li>
-            <li><span class="swatch s-common"></span><span>共通/混在（ちんちん・まんこ 等）</span></li>
-          </ul>
-        </div>
-      </aside>
+    <div class="header">
+      <h1 style="margin:0;font-size:1.2rem">ぼぼマップ（SVG）</h1>
+      <div class="legend">凡例：<span style="color:var(--y)">■</span> 都道府県領域 / 黒実線 = 境界</div>
     </div>
 
-    <footer>監修：JAD（JK1JAD）</footer>
+    <div class="frame">
+      <!-- ここにSVGを“インライン化”して差し込みます -->
+      <div id="stage" class="stage box">Loading japan.svg … 📡</div>
+    </div>
   </div>
 
   <script>
-    // --- 設定（必要に応じて拡張） ---
-    const SVG_PATH = '../images/japan.svg'; // docs/ から images/ へ相対
-    const dialectMap = {
-      1:{cat:'beccho', term:'べっちょ（女）/ まら（男）'},
-      2:{cat:'beccho', term:'べっちょ（女）'},
-      47:{cat:'hojin', term:'ほーじん（男）/ ほーじら（女）'}
-    };
-    const prefNames = {1:'北海道',2:'青森',47:'沖縄'};
+    // 同一オリジン（GitHub Pagesの /docs/ 配下）からSVGを取得して、そのままDOMに差し込む方式
+    fetch("./images/japan.svg", {cache: "no-cache"})
+      .then(r => {
+        if (!r.ok) throw new Error("SVG not found: " + r.status);
+        return r.text();
+      })
+      .then(svgText => {
+        // 直接差し込み（インライン化）→ 外部CSSやJSが効く
+        const stage = document.getElementById("stage");
+        stage.innerHTML = svgText;
 
-    // --- ツールチップ ---
-    const tip = () => document.getElementById('tooltip');
-    function showTip(x,y,el){
-      const t = tip();
-      const name = el.getAttribute('data-name') || '県名不明';
-      const term = el.getAttribute('data-term') || '（未設定）';
-      t.innerHTML = '<b>'+name+'</b><br>'+term;
-      t.style.left = x+'px';
-      t.style.top  = y+'px';
-      t.style.display = 'block';
-    }
-    function onEnter(e){
-      const el = e.currentTarget;
-      const r = el.getBoundingClientRect();
-      showTip((e.pageX||r.left+r.width/2+window.scrollX),(e.pageY||r.top+window.scrollY),el);
-    }
-    function onHover(e){ showTip(e.pageX,e.pageY,e.currentTarget); }
-    function onLeave(){ tip().style.display='none'; }
-
-    // --- メイン：SVG読み込み＆装飾 ---
-    async function loadSVG(){
-      const box = document.getElementById('mapbox');
-      const probe = document.getElementById('probe');
-      try{
-        const res = await fetch(SVG_PATH, { cache: 'no-store' });
-        if(!res.ok) throw new Error('SVGが見つかりません（HTTP '+res.status+'）');
-        const svgText = await res.text();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(svgText,'image/svg+xml');
-        const svg = doc.documentElement;
-
-        // デバッグ用：強制可視化したいときは class 付与
-        // svg.classList.add('force-visible');
-
-        // 県っぽいノードに class/データ属性/イベント付与
-        const candidates = svg.querySelectorAll('[id],[data-code],path,g');
-        candidates.forEach(el=>{
-          const id = el.getAttribute('id')||'';
-          const dataCode = el.getAttribute('data-code')||'';
-          let code=null, isPref=false;
-          const m = id.match(/pref-(\d{2})/);
-          if(m){ code=parseInt(m[1],10); isPref=true; }
-          else if(/^\d{1,2}$/.test(id)){ code=parseInt(id,10); isPref=true; }
-          else if(dataCode){ code=parseInt(dataCode,10); isPref=true; }
-          else if(id.startsWith('JP') && id.length>=4){ code=parseInt(id.slice(2,4),10); isPref=true; }
-
-          if(isPref && code>=1 && code<=47){
-            el.classList.add('prefecture');
-            const map = dialectMap[code] || {cat:'common', term:'（未設定）'};
-            el.classList.add('cat-'+map.cat);
-            el.setAttribute('data-code', String(code).padStart(2,'0'));
-            el.setAttribute('data-name', prefNames[code] || '');
-            el.setAttribute('data-term', map.term || '');
-            el.addEventListener('mousemove', onHover);
-            el.addEventListener('mouseenter', onEnter);
-            el.addEventListener('mouseleave', onLeave);
-            // アクセシビリティ
-            el.setAttribute('tabindex','0');
-            el.setAttribute('role','img');
-            el.setAttribute('aria-label', (prefNames[code]||'') + ' ' + (map.term||''));
+        // 念のため、viewportにフィットさせる
+        const svg = stage.querySelector("svg");
+        if (svg){
+          svg.removeAttribute("width");
+          svg.removeAttribute("height");
+          // viewBox無い場合は、適当に付ける（必要なら調整）
+          if (!svg.hasAttribute("viewBox") && svg.hasAttribute("width") && svg.hasAttribute("height")) {
+            const w = svg.getAttribute("width"); const h = svg.getAttribute("height");
+            if (w && h) svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
           }
-        });
-
-        box.innerHTML = ''; // probe を消す
-        box.appendChild(svg);
-        if(probe) probe.remove();
-      }catch(err){
-        console.error(err);
-        box.innerHTML = '<p style="color:#fca5a5">地図の読み込みに失敗: '+err.message+'</p>';
-        // フォールバック（埋め込み）
-        const obj = document.createElement('object');
-        obj.type = 'image/svg+xml';
-        obj.data = SVG_PATH;
-        obj.style.width = '100%';
-        obj.style.display = 'block';
-        box.appendChild(obj);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const probe = document.getElementById('probe');
-      if (probe) probe.textContent = 'JS alive ✅';
-      loadSVG();
-    });
+          // 既存fillが黒ベタ等の場合でも外側CSSを優先させたいときは、style属性を一括調整：
+          svg.querySelectorAll("path").forEach(p=>{
+            // 元の fill が強制されていたら外す（外部CSS適用のため）
+            if (p.hasAttribute("fill")) p.removeAttribute("fill");
+            if (!p.hasAttribute("stroke")) p.setAttribute("stroke","#000");
+          });
+        }
+      })
+      .catch(err => {
+        document.getElementById("stage").textContent = "SVGの読込に失敗しました… 💦 " + err.message;
+      });
   </script>
 </body>
 </html>

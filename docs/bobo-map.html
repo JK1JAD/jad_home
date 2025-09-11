@@ -40,40 +40,27 @@
       <div id="stage" class="stage box">Loading japan.svg … 📡</div>
     </div>
   </div>
-
-  <script>
-    // 同一オリジン（GitHub Pagesの /docs/ 配下）からSVGを取得して、そのままDOMに差し込む方式
-    fetch("./images/japan.svg", {cache: "no-cache"})
-      .then(r => {
-        if (!r.ok) throw new Error("SVG not found: " + r.status);
-        return r.text();
-      })
-      .then(svgText => {
-        // 直接差し込み（インライン化）→ 外部CSSやJSが効く
-        const stage = document.getElementById("stage");
-        stage.innerHTML = svgText;
-
-        // 念のため、viewportにフィットさせる
-        const svg = stage.querySelector("svg");
-        if (svg){
-          svg.removeAttribute("width");
-          svg.removeAttribute("height");
-          // viewBox無い場合は、適当に付ける（必要なら調整）
-          if (!svg.hasAttribute("viewBox") && svg.hasAttribute("width") && svg.hasAttribute("height")) {
-            const w = svg.getAttribute("width"); const h = svg.getAttribute("height");
-            if (w && h) svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-          }
-          // 既存fillが黒ベタ等の場合でも外側CSSを優先させたいときは、style属性を一括調整：
-          svg.querySelectorAll("path").forEach(p=>{
-            // 元の fill が強制されていたら外す（外部CSS適用のため）
-            if (p.hasAttribute("fill")) p.removeAttribute("fill");
-            if (!p.hasAttribute("stroke")) p.setAttribute("stroke","#000");
-          });
-        }
-      })
-      .catch(err => {
-        document.getElementById("stage").textContent = "SVGの読込に失敗しました… 💦 " + err.message;
-      });
-  </script>
+<!-- 👇 これを </body> の直前に丸ごと追加（追い置き方式） -->
+<script>
+  /* JAD MAP LOADER (ABS PATH) — START */
+  const URL_SVG = "/jad_home/images/japan.svg?v=" + Date.now();
+  fetch(URL_SVG)
+    .then(r => { if(!r.ok) throw new Error(`HTTP ${r.status}`); return r.text(); })
+    .then(svg => {
+      const stage = document.getElementById("stage");
+      stage.innerHTML = svg;
+      const s = stage.querySelector("svg");
+      if (s) {
+        s.removeAttribute("width"); s.removeAttribute("height");
+        s.querySelectorAll("path").forEach(p => p.removeAttribute("fill"));
+      }
+    })
+    .catch(err => {
+      document.getElementById("stage").innerHTML =
+        `SVGの読込に失敗しました… 💦 (${URL_SVG})<br>${err.message}`;
+    });
+  /* JAD MAP LOADER — END */
+</script>
 </body>
 </html>
+

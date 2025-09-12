@@ -27,11 +27,11 @@
     /* 県の本体（太線グループ）だけ塗る */
     g[stroke-width="4"] > path { fill: #d6c420; }
 
-   /* 北海道と沖縄を強制で黄色に */
-#Hokkaido,
-#Okinawa {
-  fill: #d6c420;
+#hokkaido,
+#okinawa {
+  fill:#d6c420 !important;
 }
+
 
 
 	  /* 区切り線や枠（細線グループ）は塗らない */

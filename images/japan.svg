@@ -1,5 +1,26 @@
 <?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="2090" height="2600">
+	<defs>
+  <style><![CDATA[
+    /* 1) まず全国を強制で黄色に（inlineのfillもねじ伏せる） */
+    svg path{
+      fill:#d6c420 !important;
+      stroke:#000;
+      stroke-width:1;
+    }
+
+    /* 2) 枠・境界・囲いなど“細線グループ”は塗りなしを強制 */
+    g[stroke-width="2"] > path{
+      fill:none !important;
+    }
+
+    /* 3) もし“太線グループ”が個別fillを持っていても無視 */
+    g[stroke-width="4"] > path{
+      fill:#d6c420 !important;
+    }
+  ]]></style>
+</defs>
+
 	<g stroke="#000" stroke-width="4">
 　　　　<defs>
   <style><![CDATA[

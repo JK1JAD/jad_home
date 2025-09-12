@@ -1,30 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="2090" height="2600" viewBox="0 0 2090 2600">
 
-<defs>
-  <style type="text/css"><![CDATA[
-    /* まず全パスの塗りをリセット */
-    path { fill: none; }
+  <defs>
+    <style><![CDATA[
+      /* 全パスの塗りを初期化 */
+      path { fill: none; }
 
-    /* 県データ（01〜47）だけ黄色に */
-    path[data-code] { fill: #d6c420 !important; }
+      /* 県データ（01〜47）だけ黄色に */
+      path[data-code] { fill: #d6c420 !important; }
 
-    /* 区切り線や囲い（細線グループ）は塗らない */
-    g[stroke-width="2"] > path { fill: none !important; }
-  ]]></style>
-</defs>
+      /* 枠・区切り線（細線グループ）は塗らない */
+      g[stroke-width="2"] > path { fill: none !important; }
+    ]]></style>
+  </defs>
 
-#Hokkaido,
-#Okinawa {
-  fill:#d6c420 !important;
-}
+  <!-- 県本体（太線） -->
+  <g stroke="#000" stroke-width="4">
+    <path id="Hokkaido" data-code="01" d="M … Z"/>
+    <path id="Honshu"   d="M … Z"/>
+    <path id="Awaji-island" d="M … Z"/>
+    <path id="Shikoku"  d="M … Z"/>
+    <path id="Kyushu"   d="M … Z"/>
+    <path id="Okinawa" data-code="47" d="M … Z"/>
+    <path id="Sado-island" d="M … Z"/>
+  </g>
 
-	  /* 区切り線や枠（細線グループ）は塗らない */
-    g[stroke-width="2"] > path { fill: none; }
+  <!-- 枠・境界（細線） -->
+  <g fill="none" stroke="#000" stroke-width="2">
+    <path id="borders" d="M … Z"/>
+    <!-- line-12,13,… などもここ -->
+  </g>
 
-    /* 念のための初期化：その他の塗りはナシ */
-    path { stroke: inherit; stroke-width: inherit; }
-  ]]>
+  <path d="m1570,2500 v-215 l160,-195 h270" fill="none" stroke="#000" stroke-width="8"/>
+
+  <g font-size="64" font-family="Bitstream Vera Sans">
+    <!-- 県番号の <text> たち -->
+    <text x="1732" y="2323.5">47</text>
+  </g>
+</svg>
+
 
 
 		<path id="Hokkaido" data-code="01" d="m1455.25,70.5 ... z"/>

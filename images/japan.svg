@@ -27,8 +27,8 @@
     /* 県の本体（太線グループ）だけ塗る */
     g[stroke-width="4"] > path { fill: #d6c420; }
 
-#hokkaido,
-#okinawa {
+#Hokkaido,
+#Okinawa {
   fill:#d6c420 !important;
 }
 

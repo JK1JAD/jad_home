@@ -24,7 +24,7 @@
 
     /* 念のための初期化：その他の塗りはナシ */
     path { stroke: inherit; stroke-width: inherit; }
-  ]]></style>
+  ]]>
 
 
 		<path id="Hokkaido" data-code="01" d="m1455.25,70.5 ... z"/>

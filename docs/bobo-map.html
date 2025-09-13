@@ -47,8 +47,7 @@
 </div>
 
 <script>
-// ===== 県データ（row / colを整数化） =====
-// 日本列島の感覚は保ちつつ、衝突しやすいエリア（関東・東海・近畿）を再配置。
+// ===== 県データ（重なり解消済み配置） =====
 const PREFS = [
   // 北海道・東北
   {code:"01",name:"北海道", row:0, col:7},
@@ -72,12 +71,12 @@ const PREFS = [
   {code:"15",name:"新潟",   row:3, col:5},
   {code:"16",name:"富山",   row:4, col:4},
   {code:"17",name:"石川",   row:3, col:4},
-  {code:"18",name:"福井",   row:5, col:2}, // ← ここ変更（京都と被らない位置へ）
+  {code:"18",name:"福井",   row:5, col:2}, // ← 京都と被らない位置
   {code:"19",name:"山梨",   row:6, col:5},
   {code:"20",name:"長野",   row:5, col:5},
   {code:"21",name:"岐阜",   row:5, col:4},
   {code:"23",name:"愛知",   row:6, col:4},
-  {code:"22",name:"静岡",   row:7, col:6}, // ← ここ変更（山梨と被らない位置へ）
+  {code:"22",name:"静岡",   row:7, col:6}, // ← 山梨と被らない位置
 
   // 近畿
   {code:"25",name:"滋賀",   row:6, col:3},
@@ -114,26 +113,38 @@ const PREFS = [
   {code:"47",name:"沖縄",   row:11,col:-4},
 ];
 
-// ===== タイル設定（GAP広げ、原点も中央寄せ） =====
-const TILE = 72;        // タイルの一辺
-const GAP  = 12;        // ここを 8→12 に拡大（密集回避）
-const ORIGIN_X = 420;   // 右寄り回避で少し左へ
+// ===== タイル設定 =====
+const TILE = 72;
+const GAP  = 12;
+const ORIGIN_X = 420;
 const ORIGIN_Y = 60;
 
-// （任意）値→色分けに使うマップ
+// 値での色分け（必要なら入れる）
 const values = {};
 
-// クリック時の挙動（必要に応じて遷移に変更）
+// クリック挙動（必要に応じて遷移に変更）
 function onTileClick(pref){
+  // location.href = `/docs/pref-${pref.code}.html`;
   alert(`${pref.name}（${pref.code}）`);
 }
 
-// ===== 生成ロジック =====
+// SVG
 const svg = document.getElementById('jp-tiles');
 
+// —— viewBox 自動調整 用（ループ前） ——
+const PAD = 60;
+let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+// ===== 生成ロジック =====
 for(const p of PREFS){
   const x = ORIGIN_X + (TILE + GAP) * p.col;
   const y = ORIGIN_Y + (TILE + GAP) * p.row;
+
+  // 範囲更新（ループ中）
+  minX = Math.min(minX, x);
+  minY = Math.min(minY, y);
+  maxX = Math.max(maxX, x);
+  maxY = Math.max(maxY, y);
 
   const g = document.createElementNS('http://www.w3.org/2000/svg','g');
   g.setAttribute('id', `pref-${p.code}`);
@@ -177,6 +188,15 @@ for(const p of PREFS){
 
   svg.appendChild(g);
 }
+
+// —— ループ後に1回だけ：viewBox 自動調整 ——
+const vbX = minX - PAD;
+const vbY = minY - PAD;
+const vbW = (maxX + TILE) - minX + PAD * 2;
+const vbH = (maxY + TILE) - minY + PAD * 2;
+
+svg.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
+svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 </script>
 </body>
 </html>

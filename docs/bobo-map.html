@@ -45,94 +45,88 @@
 </div>
 
 <script>
-/* ===== 県データ：code(01..47), name, row/col（おおよその地理感覚で配置） =====
-   タイルは (tile * col + gap * col) の座標で並べます。 */
+// ===== 県データ（row / colを整数化） =====
+// 日本列島の感覚は保ちつつ、衝突しやすいエリア（関東・東海・近畿）を再配置。
 const PREFS = [
   // 北海道・東北
-  {code:"01",name:"北海道",row:0,col:7},
-  {code:"02",name:"青森",  row:1,col:7},
-  {code:"03",name:"岩手",  row:2,col:7},
-  {code:"05",name:"秋田",  row:2,col:6},
-  {code:"04",name:"宮城",  row:2,col:8},
-  {code:"06",name:"山形",  row:3,col:6},
-  {code:"07",name:"福島",  row:3,col:7},
+  {code:"01",name:"北海道", row:0, col:7},
+  {code:"02",name:"青森",   row:1, col:7},
+  {code:"03",name:"岩手",   row:2, col:7},
+  {code:"05",name:"秋田",   row:2, col:6},
+  {code:"04",name:"宮城",   row:2, col:8},
+  {code:"06",name:"山形",   row:3, col:6},
+  {code:"07",name:"福島",   row:3, col:7},
 
-  // 関東
-  {code:"08",name:"茨城",  row:4,col:8},
-  {code:"09",name:"栃木",  row:4,col:7},
-  {code:"10",name:"群馬",  row:4,col:6},
-  {code:"11",name:"埼玉",  row:5,col:6},
-  {code:"12",name:"千葉",  row:5,col:7},
-  {code:"13",name:"東京",  row:6,col:6},
-  {code:"14",name:"神奈川",row:6,col:7},
+  // 関東（整数グリッドで整理）
+  {code:"08",name:"茨城",   row:4, col:8},
+  {code:"09",name:"栃木",   row:4, col:7},
+  {code:"10",name:"群馬",   row:4, col:6},
+  {code:"11",name:"埼玉",   row:5, col:6},
+  {code:"12",name:"千葉",   row:5, col:7},
+  {code:"13",name:"東京",   row:6, col:6},
+  {code:"14",name:"神奈川", row:6, col:7},
 
   // 中部（北陸・甲信越・東海）
-  {code:"15",name:"新潟",  row:3,col:5},
-  {code:"16",name:"富山",  row:4,col:4},
-  {code:"17",name:"石川",  row:3,col:4},
-  {code:"18",name:"福井",  row:5,col:3},
-  {code:"19",name:"山梨",  row:6,col:5},
-  {code:"20",name:"長野",  row:5,col:5},
-  {code:"21",name:"岐阜",  row:5,col:4},
-  {code:"22",name:"静岡",  row:6,col:7.6}, // 神奈川のやや南東に寄せ気味
-  {code:"23",name:"愛知",  row:6,col:4.8},
+  {code:"15",name:"新潟",   row:3, col:5},
+  {code:"16",name:"富山",   row:4, col:4},
+  {code:"17",name:"石川",   row:3, col:4},
+  {code:"18",name:"福井",   row:5, col:3},
+  {code:"19",name:"山梨",   row:6, col:5},
+  {code:"20",name:"長野",   row:5, col:5},
+  {code:"21",name:"岐阜",   row:5, col:4},
+  {code:"23",name:"愛知",   row:6, col:4}, // ← 小数点やめて固定
+  {code:"22",name:"静岡",   row:6, col:5}, // ← 神奈川の真下に寄せず衝突回避
 
   // 近畿
-  {code:"24",name:"三重",  row:7,col:4.9},
-  {code:"25",name:"滋賀",  row:6,col:3.6},
-  {code:"26",name:"京都",  row:5,col:3.5},
-  {code:"27",name:"大阪",  row:6,col:3},
-  {code:"28",name:"兵庫",  row:6,col:2},
-  {code:"29",name:"奈良",  row:7,col:3.5},
-  {code:"30",name:"和歌山",row:8,col:3.2},
+  {code:"25",name:"滋賀",   row:6, col:3},
+  {code:"26",name:"京都",   row:5, col:3},
+  {code:"27",name:"大阪",   row:6, col:2},
+  {code:"28",name:"兵庫",   row:6, col:1},
+  {code:"24",name:"三重",   row:7, col:4},
+  {code:"29",name:"奈良",   row:7, col:3},
+  {code:"30",name:"和歌山", row:8, col:2},
 
   // 中国
-  {code:"31",name:"鳥取",  row:6,col:1},
-  {code:"32",name:"島根",  row:6,col:0},
-  {code:"33",name:"岡山",  row:7,col:1},
-  {code:"34",name:"広島",  row:7,col:0},
-  {code:"35",name:"山口",  row:7,col:-1},
+  {code:"31",name:"鳥取",   row:6, col:0},
+  {code:"32",name:"島根",   row:6, col:-1},
+  {code:"33",name:"岡山",   row:7, col:0},
+  {code:"34",name:"広島",   row:7, col:-1},
+  {code:"35",name:"山口",   row:7, col:-2},
 
   // 四国
-  {code:"36",name:"徳島",  row:8,col:2.3},
-  {code:"37",name:"香川",  row:7,col:2.3},
-  {code:"38",name:"愛媛",  row:8,col:1.3},
-  {code:"39",name:"高知",  row:9,col:1.6},
+  {code:"37",name:"香川",   row:7, col:2},
+  {code:"36",name:"徳島",   row:8, col:3},
+  {code:"38",name:"愛媛",   row:8, col:1},
+  {code:"39",name:"高知",   row:9, col:2},
 
   // 九州
-  {code:"40",name:"福岡",  row:7,col:-2.2},
-  {code:"41",name:"佐賀",  row:8,col:-2.4},
-  {code:"42",name:"長崎",  row:8,col:-3.3},
-  {code:"43",name:"熊本",  row:8,col:-1.6},
-  {code:"44",name:"大分",  row:8,col:-0.8},
-  {code:"45",name:"宮崎",  row:9,col:-1.1},
-  {code:"46",name:"鹿児島",row:10,col:-1.6},
+  {code:"40",name:"福岡",   row:7, col:-3},
+  {code:"41",name:"佐賀",   row:8, col:-3},
+  {code:"42",name:"長崎",   row:8, col:-4},
+  {code:"43",name:"熊本",   row:8, col:-2},
+  {code:"44",name:"大分",   row:8, col:-1},
+  {code:"45",name:"宮崎",   row:9, col:-1},
+  {code:"46",name:"鹿児島", row:10,col:-2},
 
   // 沖縄
-  {code:"47",name:"沖縄",  row:11,col:-3.6},
+  {code:"47",name:"沖縄",   row:11,col:-4},
 ];
 
-/* 欠けていた 04,05 の並び順補正：上で秋田(05)と宮城(04)の位置は東西でズラしてあります */
+// ===== タイル設定（GAP広げ、原点も中央寄せ） =====
+const TILE = 72;        // タイルの一辺
+const GAP  = 12;        // ここを 8→12 に拡大（密集回避）
+const ORIGIN_X = 420;   // 右寄り回避で少し左へ
+const ORIGIN_Y = 60;
 
-/* タイル設定 */
-const TILE = 72;   // 1タイルの一辺(px)
-const GAP  = 8;    // タイル間隔(px)
-const ORIGIN_X = 380; // 左右バランス調整
-const ORIGIN_Y = 60;  // 上下バランス調整
+// （任意）値→色分けに使うマップ
+const values = {};
 
-/* 任意：値（塗り分け等に使う。空でOK） */
-const values = {
-  // "13": 72, "27": 55, ...
-};
-
-/* クリック時の挙動（必要に応じて編集） */
+// クリック時の挙動（必要に応じて遷移に変更）
 function onTileClick(pref){
-  // 例：docs/pref-XX.html に飛ぶ
-  // location.href = `/docs/pref-${pref.code}.html`;
-  alert(`${pref.name}（${pref.code}）をクリックしました！`);
+  alert(`${pref.name}（${pref.code}）`);
 }
 
-/* ===== 生成ロジック ===== */
+// ===== 生成ロジック =====
 const svg = document.getElementById('jp-tiles');
 
 for(const p of PREFS){
@@ -146,15 +140,15 @@ for(const p of PREFS){
   g.setAttribute('role','group');
   g.setAttribute('aria-label', p.name);
 
-  // rect（タイル）
   const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
   rect.setAttribute('class','tile');
   rect.setAttribute('width', TILE);
   rect.setAttribute('height', TILE);
+  rect.setAttribute('rx', 10);
+  rect.setAttribute('ry', 10);
   rect.addEventListener('click', () => onTileClick(p));
   g.appendChild(rect);
 
-  // 県名（中心）
   const label = document.createElementNS('http://www.w3.org/2000/svg','text');
   label.setAttribute('class','label');
   label.setAttribute('x', TILE/2);
@@ -162,7 +156,6 @@ for(const p of PREFS){
   label.textContent = p.name;
   g.appendChild(label);
 
-  // 県コード（左上）
   const code = document.createElementNS('http://www.w3.org/2000/svg','text');
   code.setAttribute('class','code');
   code.setAttribute('x', TILE/2);
@@ -170,33 +163,18 @@ for(const p of PREFS){
   code.textContent = p.code;
   g.appendChild(code);
 
-  // title（ネイティブツールチップ）
   const title = document.createElementNS('http://www.w3.org/2000/svg','title');
   title.textContent = `${p.name}（${p.code}）`;
   g.appendChild(title);
 
-  // 値→クラス付与（色分けに使う場合）
   if (values[p.code] != null){
     const v = values[p.code];
-    // 例：0-100 を 5段階に
     const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
     g.classList.add(`v-${bucket}`);
   }
 
   svg.appendChild(g);
 }
-
-/* 例：バケット色（必要ならONに）
-const style = document.createElement('style');
-style.textContent = `
-  .v-1 .tile{ fill:#1f2937 }
-  .v-2 .tile{ fill:#374151 }
-  .v-3 .tile{ fill:#4b5563 }
-  .v-4 .tile{ fill:#6b7280 }
-  .v-5 .tile{ fill:#9ca3af }
-`;
-document.head.appendChild(style);
-*/
 </script>
 </body>
 </html>

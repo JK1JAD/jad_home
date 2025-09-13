@@ -57,7 +57,7 @@ const PREFS = [
   {code:"06",name:"山形",   row:3, col:6},
   {code:"07",name:"福島",   row:3, col:7},
 
-  // 関東（整数グリッドで整理）
+  // 関東
   {code:"08",name:"茨城",   row:4, col:8},
   {code:"09",name:"栃木",   row:4, col:7},
   {code:"10",name:"群馬",   row:4, col:6},
@@ -70,12 +70,12 @@ const PREFS = [
   {code:"15",name:"新潟",   row:3, col:5},
   {code:"16",name:"富山",   row:4, col:4},
   {code:"17",name:"石川",   row:3, col:4},
-  {code:"18",name:"福井",   row:5, col:3},
+  {code:"18",name:"福井",   row:5, col:2}, // ← ここ変更（京都と被らない位置へ）
   {code:"19",name:"山梨",   row:6, col:5},
   {code:"20",name:"長野",   row:5, col:5},
   {code:"21",name:"岐阜",   row:5, col:4},
-  {code:"23",name:"愛知",   row:6, col:4}, // ← 小数点やめて固定
-  {code:"22",name:"静岡",   row:6, col:5}, // ← 神奈川の真下に寄せず衝突回避
+  {code:"23",name:"愛知",   row:6, col:4},
+  {code:"22",name:"静岡",   row:7, col:6}, // ← ここ変更（山梨と被らない位置へ）
 
   // 近畿
   {code:"25",name:"滋賀",   row:6, col:3},

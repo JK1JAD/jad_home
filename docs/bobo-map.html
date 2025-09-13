@@ -37,7 +37,9 @@
 
   <!-- 可変レイアウトSVG：JSでタイルを生成 -->
   <svg id="jp-tiles" viewBox="0 0 1000 760" aria-label="Japan Prefecture Tiles"></svg>
+　<svg id="jp-tiles" viewBox="0 0 1000 760" preserveAspectRatio="xMidYMid meet"></svg>
 
+  
   <p class="lead" style="margin-top:1rem">使い方：<br>
     1) 値を塗りたい → JS側の <code>values</code> マップに { "13": 72, ... } のように入れて、クラス付与や fill を変更。<br>
     2) クリック遷移 → 下の <code>onTileClick</code> を好きなリンクに変更。<br>

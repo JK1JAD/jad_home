@@ -184,18 +184,30 @@ for(const p of PREFS){
   const x = ORIGIN_X + (TILE + GAP) * p.col;
   const y = ORIGIN_Y + (TILE + GAP) * p.row;
 
-  // 範囲更新（ループ中）
+  // ★ 北海道はタイル実寸が1.2倍になるので、viewBox計算も反映
+  const scale = (p.code === "01") ? HOKKAIDO_SCALE : 1;
+
   minX = Math.min(minX, x);
   minY = Math.min(minY, y);
-  maxX = Math.max(maxX, x);
-  maxY = Math.max(maxY, y);
+  maxX = Math.max(maxX, x + TILE * scale);
+  maxY = Math.max(maxY, y + TILE * scale);
 
+  // 親g（位置決め用）
   const g = document.createElementNS('http://www.w3.org/2000/svg','g');
   g.setAttribute('id', `pref-${p.code}`);
   g.setAttribute('data-code', p.code);
   g.setAttribute('transform', `translate(${x},${y})`);
   g.setAttribute('role','group');
   g.setAttribute('aria-label', p.name);
+
+  // ★ 子g（拡大用：中心原点でscale）
+  const s = document.createElementNS('http://www.w3.org/2000/svg','g');
+  if (p.code === "01") {
+    // 中心へ移動→拡大→戻す（＝中心基準で四方均等に拡大）
+    s.setAttribute('transform',
+      `translate(${TILE/2},${TILE/2}) scale(${HOKKAIDO_SCALE}) translate(${-TILE/2},${-TILE/2})`
+    );
+  }
 
   const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
   rect.setAttribute('class','tile');
@@ -204,26 +216,30 @@ for(const p of PREFS){
   rect.setAttribute('rx', 10);
   rect.setAttribute('ry', 10);
   rect.addEventListener('click', () => onTileClick(p));
-  g.appendChild(rect);
 
   const label = document.createElementNS('http://www.w3.org/2000/svg','text');
   label.setAttribute('class','label');
   label.setAttribute('x', TILE/2);
   label.setAttribute('y', TILE/2);
   label.textContent = p.name;
-  g.appendChild(label);
 
   const code = document.createElementNS('http://www.w3.org/2000/svg','text');
   code.setAttribute('class','code');
   code.setAttribute('x', TILE/2);
   code.setAttribute('y', 6);
   code.textContent = p.code;
-  g.appendChild(code);
 
   const title = document.createElementNS('http://www.w3.org/2000/svg','title');
   title.textContent = `${p.name}（${p.code}）`;
+
+  // ★ 子gに要素を入れて → 親gに載せる
+  s.appendChild(rect);
+  s.appendChild(label);
+  s.appendChild(code);
+  g.appendChild(s);
   g.appendChild(title);
 
+  // 値レンジクラス付与（既存ロジック）
   if (values[p.code] != null){
     const v = values[p.code];
     const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
@@ -232,6 +248,7 @@ for(const p of PREFS){
 
   svg.appendChild(g);
 }
+
 
 // —— ループ後に1回だけ：viewBox 自動調整 ——
 const vbX = minX - PAD;

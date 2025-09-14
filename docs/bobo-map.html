@@ -19,29 +19,34 @@
   h1{font-size:1.6rem;margin:.2rem 0 .8rem}
   .lead{color:var(--mut)}
   /* --- SVG タイルの見た目 --- */
- /* 全国共通 */
-.pref-tile {
-  width: 70px;
-  height: 70px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 8px;
-  background: #1e293b;
-  color: #fff;
+/* --- SVG タイルの見た目 --- */
+svg{display:block;width:100%;height:auto;background:transparent}
+.tile{fill:var(--tile);stroke:var(--tile-stroke);stroke-width:2;rx:10;ry:10;transition:transform .08s ease}
+.tile:hover{fill:var(--tile-hover);cursor:pointer;transform:translateY(-2px)}
 
-  font-size: 20px;
-  font-weight: bold;
-  line-height: 1.2;
-
-  margin: 4px;   /* ← 全国一律 すき間 */
+.label{
+  font-size:20px;           /* 全国共通：県名 */
+  font-weight:bold;
+  fill:var(--label);
+  pointer-events:none;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+.code{
+  font-size:20px;           /* 全国共通：数字 */
+  font-weight:bold;
+  fill:#a3a3a3;
+  pointer-events:none;
+  text-anchor:middle;
+  dominant-baseline:hanging;
 }
 
-/* 北海道だけ拡大（四方均等1.2倍） */
-#pref-01 {
-  transform: scale(1.2);
-}
+/* 例の色分けはそのまま */
+[data-code="01"] .tile{fill:#3b82f6}
+[data-code="47"] .tile{fill:#f97316}
+
+/* ※ .pref-tile や margin は HTML用。今回のSVGには効きません（削ってOK） */
+
 
   svg{display:block;width:100%;height:auto;background:transparent}
   .tile{fill:var(--tile);stroke:var(--tile-stroke);stroke-width:2;rx:10;ry:10;transition:transform .08s ease}
@@ -77,7 +82,6 @@
 
   <!-- 可変レイアウトSVG：JSでタイルを生成 -->
   <svg id="jp-tiles" viewBox="0 0 1000 760" aria-label="Japan Prefecture Tiles"></svg>
-　<svg id="jp-tiles" viewBox="0 0 1000 760" preserveAspectRatio="xMidYMid meet"></svg>
 
   
   <p class="lead" style="margin-top:1rem">使い方：<br>

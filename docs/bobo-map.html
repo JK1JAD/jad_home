@@ -153,15 +153,17 @@ const PREFS = [
   // 沖縄
   {code:"47",name:"沖縄",   row:11,col:-6},
 ];
-const HOKKAIDO_SCALE = 1.2;
-const HK_SHIFT_X = 60;   // 右へ +px（お好みで調整）
-const HK_SHIFT_Y = -40;  // 上へ -px（お好みで調整）
 
 // ===== タイル設定 =====
 const TILE = 72;
 const GAP  = 12;
 const ORIGIN_X = 420;
 const ORIGIN_Y = 60;
+
+const HOKKAIDO_SCALE = 1.2; // ← ここは1回だけ
+const HK_SHIFT_X = 60;      // 右へ
+const HK_SHIFT_Y = -40;     // 上へ（マイナス）
+
 
 // 値での色分け（必要なら入れる）
 const values = {};
@@ -180,20 +182,36 @@ const PAD = 60;
 let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
 // ===== 生成ロジック =====
-for(const p of PREFS){
+for (const p of PREFS) {
   const x = ORIGIN_X + (TILE + GAP) * p.col;
   const y = ORIGIN_Y + (TILE + GAP) * p.row;
 
-  // 親g（位置決め用）
+  const scale = (p.code === "01") ? HOKKAIDO_SCALE : 1;
+
+  // ★ 中央から拡大するぶん左右上下に半分ずつ広がる
+  const delta = (TILE * (scale - 1)) / 2;
+  minX = Math.min(minX, x - delta);
+  minY = Math.min(minY, y - delta);
+  maxX = Math.max(maxX, x + TILE + delta);
+  maxY = Math.max(maxY, y + TILE + delta);
+
   const g = document.createElementNS('http://www.w3.org/2000/svg','g');
   g.setAttribute('id', `pref-${p.code}`);
   g.setAttribute('data-code', p.code);
   g.setAttribute('transform', `translate(${x},${y})`);
   g.setAttribute('role','group');
   g.setAttribute('aria-label', p.name);
- // ★ 子g（拡大＋右上へシフト）
-const s = document.createElementNS('http://www.w3.org/2000/svg','g');
-if (p.code === "01")
+
+  // ★ 子g：右上シフト＋中央から1.2倍（北海道のみ）
+  const s = document.createElementNS('http://www.w3.org/2000/svg','g');
+  if (p.code === "01") {
+    s.setAttribute(
+      'transform',
+      `translate(${TILE/2 + HK_SHIFT_X},${TILE/2 + HK_SHIFT_Y}) ` +
+      `scale(${HOKKAIDO_SCALE}) ` +
+      `translate(${-TILE/2},${-TILE/2})`
+    );
+  }
 
   const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
   rect.setAttribute('class','tile');
@@ -218,15 +236,13 @@ if (p.code === "01")
   const title = document.createElementNS('http://www.w3.org/2000/svg','title');
   title.textContent = `${p.name}（${p.code}）`;
 
-  // ★ 子gに要素を入れて → 親gに載せる
   s.appendChild(rect);
   s.appendChild(label);
   s.appendChild(code);
   g.appendChild(s);
   g.appendChild(title);
 
-  // 値レンジクラス付与（既存ロジック）
-  if (values[p.code] != null){
+  if (values[p.code] != null) {
     const v = values[p.code];
     const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
     g.classList.add(`v-${bucket}`);
@@ -234,6 +250,7 @@ if (p.code === "01")
 
   svg.appendChild(g);
 }
+
 
 
 // —— ループ後に1回だけ：viewBox 自動調整 ——

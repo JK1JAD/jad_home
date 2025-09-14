@@ -28,6 +28,22 @@
   [data-code="01"] .tile{fill:#3b82f6} /* 北海道だけ青に */
   [data-code="47"] .tile{fill:#f97316} /* 沖縄だけオレンジに */
   /* 値レンジでの色分けをしたい場合は、JSで class を付与して .v-1, .v-2 ... などを定義 */
+/* 全国共通：タイル内の文字を大きく */
+.label {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.code {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 北海道だけタイルを中央から1.2倍に拡大 */
+#pref-01 {
+  transform: scale(1.2);
+}
+
 </style>
 </head>
 <body>

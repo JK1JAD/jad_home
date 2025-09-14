@@ -19,6 +19,30 @@
   h1{font-size:1.6rem;margin:.2rem 0 .8rem}
   .lead{color:var(--mut)}
   /* --- SVG タイルの見た目 --- */
+ /* 全国共通 */
+.pref-tile {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background: #1e293b;
+  color: #fff;
+
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.2;
+
+  margin: 4px;   /* ← 全国一律 すき間 */
+}
+
+/* 北海道だけ拡大（四方均等1.2倍） */
+#pref-01 {
+  transform: scale(1.2);
+}
+
   svg{display:block;width:100%;height:auto;background:transparent}
   .tile{fill:var(--tile);stroke:var(--tile-stroke);stroke-width:2;rx:10;ry:10;transition:transform .08s ease}
   .tile:hover{fill:var(--tile-hover);cursor:pointer;transform:translateY(-2px)}

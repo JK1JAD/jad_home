@@ -251,8 +251,9 @@ for (const p of PREFS) {
   g.setAttribute('data-code', p.code);
   g.setAttribute('transform', `translate(${x},${y})`);
   g.setAttribute('role','group');
-  g.setAttribute('aria-label', p.name);
 　g.setAttribute('data-name', p.name);
+
+  g.setAttribute('data-name', p.name);
   // ★ 子g：右上シフト＋中央から1.2倍（北海道のみ）
   const s = document.createElementNS('http://www.w3.org/2000/svg','g');
   if (p.code === "01") {

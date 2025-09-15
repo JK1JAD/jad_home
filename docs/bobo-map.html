@@ -40,13 +40,47 @@ svg{display:block;width:100%;height:auto;background:transparent}
   dominant-baseline:hanging;
 }
 
+/* ===================== */
 /* 例の色分けはそのまま */
-[data-code="01"] .tile{fill:#3b82f6}
-[data-code="47"] .tile{fill:#f97316}
+/* ===================== */
 
-/* ※ .pref-tile や margin は HTML用。今回のSVGには効きません（削ってOK） */
+/* ▼ 不要なので削除しました
+[data-code="01"] .tile{fill:#3b82f6} 
+[data-code="47"] .tile{fill:#f97316} 
+*/
 
+/* ===================== */
+/* SVG全体のスタイル     */
+/* ===================== */
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: transparent;
+}
 
+.tile {
+  fill: var(--tile);
+  stroke: var(--tile-stroke);
+  stroke-width: 2;
+  rx: 10;
+  ry: 10;
+  transition: transform .08s ease;
+}
+
+.tile:hover {
+  fill: var(--tile-hover);
+  cursor: pointer;
+  transform: translateY(-2px);
+}
+
+/* ===================== */
+/* 全国共通: タイル内の文字 */
+/* ===================== */
+.label {
+  font-size: 20px;
+  font-weight: bold;
+}
   svg{display:block;width:100%;height:auto;background:transparent}
   .tile{fill:var(--tile);stroke:var(--tile-stroke);stroke-width:2;rx:10;ry:10;transition:transform .08s ease}
   .tile:hover{fill:var(--tile-hover);cursor:pointer;transform:translateY(-2px)}

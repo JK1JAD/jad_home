@@ -51,9 +51,6 @@ svg{display:block;width:100%;height:auto;background:transparent}
   .tile{fill:var(--tile);stroke:var(--tile-stroke);stroke-width:2;rx:10;ry:10;transition:transform .08s ease}
   .tile:hover{fill:var(--tile-hover);cursor:pointer;transform:translateY(-2px)}
   /* data-code で色分け例（必要に応じて追記） */
-  [data-code="01"] .tile{fill:#3b82f6} /* 北海道だけ青に */
-  [data-code="47"] .tile{fill:#f97316} /* 沖縄だけオレンジに */
-  /* 値レンジでの色分けをしたい場合は、JSで class を付与して .v-1, .v-2 ... などを定義 */
 /* 全国共通：タイル内の文字を大きく */
 .label {
   font-size: 20px;

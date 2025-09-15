@@ -284,11 +284,14 @@ for (const p of PREFS) {
   code.setAttribute('y', 6);
   code.textContent = p.code;
 
+// ここは残す！ 描画の要
 s.appendChild(rect);
 s.appendChild(label);
 s.appendChild(code);
 g.appendChild(s);
+// g.appendChild(title); ← これは入れない（標準ツールチップを無効化するため）
 svg.appendChild(g);
+
  
   if (values[p.code] != null) {
     const v = values[p.code];

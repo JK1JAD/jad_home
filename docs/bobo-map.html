@@ -100,6 +100,24 @@ svg {
 #pref-01 {
   transform: scale(1.2);
 }
+#tooltip {
+  position: fixed;        /* マウス座標に追従 */
+  padding: 6px 10px;
+  background: rgba(0,0,0,.85);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.2;
+  pointer-events: none;   /* マウス操作に干渉しない */
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity .15s ease, transform .15s ease;
+  z-index: 9999;
+}
+#tooltip.show {
+  opacity: 1;
+  transform: translateY(-10px);
+}
 
 </style>
 </head>
@@ -110,7 +128,7 @@ svg {
 
   <!-- 可変レイアウトSVG：JSでタイルを生成 -->
   <svg id="jp-tiles" viewBox="0 0 1000 760" aria-label="Japan Prefecture Tiles"></svg>
-
+<div id="tooltip" hidden></div>
   
   <p class="lead" style="margin-top:1rem">使い方：<br>
     1) 値を塗りたい → JS側の <code>values</code> マップに { "13": 72, ... } のように入れて、クラス付与や fill を変更。<br>
@@ -232,7 +250,7 @@ for (const p of PREFS) {
   g.setAttribute('transform', `translate(${x},${y})`);
   g.setAttribute('role','group');
   g.setAttribute('aria-label', p.name);
-
+　g.setAttribute('data-name', p.name);
   // ★ 子g：右上シフト＋中央から1.2倍（北海道のみ）
   const s = document.createElementNS('http://www.w3.org/2000/svg','g');
   if (p.code === "01") {
@@ -264,15 +282,6 @@ for (const p of PREFS) {
   code.setAttribute('y', 6);
   code.textContent = p.code;
 
-  const title = document.createElementNS('http://www.w3.org/2000/svg','title');
-  title.textContent = `${p.name}（${p.code}）`;
-
-  s.appendChild(rect);
-  s.appendChild(label);
-  s.appendChild(code);
-  g.appendChild(s);
-  g.appendChild(title);
-
   if (values[p.code] != null) {
     const v = values[p.code];
     const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
@@ -283,7 +292,6 @@ for (const p of PREFS) {
 }
 
 
-
 // —— ループ後に1回だけ：viewBox 自動調整 ——
 const vbX = minX - PAD;
 const vbY = minY - PAD;
@@ -292,6 +300,78 @@ const vbH = (maxY + TILE) - minY + PAD * 2;
 
 svg.setAttribute('viewBox', `${vbX} ${vbY} ${vbW} ${vbH}`);
 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+// ===== ここから追記：3秒後に出る全国共通ツールチップ =====
+
+// 1) ツールチップ用の要素を確保（無ければ生成）
+let tooltip = document.getElementById('tooltip');
+if (!tooltip) {
+  tooltip = document.createElement('div');
+  tooltip.id = 'tooltip';
+  tooltip.hidden = true;
+  document.body.appendChild(tooltip);
+}
+
+// 2) 最低限のスタイル（CSS未設置でも動くようJSで付与）
+Object.assign(tooltip.style, {
+  position: 'fixed',
+  padding: '6px 10px',
+  background: 'rgba(0,0,0,.85)',
+  color: '#fff',
+  borderRadius: '6px',
+  fontSize: '14px',
+  lineHeight: '1.2',
+  pointerEvents: 'none',
+  opacity: '0',
+  transform: 'translateY(-6px)',
+  transition: 'opacity .15s ease, transform .15s ease',
+  zIndex: '9999',
+});
+
+let hoverTimer = null;
+
+// 3) 県グループ（<g>）にリスナを付与
+document.querySelectorAll('#jp-tiles > g').forEach(g => {
+  const show = (x, y, text) => {
+    tooltip.textContent = text || '';
+    tooltip.style.left = (x + 12) + 'px';
+    tooltip.style.top  = (y - 12) + 'px';
+    tooltip.hidden = false;
+    // アニメ風に少しだけ浮かせる
+    requestAnimationFrame(() => {
+      tooltip.style.opacity = '1';
+      tooltip.style.transform = 'translateY(-10px)';
+    });
+  };
+
+  const hide = () => {
+    clearTimeout(hoverTimer);
+    tooltip.style.opacity = '0';
+    tooltip.style.transform = 'translateY(-6px)';
+    // トランジション後に非表示
+    setTimeout(() => { tooltip.hidden = true; }, 160);
+  };
+
+  g.addEventListener('mouseenter', e => {
+    clearTimeout(hoverTimer);
+    const label = g.getAttribute('data-name') || g.getAttribute('data-code') || '';
+    // ★ ここが“3秒待ち”
+    hoverTimer = setTimeout(() => show(e.clientX, e.clientY, label), 3000);
+  });
+
+  g.addEventListener('mousemove', e => {
+    if (!tooltip.hidden) {
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top  = (e.clientY - 12) + 'px';
+    }
+  });
+
+  g.addEventListener('mouseleave', hide);
+  g.addEventListener('click', hide); // クリック時は即消す（クリック本体の動作はそのまま）
+});
+
+// ===== 追記ここまで =====
+
 </script>
+
 </body>
 </html>

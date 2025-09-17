@@ -318,27 +318,29 @@ let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   code.setAttribute('y', 6);
   code.textContent = p.code;
 
-// ここは残す！ 描画の要
-  s.appendChild(rect);
-  s.appendChild(label);
-  s.appendChild(code);
-  g.appendChild(s);
-- // g.appendChild(title); ← これは入れない（標準ツールチップを無効化するため）
-         // ← ここを削除（早すぎる append）
-+ // g.appendChild(title); // 使わないならコメントのままでOK
+// ここは残す！描画の要
+s.appendChild(rect);
+s.appendChild(label);
+s.appendChild(codeEl);
+g.appendChild(s);
 
-- if (values[p.code] != null) {
--   const v = values[p.code];
-+ const code = String(p.code).padStart(2,'0');          // 2桁に統一
-+ if (values[code] != null) {
-+   const v = values[code];
-    const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
-    g.classList.add(`v-${bucket}`);
-  }
-+ // クリックで情報パネル（appendより前に付ける）
-+ g.addEventListener('click', ()=> showPrefInfo(code, p.name));
- 
-+ svg.appendChild(g);             // ← ここで“1回だけ”append
+// 2桁コードに統一して各所で使用
+const prefCode = String(p.code).padStart(2,'0');
+g.setAttribute('data-code', prefCode);
+codeEl.textContent = prefCode;
+
+// 値→クラス（任意）
+if (values && values[prefCode] != null) {
+  const v = values[prefCode];
+  const bucket = Math.max(1, Math.min(5, Math.ceil((v+1)/20)));
+  g.classList.add(`v-${bucket}`);
+}
+
+// クリックで情報パネル
+g.addEventListener('click', () => showPrefInfo(prefCode, p.name));
+
+// ここで1回だけ append
+svg.appendChild(g);
 
 
 

@@ -264,7 +264,9 @@ const PAD = 60;
 let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
 
 // ===== 生成ロジック =====
-for (const p of PREFS_BASE) {
+  const code = String(p.code).padStart(2, '0');  // ← 追加（01〜47の文字列に統一）
+
+  for (const p of PREFS_BASE) {
   const x = ORIGIN_X + (TILE + GAP) * p.col;
   const y = ORIGIN_Y + (TILE + GAP) * p.row;
 

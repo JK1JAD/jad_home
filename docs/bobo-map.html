@@ -204,7 +204,38 @@ const PREFS = [
   // 沖縄
   {code:"47",name:"沖縄",   row:11,col:-6},
 ];
+// ===== 県データを公式表と照合して底打ち直し =====
+const CODE2NAME = { "01":"北海道","02":"青森県","03":"岩手県","04":"宮城県","05":"秋田県",/*…*/"47":"沖縄県" };
 
+const NAME2CODE = {};
+for (const [c,n] of Object.entries(CODE2NAME)) {
+  NAME2CODE[n] = c;
+  NAME2CODE[n.replace(/(県|府|都)$/,"")] = c; // 宮城/大阪/京都も拾う
+}
+
+const norm = s => String(s ?? "").trim();
+
+function rebaselinePrefs(list){
+  return list.map(p=>{
+    let code = String(p.code).padStart(2,"0");
+    let name = norm(p.name);
+
+    // 名称からコードを優先補正
+    const codeByName = NAME2CODE[name];
+    if (codeByName && codeByName !== code) {
+      console.warn(`補正: ${name} code ${code} -> ${codeByName}`);
+      code = codeByName;
+    }
+    // 正式表記で上書き
+    if (CODE2NAME[code]) name = CODE2NAME[code];
+
+    return { ...p, code, name };
+  });
+}
+
+const PREFS_BASE = rebaselinePrefs(PREFS);
+
+  
 // ===== タイル設定 =====
 const TILE = 72;
 const GAP  = 12;

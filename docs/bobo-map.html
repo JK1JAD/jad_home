@@ -323,6 +323,21 @@ s.appendChild(rect);
 s.appendChild(label);
 s.appendChild(codeEl);
 g.appendChild(s);
+// ① 2桁コードを作成
+const prefCode = String(p.code).padStart(2,'0');
+
+// ② クラスと属性を必ず付ける（←超重要）
+g.classList.add('pref-tile');
+g.setAttribute('data-code', prefCode);
+label.classList.add('pref-label');
+codeEl.classList.add('pref-code');
+codeEl.textContent = prefCode;   // 表示も 01〜47 に統一
+
+// ③ クリックで情報パネル（append の直前に）
+g.addEventListener('click', ()=> showPrefInfo(prefCode, p.name));
+
+// ④ タイルを1回だけ append
+svg.appendChild(g);
 
 // 2桁コードに統一して各所で使用
 const prefCode = String(p.code).padStart(2,'0');

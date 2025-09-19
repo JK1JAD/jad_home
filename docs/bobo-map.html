@@ -34,11 +34,11 @@
     <p class="lead">「展示しておく」ことが目的の軽量版。細かい作り込みは後日QSY予定です。</p>
     <span class="pill">置場っ子ちゃんの片隅コーナー</span>
 
-    <!-- ぼぼマップ 埋め込み -->
-<div id="bobo-wrap" style="max-width:1024px;margin:1rem auto;padding:12px;border:1px solid #334155;border-radius:12px;background:#0f172a">
-  <!-- docs直下なのでパスは images/japan.svg -->
-  <object id="boboMap" data="images/japan.svg" type="image/svg+xml" style="width:100%;height:auto;"></object>
-</div>
+<!-- ぼぼマップ（インライン描画版） -->
+<div id="stage" class="stage" aria-busy="true" aria-live="polite"></div>
+
+<!-- クリック情報カード -->
+<div id="bobo-info" style="display:none;"></div>
 
 
     <p class="note">※ 県パス（<code>path[data-code]</code>）へツールチップ（県名）を自動付与。ホバーでちょい強調。</p>
@@ -78,52 +78,65 @@
     return lines[Math.floor(Math.random()*lines.length)];
   }
 
-  // ====== 情報カードをページ下に作成 ======
-  const info = document.createElement('div');
-  info.style.cssText = "position:sticky;bottom:0;max-width:1024px;margin:12px auto;padding:12px 14px;background:#0b132b;border:1px solid #334155;border-radius:12px;color:#e5e7eb;font:14px/1.6 system-ui,Segoe UI,Roboto;display:none";
+  // ====== 情報カード整形 ======
+  const info = document.getElementById('bobo-info');
+  info.style.cssText = "position:sticky;bottom:0;max-width:1024px;margin:12px auto;padding:12px 14px;background:#0b132b;border:1px solid #334155;border-radius:12px;color:#e5e7eb;font:14px/1.6 system-ui,Segoe UI,Roboto;";
   info.innerHTML = '<strong id="pname"></strong> <span id="pmeta" style="color:#94a3b8;margin-left:.5rem"></span><div id="pbobo" style="color:#cbd5e1;margin-top:.25rem"></div>';
-  document.getElementById('bobo-wrap').after(info);
 
-  // ====== SVG 読み込み後の処理 ======
-  const obj = document.getElementById('boboMap');
-  obj.addEventListener('load', () => {
-    const svg = obj.contentDocument && obj.contentDocument.querySelector('svg');
-    if(!svg) return;
+  // ====== SVG を fetch → インライン化 ======
+  const host = document.getElementById('stage');
+  (async () => {
+    try{
+      const res = await fetch('images/japan.svg', {cache:'no-store'});
+      if(!res.ok) throw new Error('SVG fetch failed: '+res.status);
+      const text = await res.text();
+      host.innerHTML = text;
 
-    // 黄色スタイルを保険で注入
-    const style = document.createElementNS('http://www.w3.org/2000/svg','style');
-    style.textContent = `[data-code]{fill:#d6c420;stroke:#333;stroke-width:1}
-                          [data-code].hovered{filter:brightness(1.1);stroke-width:2}`;
-    svg.prepend(style);
+      const svg = host.querySelector('svg');
+      if(!svg) throw new Error('SVG root not found');
 
-    // 各県ごとにイベント設定
-    svg.querySelectorAll('[data-code]').forEach(el=>{
-      const code = (el.getAttribute('data-code')||'').padStart(2,'0');
-      const rec = PREFS[code];
-      const name = rec? rec[0] : `不明(${code})`;
+      if(!svg.hasAttribute('viewBox')){
+        const w = svg.getAttribute('width') || 600;
+        const h = svg.getAttribute('height') || 800;
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+        svg.removeAttribute('width'); svg.removeAttribute('height');
+      }
+      svg.setAttribute('preserveAspectRatio','xMidYMid meet');
 
-      // 標準ツールチップ
-      const old = el.querySelector('title'); if(old) old.remove();
-      const t = document.createElementNS('http://www.w3.org/2000/svg','title');
-      t.textContent = name;
-      el.appendChild(t);
+      const style = document.createElementNS('http://www.w3.org/2000/svg','style');
+      style.textContent = `[data-code]{fill:#d6c420;stroke:#333;stroke-width:1}
+                           [data-code].hovered{filter:brightness(1.1);stroke-width:2}`;
+      svg.prepend(style);
 
-      // ホバー
-      el.addEventListener('mouseenter',()=>el.classList.add('hovered'));
-      el.addEventListener('mouseleave',()=>el.classList.remove('hovered'));
+      svg.querySelectorAll('[data-code]').forEach(el=>{
+        const code = (el.getAttribute('data-code')||'').padStart(2,'0');
+        const rec = PREFS[code];
 
-      // クリック
-      el.addEventListener('click',()=>{
-        if(!rec){ return; }
-        const [nm, area, pop] = rec;
-        document.getElementById('pname').textContent = nm;
-        document.getElementById('pmeta').textContent = `面積 ${area.toLocaleString()} km² / 人口 ${pop.toLocaleString()} 人（概数）`;
-        document.getElementById('pbobo').textContent = boboLine(nm);
-        info.style.display = 'block';
-        info.scrollIntoView({behavior:'smooth', block:'nearest'});
+        const old = el.querySelector('title'); if(old) old.remove();
+        const t = document.createElementNS('http://www.w3.org/2000/svg','title');
+        t.textContent = rec ? rec[0] : `不明(${code})`;
+        el.appendChild(t);
+
+        el.addEventListener('mouseenter',()=>el.classList.add('hovered'));
+        el.addEventListener('mouseleave',()=>el.classList.remove('hovered'));
+
+        el.addEventListener('click',()=>{
+          if(!rec) return;
+          const [nm, area, pop] = rec;
+          document.getElementById('pname').textContent = nm;
+          document.getElementById('pmeta').textContent = `面積 ${area.toLocaleString()} km² / 人口 ${pop.toLocaleString()} 人（概数）`;
+          document.getElementById('pbobo').textContent = boboLine(nm);
+          info.style.display = 'block';
+          info.scrollIntoView({behavior:'smooth', block:'nearest'});
+        });
       });
-    });
-  });
+
+      host.setAttribute('aria-busy','false');
+    }catch(err){
+      host.innerHTML = `<div style="padding:12px;color:#fca5a5">読み込みエラー：${String(err)}</div>`;
+      host.setAttribute('aria-busy','false');
+    }
+  })();
 })();
 </script>
 

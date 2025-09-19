@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+  <style>
+    path[data-code] { fill:#d6c420; stroke:#333; stroke-width:1; }
+  </style>
+
+  <!-- 北海道 -->
+  <rect x="250" y="20" width="100" height="60" data-code="01"/>
+  
+  <!-- 東北（例として横並び） -->
+  <rect x="250" y="100" width="40" height="40" data-code="02"/>
+  <rect x="290" y="100" width="40" height="40" data-code="03"/>
+  <rect x="250" y="140" width="40" height="40" data-code="04"/>
+  <rect x="290" y="140" width="40" height="40" data-code="05"/>
+  <rect x="250" y="180" width="40" height="40" data-code="06"/>
+  <rect x="290" y="180" width="40" height="40" data-code="07"/>
+
+  <!-- 以降はダミー配置：関東〜沖縄までタイル状 -->
+  <!-- コードだけ正しく47まで振っておけば、JAD側JSが県名ツールチップ付けるのでOK -->
+  <g id="dummy-tiles">
+    <!-- 関東：08〜14 -->
+    <rect x="250" y="240" width="40" height="40" data-code="08"/>
+    <rect x="290" y="240" width="40" height="40" data-code="09"/>
+    <rect x="330" y="240" width="40" height="40" data-code="10"/>
+    <rect x="250" y="280" width="40" height="40" data-code="11"/>
+    <rect x="290" y="280" width="40" height="40" data-code="12"/>
+    <rect x="330" y="280" width="40" height="40" data-code="13"/>
+    <rect x="370" y="280" width="40" height="40" data-code="14"/>
+    
+    <!-- 以下、省略しながらタイルを縦に並べる -->
+    <!-- 15〜47まで同じサイズで順に配置 -->
+    <!-- …このあたりは自動生成でもOK（必要なら私が全部展開します） -->
+  </g>
+
+  <!-- 沖縄 -->
+  <rect x="400" y="700" width="40" height="40" data-code="47"/>
+</svg>

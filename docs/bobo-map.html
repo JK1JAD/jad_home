@@ -34,75 +34,98 @@
     <p class="lead">「展示しておく」ことが目的の軽量版。細かい作り込みは後日QSY予定です。</p>
     <span class="pill">置場っ子ちゃんの片隅コーナー</span>
 
-    <div id="stage" class="stage" aria-busy="true" aria-live="polite">
-      <!-- ここに SVG をインライン挿入 -->
-    </div>
+    <!-- ぼぼマップ 埋め込み -->
+<div id="bobo-wrap" style="max-width:1024px;margin:1rem auto;padding:12px;border:1px solid #334155;border-radius:12px;background:#0f172a">
+  <!-- docs直下なのでパスは images/japan.svg -->
+  <object id="boboMap" data="images/japan.svg" type="image/svg+xml" style="width:100%;height:auto;"></object>
+</div>
+
 
     <p class="note">※ 県パス（<code>path[data-code]</code>）へツールチップ（県名）を自動付与。ホバーでちょい強調。</p>
   </div>
-
 <script>
-/* ===== 県コード → 県名 ===== */
-const PREF_NAME = {
-  "01":"北海道","02":"青森","03":"岩手","04":"秋田","05":"宮城","06":"山形","07":"福島",
-  "08":"茨城","09":"栃木","10":"群馬","11":"埼玉","12":"千葉","13":"東京","14":"神奈川",
-  "15":"新潟","16":"富山","17":"石川","18":"福井","19":"山梨","20":"長野",
-  "21":"岐阜","22":"静岡","23":"愛知","24":"三重",
-  "25":"滋賀","26":"京都","27":"大阪","28":"兵庫","29":"奈良","30":"和歌山",
-  "31":"鳥取","32":"島根","33":"岡山","34":"広島","35":"山口",
-  "36":"徳島","37":"香川","38":"愛媛","39":"高知",
-  "40":"福岡","41":"佐賀","42":"長崎","43":"熊本","44":"大分","45":"宮崎","46":"鹿児島","47":"沖縄"
-};
+(function(){
+  // ====== 県データ：名前・面積・人口（概数） ======
+  const PREFS = {
+"01":["北海道",83424,5200000],"02":["青森",9645,1240000],"03":["岩手",15275,1220000],
+"04":["秋田",11638,960000],"05":["宮城",7285,2300000],"06":["山形",9323,1080000],
+"07":["福島",13784,1840000],"08":["茨城",6097,2910000],"09":["栃木",6408,1930000],
+"10":["群馬",6362,1930000],"11":["埼玉",3798,7340000],"12":["千葉",5157,6270000],
+"13":["東京",2194,13960000],"14":["神奈川",2416,9230000],"15":["新潟",12584,2220000],
+"16":["富山",4247,1040000],"17":["石川",4186,1140000],"18":["福井",4190,767000],
+"19":["山梨",4465,817000],"20":["長野",13562,2050000],
+"21":["岐阜",10621,1990000],"22":["静岡",7777,3630000],"23":["愛知",5173,7550000],
+"24":["三重",5774,1790000],
+"25":["滋賀",4017,1410000],"26":["京都",4612,2560000],"27":["大阪",1905,8820000],
+"28":["兵庫",8401,5460000],"29":["奈良",3691,1330000],"30":["和歌山",4726,924000],
+"31":["鳥取",3507,553000],"32":["島根",6708,674000],"33":["岡山",7114,1890000],
+"34":["広島",8479,2790000],"35":["山口",6112,1350000],
+"36":["徳島",4146,727000],"37":["香川",1877,956000],"38":["愛媛",5676,1340000],
+"39":["高知",7103,698000],
+"40":["福岡",4986,5110000],"41":["佐賀",2441,814000],"42":["長崎",4132,1310000],
+"43":["熊本",7409,1750000],"44":["大分",6339,1130000],"45":["宮崎",7735,1070000],
+"46":["鹿児島",9187,1590000],"47":["沖縄",2281,1460000]
+  };
 
-/* ===== SVG を同一オリジンから読み込み → インライン化 =====
-   docs/ が公開ルートなので、相対パス 'images/japan.svg' でOK。
-*/
-(async function init() {
-  const el = document.getElementById('stage');
-  try {
-    const res = await fetch('images/japan.svg', {cache: 'no-store'});
-    if (!res.ok) throw new Error('SVG fetch failed: ' + res.status);
-    const svgText = await res.text();
-
-    // そのまま差し込む（同一オリジンなのでスクリプト操作可）
-    el.innerHTML = svgText;
-
-    const svg = el.querySelector('svg');
-    if (!svg) throw new Error('SVG root not found');
-
-    // 表示調整（保険）：viewBox が無い場合に備えて付与
-    if (!svg.hasAttribute('viewBox')) {
-      const w = svg.getAttribute('width') || 2090;
-      const h = svg.getAttribute('height') || 2600;
-      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-      svg.removeAttribute('width'); svg.removeAttribute('height');
-    }
-    svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-
-    // 県パスへ <title> 追加（ブラウザ標準ツールチップ）
-    const prefs = svg.querySelectorAll('path[data-code]');
-    prefs.forEach(p => {
-      const code = (p.getAttribute('data-code') || '').padStart(2,'0');
-      const name = PREF_NAME[code] || `不明(${code})`;
-
-      // 既存 title をクリアして付け直し
-      const old = p.querySelector('title');
-      if (old) old.remove();
-      const t = document.createElementNS('http://www.w3.org/2000/svg','title');
-      t.textContent = `${name}（${code}）`;
-      p.appendChild(t);
-
-      // 軽いホバー演出
-      p.addEventListener('mouseenter', () => p.classList.add('hovered'));
-      p.addEventListener('mouseleave', () => p.classList.remove('hovered'));
-    });
-
-    el.setAttribute('aria-busy','false');
-  } catch (err) {
-    el.innerHTML = `<div style="padding:12px;color:#fca5a5">読み込みエラー：${String(err)}</div>`;
-    el.setAttribute('aria-busy','false');
+  // ====== ボボネタ（ランダム1行） ======
+  function boboLine(name){
+    const lines = [
+      `${name}は今日も“だいたいOK（ぼぼ）”運転中。`,
+      `ここは${name}、地図の精度も気持ちも“ほぼ”で行こう。`,
+      `${name}チェック…Sメーター59−（ぼぼ）。`,
+      `${name}：詳細は次回公演で。今回は展示（ぼぼ）。`
+    ];
+    return lines[Math.floor(Math.random()*lines.length)];
   }
+
+  // ====== 情報カードをページ下に作成 ======
+  const info = document.createElement('div');
+  info.style.cssText = "position:sticky;bottom:0;max-width:1024px;margin:12px auto;padding:12px 14px;background:#0b132b;border:1px solid #334155;border-radius:12px;color:#e5e7eb;font:14px/1.6 system-ui,Segoe UI,Roboto;display:none";
+  info.innerHTML = '<strong id="pname"></strong> <span id="pmeta" style="color:#94a3b8;margin-left:.5rem"></span><div id="pbobo" style="color:#cbd5e1;margin-top:.25rem"></div>';
+  document.getElementById('bobo-wrap').after(info);
+
+  // ====== SVG 読み込み後の処理 ======
+  const obj = document.getElementById('boboMap');
+  obj.addEventListener('load', () => {
+    const svg = obj.contentDocument && obj.contentDocument.querySelector('svg');
+    if(!svg) return;
+
+    // 黄色スタイルを保険で注入
+    const style = document.createElementNS('http://www.w3.org/2000/svg','style');
+    style.textContent = `[data-code]{fill:#d6c420;stroke:#333;stroke-width:1}
+                          [data-code].hovered{filter:brightness(1.1);stroke-width:2}`;
+    svg.prepend(style);
+
+    // 各県ごとにイベント設定
+    svg.querySelectorAll('[data-code]').forEach(el=>{
+      const code = (el.getAttribute('data-code')||'').padStart(2,'0');
+      const rec = PREFS[code];
+      const name = rec? rec[0] : `不明(${code})`;
+
+      // 標準ツールチップ
+      const old = el.querySelector('title'); if(old) old.remove();
+      const t = document.createElementNS('http://www.w3.org/2000/svg','title');
+      t.textContent = name;
+      el.appendChild(t);
+
+      // ホバー
+      el.addEventListener('mouseenter',()=>el.classList.add('hovered'));
+      el.addEventListener('mouseleave',()=>el.classList.remove('hovered'));
+
+      // クリック
+      el.addEventListener('click',()=>{
+        if(!rec){ return; }
+        const [nm, area, pop] = rec;
+        document.getElementById('pname').textContent = nm;
+        document.getElementById('pmeta').textContent = `面積 ${area.toLocaleString()} km² / 人口 ${pop.toLocaleString()} 人（概数）`;
+        document.getElementById('pbobo').textContent = boboLine(nm);
+        info.style.display = 'block';
+        info.scrollIntoView({behavior:'smooth', block:'nearest'});
+      });
+    });
+  });
 })();
 </script>
+
 </body>
 </html>

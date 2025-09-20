@@ -147,13 +147,6 @@
           textEl.setAttribute('class','label');
           textEl.textContent = name;
           svg.appendChild(textEl);
-        }
-
-        // 標準ツールチップ（保険）
-        const old = el.querySelector('title'); if(old) old.remove();
-        const t = document.createElementNS('http://www.w3.org/2000/svg','title');
-        t.textContent = name;
-        el.appendChild(t);
 
         // ホバー：3秒後にボボネタ吹き出し
         el.addEventListener('mouseenter', (ev)=>{

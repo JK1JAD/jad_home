@@ -45,7 +45,7 @@
   </div>
 <script>
 (function(){
-  // ====== 県データ：名前・面積・人口（概数） ======
+  // ====== 県データ：名前・面積・人口 ======
   const PREFS = {
 "01":["北海道",83424,5200000],"02":["青森",9645,1240000],"03":["岩手",15275,1220000],
 "04":["秋田",11638,960000],"05":["宮城",7285,2300000],"06":["山形",9323,1080000],
@@ -67,7 +67,6 @@
 "46":["鹿児島",9187,1590000],"47":["沖縄",2281,1460000]
   };
 
-  // ====== ボボネタ（ランダム1行） ======
   function boboLine(name){
     const lines = [
       `${name}は今日も“だいたいOK（ぼぼ）”運転中。`,
@@ -78,12 +77,10 @@
     return lines[Math.floor(Math.random()*lines.length)];
   }
 
-  // ====== 情報カード整形 ======
   const info = document.getElementById('bobo-info');
   info.style.cssText = "position:sticky;bottom:0;max-width:1024px;margin:12px auto;padding:12px 14px;background:#0b132b;border:1px solid #334155;border-radius:12px;color:#e5e7eb;font:14px/1.6 system-ui,Segoe UI,Roboto;";
   info.innerHTML = '<strong id="pname"></strong> <span id="pmeta" style="color:#94a3b8;margin-left:.5rem"></span><div id="pbobo" style="color:#cbd5e1;margin-top:.25rem"></div>';
 
-  // ====== SVG を fetch → インライン化 ======
   const host = document.getElementById('stage');
   (async () => {
     try{
@@ -105,21 +102,35 @@
 
       const style = document.createElementNS('http://www.w3.org/2000/svg','style');
       style.textContent = `[data-code]{fill:#d6c420;stroke:#333;stroke-width:1}
-                           [data-code].hovered{filter:brightness(1.1);stroke-width:2}`;
+                           [data-code].hovered{filter:brightness(1.1);stroke-width:2}
+                           text.label{font-size:10px;fill:#000;text-anchor:middle;dominant-baseline:middle;pointer-events:none}`;
       svg.prepend(style);
 
+      // === ラベル追加処理 ===
       svg.querySelectorAll('[data-code]').forEach(el=>{
         const code = (el.getAttribute('data-code')||'').padStart(2,'0');
         const rec = PREFS[code];
+        const name = rec? rec[0] : `不明(${code})`;
 
-        const old = el.querySelector('title'); if(old) old.remove();
-        const t = document.createElementNS('http://www.w3.org/2000/svg','title');
-        t.textContent = rec ? rec[0] : `不明(${code})`;
-        el.appendChild(t);
+        // 中心座標を計算（rect用）
+        let cx=0, cy=0;
+        if(el.tagName === 'rect'){
+          cx = +el.getAttribute('x') + (+el.getAttribute('width'))/2;
+          cy = +el.getAttribute('y') + (+el.getAttribute('height'))/2;
+        } else {
+          // path の場合はラベルなし
+          return;
+        }
+        const textEl = document.createElementNS('http://www.w3.org/2000/svg','text');
+        textEl.setAttribute('x', cx);
+        textEl.setAttribute('y', cy);
+        textEl.setAttribute('class','label');
+        textEl.textContent = name;
+        svg.appendChild(textEl);
 
+        // クリック・ホバー処理
         el.addEventListener('mouseenter',()=>el.classList.add('hovered'));
         el.addEventListener('mouseleave',()=>el.classList.remove('hovered'));
-
         el.addEventListener('click',()=>{
           if(!rec) return;
           const [nm, area, pop] = rec;

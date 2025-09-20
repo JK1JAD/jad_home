@@ -175,19 +175,22 @@
         });
 
         // クリック：県名・面積・人口（男◯万人 女◯万人）
-        el.addEventListener('click', ()=>{
-          if(!rec) return;
-          const [nm, area, pop] = rec;
-          const {maleMan, femaleMan} = splitSex(pop);
-          document.getElementById('pname').textContent = nm;
-          document.getElementById('pmeta').textContent =
-            `面積 ${area.toLocaleString()} km² / 人口 男 ${maleMan} 万人・女 ${femaleMan} 万人（概数）`;
-          info.style.display = 'block';
-          info.scrollIntoView({behavior:'smooth', block:'nearest'});
-        });
-     　　document.getElementById('pclose').onclick = ()=>{
-  info.style.display = 'none';
-};
+       el.addEventListener('click', ()=>{
+  if(!rec) return;
+  const [nm, area, pop] = rec;
+  const {maleMan, femaleMan} = splitSex(pop);
+  document.getElementById('pname').textContent = nm;
+  document.getElementById('pmeta').textContent =
+    `面積 ${area.toLocaleString()} km² / 人口 男 ${maleMan} 万人・女 ${femaleMan} 万人（概数）`;
+  info.style.display = 'block';
+  info.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  // ★ここが「最後」＝閉じるボタンの動作を仕込む場所
+  document.getElementById('pclose').onclick = ()=>{
+    info.style.display = 'none';
+  };
+});
+
 
       });
 

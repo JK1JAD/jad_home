@@ -139,14 +139,15 @@
 
         // ラベル（rectの中央）
         if(el.tagName === 'rect'){
-          const cx = +el.getAttribute('x') + (+el.getAttribute('width'))/2;
-          const cy = +el.getAttribute('y') + (+el.getAttribute('height'))/2;
-          const textEl = document.createElementNS('http://www.w3.org/2000/svg','text');
-          textEl.setAttribute('x', cx);
-          textEl.setAttribute('y', cy);
-          textEl.setAttribute('class','label');
-          textEl.textContent = name;
-          svg.appendChild(textEl);
+         const cx = +el.getAttribute('x') + (+el.getAttribute('width'))/2;
+const cy = +el.getAttribute('y') + (+el.getAttribute('height'))/2;
+const textEl = document.createElementNS('http://www.w3.org/2000/svg','text');
+textEl.setAttribute('x', cx);
+textEl.setAttribute('y', cy);
+textEl.setAttribute('class','label');
+textEl.textContent = name;
+svg.appendChild(textEl);   // ★この行を正しく復元！
+
 
         // ホバー：3秒後にボボネタ吹き出し
         el.addEventListener('mouseenter', (ev)=>{

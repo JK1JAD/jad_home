@@ -89,7 +89,17 @@
   // 下部情報カード（県名＋面積＋人口（男/女））
   const info = document.getElementById('bobo-info');
   info.style.cssText = "position:sticky;bottom:0;max-width:1024px;margin:12px auto;padding:12px 14px;background:#0b132b;border:1px solid #334155;border-radius:12px;color:#e5e7eb;font:14px/1.6 system-ui,Segoe UI,Roboto;display:none";
-  info.innerHTML = '<strong id="pname"></strong> <span id="pmeta" style="color:#94a3b8;margin-left:.5rem"></span>';
+ 　info.innerHTML = `
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <strong id="pname"></strong>
+    <button id="pclose"
+      style="background:none;border:none;color:#94a3b8;font-size:16px;cursor:pointer;line-height:1;">
+      ×
+    </button>
+  </div>
+  <div id="pmeta" style="color:#94a3b8;margin-top:.25rem"></div>
+`;
+
 
   // 3秒後に出る吹き出し（マウスオーバー）
   const tip = document.createElement('div');
@@ -175,6 +185,10 @@
           info.style.display = 'block';
           info.scrollIntoView({behavior:'smooth', block:'nearest'});
         });
+     　　document.getElementById('pclose').onclick = ()=>{
+  info.style.display = 'none';
+};
+
       });
 
       host.setAttribute('aria-busy','false');

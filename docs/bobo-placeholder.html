@@ -8,29 +8,38 @@
   html,body{background:#0b132b;color:#cbd5e1;margin:0;
             font-family:system-ui,Segoe UI,Roboto}
   .box{max-width:720px;margin:12vh auto;padding:32px;
-       border:1px solid #1f2937;border-radius:16px}
+       border:1px solid #1f2937;border-radius:16px;text-align:center}
   h1{margin:0 0 .5rem;font-size:1.6rem}
   p{margin:.25rem 0 1rem;color:#94a3b8}
-  .row{display:flex;gap:.5rem;flex-wrap:wrap}
+  .row{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center}
   .btn{display:inline-block;padding:.6rem .9rem;border-radius:.75rem;
        border:1px solid #374151;text-decoration:none;color:#e5e7eb}
   .btn:hover{background:#111827}
-  .ghost{opacity:.8}
+  .count{font-size:2rem;margin:1rem 0;color:#d6c420}
 </style>
 </head>
 <body>
   <div class="box">
     <h1>🗾 ぼぼマップ、ただいまQSY準備中…</h1>
     <p class="ghost">地図っ子ちゃん『ちょっと待っててね〜（59＋予感）』</p>
+    <div class="count">5</div> <!-- カウント表示場所 -->
     <div class="row">
-      <a class="btn" href="bobo-map.html">もう一度トライ</a>
+      <a class="btn" href="bobo-map.html">すぐ行く！</a>
       <a class="btn" href="../images/">置き場っ子ちゃんに戻る</a>
       <a class="btn" href="../">ホームへ</a>
     </div>
   </div>
 <script>
-  // 1.5秒後に自動で本番マップへジャンプ
-  setTimeout(()=>location.href="bobo-map.html", 1500);
+  let sec = 5; // 秒数設定
+  const counter = document.querySelector(".count");
+  const timer = setInterval(()=>{
+    sec--;
+    counter.textContent = sec;
+    if(sec <= 0){
+      clearInterval(timer);
+      location.href="bobo-map.html";
+    }
+  },1000);
 </script>
 </body>
 </html>

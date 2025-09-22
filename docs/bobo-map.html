@@ -189,6 +189,25 @@
   })();
 })();
 </script>
+ <!-- ◀ この下に追記する（終了タグの直前） -->
+  <style>
+    .jad-fab-back{
+      position: fixed; right: 16px; bottom: 16px; z-index: 9999;
+      padding: .65rem .9rem; border-radius: .8rem; cursor: pointer;
+      background: #111827; color:#e5e7eb; border:1px solid #374151;
+    }
+    .jad-fab-back:hover{ background:#0b132b }
+  </style>
 
+  <button class="jad-fab-back" id="fabBack"
+          aria-label="置き場っ子ちゃんへ戻る">◁ 置き場へ</button>
+
+  <script>
+    document.getElementById('fabBack').addEventListener('click', () => {
+      if (history.length > 1) history.back();
+      else location.href = "../images/";
+    });
+  </script>
+  
 </body>
 </html>

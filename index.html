@@ -335,6 +335,42 @@ html{ scroll-behavior:smooth; }
     box-shadow:
       inset 6px 0 14px -6px rgba(14,165,233,0.9); /* 内側ぼかし光 */
   }
+/* 双子カプセルをきれいに見せる微調整 */
+.twin-pill{
+  display:flex;
+  border-radius:2rem;
+  border:1px solid #334155;
+  align-items:stretch;           /* ← 高さをそろえる */
+}
+
+/* 双子ボタン共通：折り返し防止・高さ安定 */
+.twin-pill .btn{
+  flex:1;
+  padding:.68rem 1.1rem;
+  background:#1e293b;
+  color:#e5e7eb;
+  text-decoration:none;
+  text-align:center;
+  transition:background .2s;
+  white-space:nowrap;            /* ← ここで1行固定！ */
+  line-height:1.05;              /* ← 文字の上下の詰め改善 */
+  min-width:8.5em;               /* ← 幅の下限（好みで 8–9em 程度） */
+}
+
+/* ホバー色は今のまま */
+.twin-pill .btn:hover{ background:#0f172a; }
+
+/* 中央の境界＝濃いネオン青（常時） */
+.twin-pill .btn + .btn{
+  border-left:1px solid rgba(14,165,233,.6);
+  box-shadow:inset 6px 0 14px -6px rgba(14,165,233,.9);
+}
+
+/* スマホで窮屈な場合の保険（幅が足りない時に自動縮小） */
+@media (max-width: 420px){
+  .twin-pill .btn{ min-width:auto; font-size:0.95rem; }
+}
+
 </style>
 
 

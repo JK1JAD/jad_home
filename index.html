@@ -238,15 +238,15 @@ html{ scroll-behavior:smooth; }
   </a>
 
   <!-- 双子：置き場っ子（フォト・マップ） -->
- <div class="twin-pill">
+<div class="twin-pill">
   <!-- フォトちゃん -->
-  <a href="images/" class="btn jad-tip twin"
-     data-tooltip="📸 フォトちゃん『また撮りすぎちゃった〜！』">
+  <a href="images/" class="btn jad-tip"
+     data-tooltip="📸 フォトちゃん『また撮りすぎちゃった〜！』" tabindex="0">
     フォトちゃん
   </a>
   <!-- マップちゃん -->
-  <a href="docs/bobo-placeholder.html" class="btn jad-tip twin"
-     data-tooltip="🗾 マップちゃん『全国案内するよ〜！QSY！』">
+  <a href="docs/bobo-placeholder.html" class="btn jad-tip"
+     data-tooltip="🗾 マップちゃん『全国案内するよ〜！QSY！』" tabindex="0">
     マップちゃん
   </a>
 </div>
@@ -290,6 +290,44 @@ html{ scroll-behavior:smooth; }
   .twin-pill .btn:hover {
     background:#0f172a;
   }
+/* --- ツールチップ（jad-tip）最小セット --- */
+.jad-tip{ position:relative; }
+
+.jad-tip::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  background:#111827;
+  color:#e5e7eb;
+  padding:.5rem .7rem;
+  border-radius:.5rem;
+  white-space:pre-wrap;
+  max-width:260px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .15s, transform .15s;
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  z-index:1000;
+}
+.jad-tip::before{
+  content:"";
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  border:6px solid transparent;
+  border-top-color:#111827;
+  margin-bottom:2px;
+  opacity:0;
+  transition:opacity .15s;
+  z-index:1001;
+}
+.jad-tip:hover::after,
+.jad-tip:hover::before,
+.jad-tip:focus::after,
+.jad-tip:focus::before{ opacity:1; }
 
   /* 中央の境界＝濃いネオン青（常時） */
   .twin-pill .btn + .btn {

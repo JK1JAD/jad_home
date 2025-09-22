@@ -197,7 +197,7 @@ html{ scroll-behavior:smooth; }
     <div class="nav-inner">
       <a class="logo" href="#top">
         <span class="logo-mark" aria-hidden="true"></span>
-        <span class="logo-text">３姉妹にQSY</span></a>
+        <span class="logo-text">ホームにQSY</span></a>
       <div class="nav-links">
         <a class="link is-active" href="#about">概要</a>
         <a class="link" href="#plan">構成</a>
@@ -370,6 +370,29 @@ html{ scroll-behavior:smooth; }
 @media (max-width: 420px){
   .twin-pill .btn{ min-width:auto; font-size:0.95rem; }
 }
+/* --- 迅速復旧パッチ：双子が色を上書きしないようにする --- */
+
+/* 1) twin は“形だけ”担当。色・背景は .btn 側に任せる */
+.twin-pill{ display:flex; border-radius:2rem; border:1px solid #334155; }
+
+/* 2) 余計な上書きを撤回（背景・文字色は継承） */
+.twin-pill > .btn{
+  flex:1;
+  /* ← これらは消す/書かない：background, color, border */
+  border:0;                 /* 枠は外側と中央線に任せる */
+  padding:.68rem 1.1rem;
+  text-align:center;
+  white-space:nowrap;       /* 折り返し防止 */
+}
+
+/* 3) 中央の“ネオン青”だけ付与（見た目はそのまま） */
+.twin-pill > .btn + .btn{
+  border-left:1px solid rgba(14,165,233,.6);
+  box-shadow:inset 6px 0 14px -6px rgba(14,165,233,.9);
+}
+
+/* 4) ホバー色も .btn の既存ルールを使う（twin では触らない） */
+
 
 </style>
 

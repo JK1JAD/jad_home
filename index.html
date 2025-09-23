@@ -292,7 +292,171 @@ html{ scroll-behavior:smooth; }
   background: linear-gradient(180deg, var(--jad-lo), var(--jad-press));
 }
 </style>
+<style>
+/* ===== JAD Button Fix Pack ===== */
 
+/* 競合に勝つためにスコープを限定しつつ強め指定 */
+#jad-sisters, .btn-row{
+  display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin:24px 0;
+}
+
+/* ミントグリーン（JAD正調） */
+:root{
+  --ink:#0b132b;
+  --jad-hi: rgba(0,242,156,.98);
+  --jad-lo: rgba(0,200,120,.98);
+  --jad-press: rgba(0,160,96,.98);
+  --jad-outline: rgba(16,185,129,.7);
+  --btn-text:#071b12;
+}
+
+#jad-sisters .btn,
+#jad-sisters .btn-twins{
+  -webkit-appearance:none; appearance:none; border:none; cursor:pointer; user-select:none;
+  color:var(--btn-text) !important;
+  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo)) !important;
+  box-shadow:
+    0 0 0 1px var(--jad-outline) inset,
+    0 2px 0 0 rgba(3,56,36,.45) inset,
+    0 12px 24px rgba(0,242,156,.18),
+    0 0 24px rgba(0,242,156,.28) !important;
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, filter .2s ease !important;
+}
+
+#jad-sisters .btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:14px 22px; gap:.5rem;
+  font-weight:700; letter-spacing:.02em; text-decoration:none;
+  border-radius:9999px; position:relative; overflow:hidden;
+}
+#jad-sisters .btn::before,
+#jad-sisters .btn-twins::before{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+  background: radial-gradient(120% 120% at 50% -20%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 60%);
+}
+
+#jad-sisters .btn:hover,
+#jad-sisters .btn-twins:hover{ transform: translateY(-1px); filter:saturate(1.06); box-shadow:
+  0 0 0 1px var(--jad-outline) inset,
+  0 2px 0 0 rgba(3,56,36,.5) inset,
+  0 16px 30px rgba(0,242,156,.28),
+  0 0 36px rgba(0,242,156,.38) !important;
+}
+#jad-sisters .btn:active,
+#jad-sisters .btn-twins:active{
+  transform: translateY(0);
+  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press)) !important;
+}
+#jad-sisters .btn:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 6px rgba(0,242,156,.6) !important;
+}
+
+/* visited紫化を封印 */
+#jad-sisters .btn:visited,
+#jad-sisters .btn-twins a:visited{ color:var(--btn-text) !important; }
+
+/* 双子（フォト・マップ） */
+#jad-sisters .btn-twins{
+  display:inline-grid; grid-template-columns:1fr 1fr; gap:0;
+  border-radius:9999px; overflow:hidden; position:relative;
+  text-decoration:none;
+}
+#jad-sisters .btn-twins a{
+  padding:14px 22px; font-weight:700; text-align:center; white-space:nowrap;
+  color:var(--btn-text) !important; text-decoration:none;
+  position:relative; z-index:1;
+}
+#jad-sisters .btn-twins .divider{
+  position:absolute; left:50%; top:6px; bottom:6px; width:2px; pointer-events:none;
+  background: radial-gradient(closest-side, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 70%);
+  filter: blur(1.5px);
+}
+
+/* スマホで全幅 */
+@media (max-width:560px){ #jad-sisters .btn{ min-width:100%; } }
+
+/* —— ツールチップ（吹き出し） —— */
+.jad-tip{ position:relative; }
+.jad-tooltip{
+  position: fixed; z-index: 9999; pointer-events:none;
+  max-width: 320px; padding:10px 12px; border-radius:12px;
+  font-size:.92rem; line-height:1.35; font-weight:600;
+  color:#0b132b; background: #ecfdf5; /* 薄ミント背景 */
+  box-shadow: 0 6px 24px rgba(0,0,0,.25), 0 0 0 1px rgba(16,185,129,.35) inset;
+  transform: translate(12px, 12px);
+  opacity:0; transition: opacity .12s ease;
+}
+.jad-tooltip.show{ opacity:1; }
+</style>
+
+<script>
+// ===== 404対策：hrefを自動で“正しいベース”に補正 =====
+// Project Pages の場合: https://ユーザー.github.io/<repo>/ がベース
+// User Pages の場合:   https://ユーザー.github.io/ がベース
+(function(){
+  const base = (function(){
+    if (!location.hostname.endsWith('github.io')) return '/';
+    const parts = location.pathname.split('/').filter(Boolean);
+    // /<repo>/... → 先頭セグメントをベースに
+    return parts.length ? `/${parts[0]}/` : '/';
+  })();
+
+  // data-path から href を作る（先頭スラッシュ禁止！）
+  document.querySelectorAll('#jad-sisters a[data-path]').forEach(a=>{
+    const p = (a.getAttribute('data-path')||'').replace(/^\/+/, ''); // 先頭/除去
+    a.setAttribute('href', base + p);
+  });
+})();
+</script>
+
+<script>
+// ===== 吹き出し：data-tooltip を表示 =====
+(function(){
+  const tooltip = document.createElement('div');
+  tooltip.className = 'jad-tooltip';
+  document.body.appendChild(tooltip);
+
+  let showTimer = null;
+
+  const showTip = (el, e) => {
+    tooltip.textContent = el.getAttribute('data-tooltip') || '';
+    if (!tooltip.textContent) return;
+    position(e);
+    tooltip.classList.add('show');
+  };
+  const hideTip = () => {
+    tooltip.classList.remove('show');
+  };
+  const position = (e) => {
+    const x = e.clientX, y = e.clientY;
+    const pad = 14;
+    tooltip.style.left = Math.max(pad, Math.min(window.innerWidth - pad - tooltip.offsetWidth, x + 12)) + 'px';
+    tooltip.style.top  = Math.max(pad, Math.min(window.innerHeight - pad - tooltip.offsetHeight, y + 12)) + 'px';
+  };
+
+  // デリゲート
+  document.addEventListener('mouseover', (e)=>{
+    const el = e.target.closest('.jad-tip');
+    if (!el) return;
+    clearTimeout(showTimer);
+    showTimer = setTimeout(()=>showTip(el, e), 120); // 少し待ってから表示
+  });
+  document.addEventListener('mousemove', (e)=>{
+    if (!tooltip.classList.contains('show')) return;
+    position(e);
+  });
+  document.addEventListener('mouseout', (e)=>{
+    if (e.target.closest('.jad-tip') && !e.relatedTarget?.closest('.jad-tip')){
+      clearTimeout(showTimer); hideTip();
+    }
+  });
+})();
+</script>
+
+  
 </head>
 <body>
 
@@ -328,26 +492,27 @@ html{ scroll-behavior:smooth; }
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     
-<div class="btn-group">
-<!-- 長女：PDFアーカイブ -->
-<a class="btn btn--wide jad-tip" href="/pdfs/"
-   data-tooltip="💜『記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！』">
-  PDFアーカイブ
-</a>
+<div id="jad-sisters" class="btn-row">
+  <!-- アーカイブちゃん -->
+  <a class="btn jad-tip" data-path="pdfs/"
+     data-tooltip="💜『記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！』">
+    アーカイブちゃん
+  </a>
 
-<!-- 次女：マニュアル -->
-<a class="btn btn--wide jad-tip" href="/docs/manual.html"
-   data-tooltip="💚『解らない事があったらわたしに聞いて！　ここ間違ってるよ！…って言いたいタイプ』">
-  マニュアル
-</a>
+  <!-- マニュアルちゃん -->
+  <a class="btn jad-tip" data-path="manual.html"
+     data-tooltip="💚『解らない事があったらわたしに聞いて！　ここ間違ってるよ！…って言いたいタイプ』">
+    マニュアルちゃん
+  </a>
 
-<!-- 双子ピル：フォト & マップ -->
-<div class="btn-twins btn--wide">
-  <a class="jad-tip" href="/images/"
-     data-tooltip="📸『あっちゃ〜、また撮りすぎちゃった〜！』">フォト</a>
-  <span class="divider" aria-hidden="true"></span>
-  <a class="jad-tip" href="/docs/bobo-map.html"
-     data-tooltip="🗾『全国どこでも案内するよ〜！QSY！』">マップ</a>
+  <!-- 双子（フォトちゃん・マップちゃん） -->
+  <div class="btn-twins">
+    <a class="jad-tip" data-path="images/"
+       data-tooltip="📸『あっちゃ〜、また撮りすぎちゃった〜！』">フォトちゃん</a>
+    <span class="divider" aria-hidden="true"></span>
+    <a class="jad-tip" data-path="bobo-map.html"
+       data-tooltip="🗾『全国どこでも案内するよ〜！QSY！』">マップちゃん</a>
+  </div>
 </div>
 
 </div>

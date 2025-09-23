@@ -189,6 +189,110 @@ html{ scroll-behavior:smooth; }
       .card{grid-column: span 12}
     }
   </style>
+<style>
+/* ===== JAD Button Pack (top page) ===== */
+:root{
+  --ink:#0b132b;                 /* 背景の濃紺（既存と同じならそのまま） */
+  --jad-hi: rgba(0,242,156,.98); /* ネオン緑 上面 */
+  --jad-lo: rgba(0,200,120,.98); /* ネオン緑 下面 */
+  --jad-press: rgba(0,160,96,.98);
+  --jad-outline: rgba(16,185,129,.7);
+  --btn-text:#071b12;            /* ボタン文字色（黒に近い深緑） */
+}
+
+/* コンテナ：中央寄せ＆崩れにくく */
+#jad-sisters, .btn-row{
+  display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center;
+  margin:24px 0;
+}
+
+/* 基本ボタン：長円ピル型＋ネオングリーン */
+.btn{
+  -webkit-appearance:none; appearance:none; border:none; cursor:pointer; user-select:none;
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:14px 22px; gap:.5rem;
+  font-weight:700; letter-spacing:.02em; text-decoration:none;
+  border-radius:9999px; position:relative; overflow:hidden;
+  color:var(--btn-text);
+  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo));
+  box-shadow:
+    0 0 0 1px var(--jad-outline) inset,
+    0 2px 0 0 rgba(3,56,36,.45) inset,
+    0 12px 24px rgba(0,242,156,.18),
+    0 0 24px rgba(0,242,156,.28);
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;
+}
+
+/* 天面のハイライト（光沢） */
+.btn::before{
+  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
+  background: radial-gradient(120% 120% at 50% -20%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 60%);
+}
+
+/* hover / active / focus-visible */
+.btn:hover{
+  transform: translateY(-1px);
+  filter: saturate(1.06);
+  box-shadow:
+    0 0 0 1px var(--jad-outline) inset,
+    0 2px 0 0 rgba(3,56,36,.5) inset,
+    0 16px 30px rgba(0,242,156,.28),
+    0 0 36px rgba(0,242,156,.38);
+}
+.btn:active{
+  transform: translateY(0);
+  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press));
+  box-shadow:
+    0 0 0 1px var(--jad-outline) inset,
+    0 1px 0 0 rgba(3,56,36,.55) inset;
+}
+.btn:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--ink),
+    0 0 0 6px rgba(0,242,156,.6);
+}
+
+/* visitedで色が変わらないよう固定 */
+.btn:visited{ color:var(--btn-text); }
+
+/* 幅を揃えたいときに */
+.btn--wide{ min-width:220px; }
+
+/* サブテキスト（任意） */
+.btn .sub{ font-weight:600; opacity:.85; font-size:.9em; margin-left:.25em; }
+
+/* スマホではフル幅に */
+@media (max-width:560px){
+  .btn--wide{ min-width:100%; }
+}
+
+/* —— 双子ピル（フォトちゃん×マップちゃん）オプション —— */
+.btn-twins{
+  display:inline-grid; grid-template-columns:1fr 1fr; gap:0;
+  border-radius:9999px; overflow:hidden; position:relative;
+  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo));
+  box-shadow:
+    0 0 0 1px var(--jad-outline) inset,
+    0 2px 0 0 rgba(3,56,36,.45) inset,
+    0 12px 24px rgba(0,242,156,.18),
+    0 0 24px rgba(0,242,156,.28);
+}
+.btn-twins a{
+  padding:14px 22px; text-decoration:none; color:var(--btn-text);
+  font-weight:700; text-align:center; white-space:nowrap;
+}
+.btn-twins .divider{
+  position:absolute; left:50%; top:6px; bottom:6px; width:2px; pointer-events:none;
+  background: radial-gradient(closest-side, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 70%);
+  filter: blur(1.5px);
+}
+.btn-twins a:hover{ filter:saturate(1.06); }
+.btn-twins a:active{
+  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press));
+}
+</style>
+
 </head>
 <body>
 
@@ -225,30 +329,25 @@ html{ scroll-behavior:smooth; }
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
     
 <div class="btn-group">
-  <!-- 長女：アーカイブちゃん -->
-  <a href="pdfs/" class="btn jad-tip solo"
-     data-tooltip="💜『記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！』">
-    アーカイブちゃん
-  </a>
+<!-- 長女：PDFアーカイブ -->
+<a class="btn btn--wide jad-tip" href="/pdfs/"
+   data-tooltip="💜『記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！』">
+  PDFアーカイブ
+</a>
 
-  <!-- 次女：マニュアルちゃん -->
-  <a href="docs/manual.html" class="btn jad-tip solo"
-     data-tooltip="💚『解らない事があったらわたしに聞いて！　ここ間違ってるよ！…って言いたいタイプ』">
-    マニュアルちゃん
-  </a>
+<!-- 次女：マニュアル -->
+<a class="btn btn--wide jad-tip" href="/docs/manual.html"
+   data-tooltip="💚『解らない事があったらわたしに聞いて！　ここ間違ってるよ！…って言いたいタイプ』">
+  マニュアル
+</a>
 
-  <!-- 双子：置き場っ子（フォト・マップ） -->
-<div class="twin-pill">
-  <!-- フォトちゃん -->
-  <a href="images/" class="btn jad-tip"
-     data-tooltip="📸『あっちゃ～、また撮りすぎちゃった〜！』" tabindex="0">
-    フォトちゃん
-  </a>
-  <!-- マップちゃん -->
-  <a href="docs/bobo-placeholder.html" class="btn jad-tip"
-     data-tooltip="🗾『全国どこでも案内するよ〜！QSY！』" tabindex="0">
-    マップちゃん
-  </a>
+<!-- 双子ピル：フォト & マップ -->
+<div class="btn-twins btn--wide">
+  <a class="jad-tip" href="/images/"
+     data-tooltip="📸『あっちゃ〜、また撮りすぎちゃった〜！』">フォト</a>
+  <span class="divider" aria-hidden="true"></span>
+  <a class="jad-tip" href="/docs/bobo-map.html"
+     data-tooltip="🗾『全国どこでも案内するよ〜！QSY！』">マップ</a>
 </div>
 
 </div>

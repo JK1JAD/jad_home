@@ -1,59 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <!-- 最初の1ペイント目から黒で塗りつぶす（白チカ防止の最短手） -->
-  <style>
-    /* まずは固定値で確実に効かせる */
-    html, body { background:#0b132b; margin:0; }
-  #jad-line{
-      margin-top: .8rem;
-      padding: .75rem 1rem;
-      border: 1px solid #2a9d8f33;
-      background: #0b132b;
-      color: #e5f7f5;
-      border-radius: .6rem;
-      font-size: .95rem;
-      display: none;
-    }
-    #jad-line.show{ display:block; }
-
-    .jad-tip:focus-visible::after{
-      content: attr(data-tooltip);
-      position: absolute;
-      left: 50%; transform: translateX(-50%);
-      bottom: calc(100% + 8px);
-      padding: .4rem .6rem;
-      background: #111827; color:#fff; border-radius: .5rem;
-      white-space: pre-wrap; max-width: 24rem;
-      box-shadow: 0 6px 20px rgba(0,0,0,.35);
-      pointer-events: none;
-    }
- /* === ここから追記分 === */
-#jad-line {
-  transition: opacity 0.3s ease-in-out;
-}
-#jad-line.show {
-  display: block;
-  opacity: 1;
-}
-#jad-line.hide {
-  opacity: 0;
-}
-
-/* もし姉妹ごとに色を変えたければ、class名で指定可能 */
-#jad-line.purple { border-color: #9d4edd; }
-#jad-line.emerald { border-color: #2a9d8f; }
-#jad-line.amber { border-color: #f59e0b; }
-
-  </style>
-  <!-- ここから下に既存の meta / title / 既存の <style> が続く -->
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JK1JAD · JAD Home</title>
   <meta name="description" content="JK1JAD（ふじさわたけひこ）のGitHub Pagesホーム。黒×緑のJAD風デザイン + ふじさわ節増量版。" />
+
+  <!-- 最初の1ペイント目から黒で塗りつぶす（白チカ防止） + セリフバー -->
   <style>
-    /* ===== Theme ===== */
+    html, body { background:#0b132b; margin:0; }
+    #jad-line{
+      margin-top:.8rem; padding:.75rem 1rem; border:1px solid #2a9d8f33;
+      background:#0b132b; color:#e5f7f5; border-radius:.6rem; font-size:.95rem;
+      display:none; opacity:0; transition:opacity .25s ease;
+    }
+    #jad-line.show{ display:block; opacity:1; }
+  </style>
+
+  <!-- ===== Theme / Layout ===== -->
+  <style>
     :root{
       --ink:#0b132b;      /* 背景の濃紺 */
       --ink-2:#111827;    /* もう一段暗いところに */
@@ -68,9 +33,8 @@
       --radius-sm:10px;
       --warning:#f59e0b;
     }
-    /* 追記（どこでもOK、:rootの下あたり） */
-html{ scroll-behavior:smooth; }
-.anchor{ scroll-margin-top: 88px; }  /* 固定ヘッダー分だけ余裕を取る */
+    html{ scroll-behavior:smooth; }
+    .anchor{ scroll-margin-top: 88px; }
 
     html,body{height:100%}
     body{
@@ -94,7 +58,6 @@ html{ scroll-behavior:smooth; }
     .link{color:var(--mut); text-decoration:none; padding:8px 10px; border-radius:10px}
     .link:hover{color:#d1d5db; background:#0f172a}
 
-    /* === ナビ強化 === */
     .nav a{ color:#b7c1d1; transition:color .2s ease, text-shadow .2s ease; }
     .nav a:hover{ color:var(--acc); text-shadow:0 0 6px rgba(42,157,143,.45); }
     .nav a.is-active{ color:#e9f5f3; border-bottom:2px solid var(--acc); padding-bottom:2px; }
@@ -104,11 +67,6 @@ html{ scroll-behavior:smooth; }
     .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; color:#c7ece7; background:rgba(42,157,143,.18); border:1px solid rgba(42,157,143,.4); padding:6px 10px; border-radius:999px}
     .title{font-size:40px; font-weight:800; margin:14px 0 8px; letter-spacing:.01em}
     .subtitle{color:var(--mut); max-width:820px}
-    .cta{display:flex; gap:12px; margin-top:20px; flex-wrap:wrap}
-    .btn{appearance:none; border:1px solid transparent; background:var(--acc); color:#082a29; font-weight:700; padding:12px 16px; border-radius:12px; text-decoration:none; box-shadow:var(--shadow)}
-    .btn:hover{background:var(--acc-2); color:#061f1e}
-    .btn-ghost{background:transparent; color:#cfe9e6; border-color:#255e59}
-    .btn-ghost:hover{background:#0a1b1a}
 
     /* ===== Sections / Cards ===== */
     .section{max-width:1100px; margin:22px auto; padding:0 20px}
@@ -146,403 +104,60 @@ html{ scroll-behavior:smooth; }
     .cover-card__caption span{ color:var(--mut); font-size:13px; opacity:.9; }
 
     /* ===== 右カラム 目次カード ===== */
-    .toc{
-      position: relative;
-      margin: 2rem 2rem 4rem;
-      padding: .5rem;
-      display: grid;
-      gap: 16px;
-      max-width: 520px;
-      margin-left: auto; /* 右へ寄せる */
-    }
-    .toc h2{
-      color:#cfe9e5;
-      letter-spacing:.1em;
-      font-weight:700;
-      font-size:1.25rem;
-      margin:.25rem 0 .5rem;
-    }
+    .toc{ position: relative; margin: 2rem 2rem 4rem; padding: .5rem; display: grid; gap: 16px; max-width: 520px; margin-left: auto; }
+    .toc h2{ color:#cfe9e5; letter-spacing:.1em; font-weight:700; font-size:1.25rem; margin:.25rem 0 .5rem; }
     .toc-card{
       display:flex; flex-direction:column; gap:6px;
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:18px 20px;
-      color:#e6fbf7; text-decoration:none;
+      border-radius:16px; padding:18px 20px; color:#e6fbf7; text-decoration:none;
       box-shadow: 0 6px 24px rgba(0,0,0,.25);
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
     .toc-card span{ font-size:1.1rem; color: var(--acc); font-weight:700; }
     .toc-card small{ color:#9ec7c1; }
-    .toc-card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(42,157,143,.55);
-      box-shadow: 0 10px 28px rgba(42,157,143,.18);
-    }
+    .toc-card:hover{ transform: translateY(-2px); border-color: rgba(42,157,143,.55); box-shadow: 0 10px 28px rgba(42,157,143,.18); }
 
     /* ===== Footer ===== */
     footer{border-top:1px solid var(--border); margin-top:34px}
     .foot{max-width:1100px; margin:0 auto; padding:24px 20px; color:#93a4b5; font-size:14px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
 
-    @media (max-width: 900px){
-      .title{font-size:32px}
-      .card{grid-column: span 12}
-    }
+    @media (max-width: 900px){ .title{font-size:32px} .card{grid-column: span 12} }
   </style>
-<style>
-/* ===== JAD Button Pack (top page) ===== */
-:root{
-  --ink:#0b132b;                 /* 背景の濃紺（既存と同じならそのまま） */
-  --jad-hi: rgba(0,242,156,.98); /* ネオン緑 上面 */
-  --jad-lo: rgba(0,200,120,.98); /* ネオン緑 下面 */
-  --jad-press: rgba(0,160,96,.98);
-  --jad-outline: rgba(16,185,129,.7);
-  --btn-text:#071b12;            /* ボタン文字色（黒に近い深緑） */
-}
 
-/* コンテナ：中央寄せ＆崩れにくく */
-#jad-sisters, .btn-row{
-  display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center;
-  margin:24px 0;
-}
-
-/* 基本ボタン：長円ピル型＋ネオングリーン */
-.btn{
-  -webkit-appearance:none; appearance:none; border:none; cursor:pointer; user-select:none;
-  display:inline-flex; align-items:center; justify-content:center;
-  min-height:44px; padding:14px 22px; gap:.5rem;
-  font-weight:700; letter-spacing:.02em; text-decoration:none;
-  border-radius:9999px; position:relative; overflow:hidden;
-  color:var(--btn-text);
-  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo));
-  box-shadow:
-    0 0 0 1px var(--jad-outline) inset,
-    0 2px 0 0 rgba(3,56,36,.45) inset,
-    0 12px 24px rgba(0,242,156,.18),
-    0 0 24px rgba(0,242,156,.28);
-  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, filter .2s ease;
-}
-
-/* 天面のハイライト（光沢） */
-.btn::before{
-  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
-  background: radial-gradient(120% 120% at 50% -20%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 60%);
-}
-
-/* hover / active / focus-visible */
-.btn:hover{
-  transform: translateY(-1px);
-  filter: saturate(1.06);
-  box-shadow:
-    0 0 0 1px var(--jad-outline) inset,
-    0 2px 0 0 rgba(3,56,36,.5) inset,
-    0 16px 30px rgba(0,242,156,.28),
-    0 0 36px rgba(0,242,156,.38);
-}
-.btn:active{
-  transform: translateY(0);
-  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press));
-  box-shadow:
-    0 0 0 1px var(--jad-outline) inset,
-    0 1px 0 0 rgba(3,56,36,.55) inset;
-}
-.btn:focus-visible{
-  outline: none;
-  box-shadow:
-    0 0 0 3px var(--ink),
-    0 0 0 6px rgba(0,242,156,.6);
-}
-
-/* visitedで色が変わらないよう固定 */
-.btn:visited{ color:var(--btn-text); }
-
-/* 幅を揃えたいときに */
-.btn--wide{ min-width:220px; }
-
-/* サブテキスト（任意） */
-.btn .sub{ font-weight:600; opacity:.85; font-size:.9em; margin-left:.25em; }
-
-/* スマホではフル幅に */
-@media (max-width:560px){
-  .btn--wide{ min-width:100%; }
-}
-
-/* —— 双子ピル（フォトちゃん×マップちゃん）オプション —— */
-.btn-twins{
-  display:inline-grid; grid-template-columns:1fr 1fr; gap:0;
-  border-radius:9999px; overflow:hidden; position:relative;
-  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo));
-  box-shadow:
-    0 0 0 1px var(--jad-outline) inset,
-    0 2px 0 0 rgba(3,56,36,.45) inset,
-    0 12px 24px rgba(0,242,156,.18),
-    0 0 24px rgba(0,242,156,.28);
-}
-.btn-twins a{
-  padding:14px 22px; text-decoration:none; color:var(--btn-text);
-  font-weight:700; text-align:center; white-space:nowrap;
-}
-.btn-twins .divider{
-  position:absolute; left:50%; top:6px; bottom:6px; width:2px; pointer-events:none;
-  background: radial-gradient(closest-side, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 70%);
-  filter: blur(1.5px);
-}
-.btn-twins a:hover{ filter:saturate(1.06); }
-.btn-twins a:active{
-  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press));
-}
-</style>
-<style>
-/* ===== JAD Button Fix Pack ===== */
-
-/* 競合に勝つためにスコープを限定しつつ強め指定 */
-#jad-sisters, .btn-row{
-  display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; margin:24px 0;
-}
-
-/* ミントグリーン（JAD正調） */
-:root{
-  --ink:#0b132b;
-  --jad-hi: rgba(0,242,156,.98);
-  --jad-lo: rgba(0,200,120,.98);
-  --jad-press: rgba(0,160,96,.98);
-  --jad-outline: rgba(16,185,129,.7);
-  --btn-text:#071b12;
-}
-
-#jad-sisters .btn,
-#jad-sisters .btn-twins{
-  -webkit-appearance:none; appearance:none; border:none; cursor:pointer; user-select:none;
-  color:var(--btn-text) !important;
-  background: linear-gradient(180deg, var(--jad-hi), var(--jad-lo)) !important;
-  box-shadow:
-    0 0 0 1px var(--jad-outline) inset,
-    0 2px 0 0 rgba(3,56,36,.45) inset,
-    0 12px 24px rgba(0,242,156,.18),
-    0 0 24px rgba(0,242,156,.28) !important;
-  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, filter .2s ease !important;
-}
-
-#jad-sisters .btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  min-height:44px; padding:14px 22px; gap:.5rem;
-  font-weight:700; letter-spacing:.02em; text-decoration:none;
-  border-radius:9999px; position:relative; overflow:hidden;
-}
-#jad-sisters .btn::before,
-#jad-sisters .btn-twins::before{
-  content:""; position:absolute; inset:-2px; border-radius:inherit; pointer-events:none;
-  background: radial-gradient(120% 120% at 50% -20%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 60%);
-}
-
-#jad-sisters .btn:hover,
-#jad-sisters .btn-twins:hover{ transform: translateY(-1px); filter:saturate(1.06); box-shadow:
-  0 0 0 1px var(--jad-outline) inset,
-  0 2px 0 0 rgba(3,56,36,.5) inset,
-  0 16px 30px rgba(0,242,156,.28),
-  0 0 36px rgba(0,242,156,.38) !important;
-}
-#jad-sisters .btn:active,
-#jad-sisters .btn-twins:active{
-  transform: translateY(0);
-  background: linear-gradient(180deg, var(--jad-lo), var(--jad-press)) !important;
-}
-#jad-sisters .btn:focus-visible{
-  outline: none;
-  box-shadow:
-    0 0 0 3px var(--ink),
-    0 0 0 6px rgba(0,242,156,.6) !important;
-}
-
-/* visited紫化を封印 */
-#jad-sisters .btn:visited,
-#jad-sisters .btn-twins a:visited{ color:var(--btn-text) !important; }
-
-/* 双子（フォト・マップ） */
-#jad-sisters .btn-twins{
-  display:inline-grid; grid-template-columns:1fr 1fr; gap:0;
-  border-radius:9999px; overflow:hidden; position:relative;
-  text-decoration:none;
-}
-#jad-sisters .btn-twins a{
-  padding:14px 22px; font-weight:700; text-align:center; white-space:nowrap;
-  color:var(--btn-text) !important; text-decoration:none;
-  position:relative; z-index:1;
-}
-#jad-sisters .btn-twins .divider{
-  position:absolute; left:50%; top:6px; bottom:6px; width:2px; pointer-events:none;
-  background: radial-gradient(closest-side, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 70%);
-  filter: blur(1.5px);
-}
-
-/* スマホで全幅 */
-@media (max-width:560px){ #jad-sisters .btn{ min-width:100%; } }
-
-/* —— ツールチップ（吹き出し） —— */
-.jad-tip{ position:relative; }
-.jad-tooltip{
-  position: fixed; z-index: 9999; pointer-events:none;
-  max-width: 320px; padding:10px 12px; border-radius:12px;
-  font-size:.92rem; line-height:1.35; font-weight:600;
-  color:#0b132b; background: #ecfdf5; /* 薄ミント背景 */
-  box-shadow: 0 6px 24px rgba(0,0,0,.25), 0 0 0 1px rgba(16,185,129,.35) inset;
-  transform: translate(12px, 12px);
-  opacity:0; transition: opacity .12s ease;
-}
-.jad-tooltip.show{ opacity:1; }
-</style>
-
-<script>
-// ===== 404対策：hrefを自動で“正しいベース”に補正 =====
-// Project Pages の場合: https://ユーザー.github.io/<repo>/ がベース
-// User Pages の場合:   https://ユーザー.github.io/ がベース
-(function(){
-  const base = (function(){
-    if (!location.hostname.endsWith('github.io')) return '/';
-    const parts = location.pathname.split('/').filter(Boolean);
-    // /<repo>/... → 先頭セグメントをベースに
-    return parts.length ? `/${parts[0]}/` : '/';
-  })();
-
-  // data-path から href を作る（先頭スラッシュ禁止！）
-  document.querySelectorAll('#jad-sisters a[data-path]').forEach(a=>{
-    const p = (a.getAttribute('data-path')||'').replace(/^\/+/, ''); // 先頭/除去
-    a.setAttribute('href', base + p);
-  });
-})();
-</script>
-
-<script>
-// ===== 吹き出し：data-tooltip を表示 =====
-(function(){
-  const tooltip = document.createElement('div');
-  tooltip.className = 'jad-tooltip';
-  document.body.appendChild(tooltip);
-
-  let showTimer = null;
-
-  const showTip = (el, e) => {
-    tooltip.textContent = el.getAttribute('data-tooltip') || '';
-    if (!tooltip.textContent) return;
-    position(e);
-    tooltip.classList.add('show');
-  };
-  const hideTip = () => {
-    tooltip.classList.remove('show');
-  };
-  const position = (e) => {
-    const x = e.clientX, y = e.clientY;
-    const pad = 14;
-    tooltip.style.left = Math.max(pad, Math.min(window.innerWidth - pad - tooltip.offsetWidth, x + 12)) + 'px';
-    tooltip.style.top  = Math.max(pad, Math.min(window.innerHeight - pad - tooltip.offsetHeight, y + 12)) + 'px';
-  };
-
-  // デリゲート
-  document.addEventListener('mouseover', (e)=>{
-    const el = e.target.closest('.jad-tip');
-    if (!el) return;
-    clearTimeout(showTimer);
-    showTimer = setTimeout(()=>showTip(el, e), 120); // 少し待ってから表示
-  });
-  document.addEventListener('mousemove', (e)=>{
-    if (!tooltip.classList.contains('show')) return;
-    position(e);
-  });
-  document.addEventListener('mouseout', (e)=>{
-    if (e.target.closest('.jad-tip') && !e.relatedTarget?.closest('.jad-tip')){
-      clearTimeout(showTimer); hideTip();
+  <!-- === 四姉妹ボタン：最終安定版（シンプル） === -->
+  <style>
+    #jad-sisters{ display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin:24px 0; }
+    .jad-btn{
+      display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:12px 20px; gap:.5rem;
+      border-radius:9999px; border:1px solid #334155; font-weight:700; letter-spacing:.02em; text-decoration:none;
+      color:#071b12; background:linear-gradient(180deg, rgba(0,242,156,.98), rgba(0,200,120,.98));
+      box-shadow:0 0 0 1px rgba(16,185,129,.65) inset, 0 10px 18px rgba(0,242,156,.20);
+      transition:transform .15s ease, filter .15s ease, box-shadow .2s ease; position:relative; overflow:visible;
     }
-  });
-})();
-</script>
-<style>
-/* ===== JAD ミントの超シンプルボタン ===== */
-#jad-sisters{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:24px 0}
-#jad-sisters .btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:44px;padding:12px 20px;border-radius:9999px;
-  font-weight:700;letter-spacing:.02em;text-decoration:none;
-  color:#071b12;background:linear-gradient(180deg,rgba(0,242,156,.98),rgba(0,200,120,.98));
-  box-shadow:0 0 0 1px rgba(16,185,129,.7) inset,0 10px 18px rgba(0,242,156,.2);
-  transition:transform .15s ease,filter .15s ease,box-shadow .2s ease;
-}
-#jad-sisters .btn:hover{transform:translateY(-1px);filter:saturate(1.06);
-  box-shadow:0 0 0 1px rgba(16,185,129,.75) inset,0 14px 26px rgba(0,242,156,.3);}
-#jad-sisters .btn:visited{color:#071b12;} /* 紫化防止 */
-@media (max-width:560px){#jad-sisters .btn{min-width:100%}}
-</style>
-<style>
-  /* === JAD 四姉妹ボタン 基本 === */
-  .jad-sisters{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-  .jad-btn{
-    --bg:#1f2937; --ink:#e5e7eb; --bd:#334155; --hover:#10b98122;
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:12px 18px;border-radius:9999px;border:1px solid var(--bd);
-    background:var(--bg);color:var(--ink);text-decoration:none;
-    font-weight:600;letter-spacing:.02em;position:relative;
-    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
-    box-shadow:0 2px 6px rgba(0,0,0,.25);
-  }
-  .jad-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
-  .jad-btn:active{transform:translateY(0)}
-  /* 色バリエーション（mint復活＆ネオン寄り） */
-  .jad-btn[data-color="purple"]{--bg:#6d28d9;--bd:#7c3aed;--ink:#fff}
-  .jad-btn[data-color="mint"]  {--bg:#059669;--bd:#10b981;--ink:#fff}
-  .jad-btn[data-color="blue"]  {--bg:#1d4ed8;--bd:#2563eb;--ink:#fff}
-  .jad-btn[data-color="cyan"]  {--bg:#0891b2;--bd:#06b6d4;--ink:#fff}
-  .jad-btn:hover::after{
-    content:"";position:absolute;inset:-2px;border-radius:inherit;
-    box-shadow:0 0 0 2px var(--bd), 0 0 36px var(--bd);
-    opacity:.25;pointer-events:none;
-  }
-  /* 吹き出し（ホバー用ツールチップ） */
-  .jad-tip-bubble{
-    position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);
-    background:#0f172a;color:#e2e8f0;border:1px solid #1f2937;border-radius:12px;
-    padding:10px 12px;font-size:14px;line-height:1.35;white-space:pre-line;
-    box-shadow:0 12px 28px rgba(0,0,0,.4);z-index:9999;pointer-events:none;
-    max-width:min(72ch, 80vw)
-  }
-</style>
-<style>
-  .jad-sisters{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-  .jad-btn{
-    --bg:#1f2937; --ink:#e5e7eb; --bd:#334155;
-    display:inline-flex;align-items:center;justify-content:center;
-    padding:12px 18px;border-radius:9999px;border:1px solid var(--bd);
-    background:var(--bg);color:var(--ink);text-decoration:none;font-weight:600;
-    letter-spacing:.02em;position:relative;transition:transform .12s,box-shadow .12s,background .12s;
-    box-shadow:0 2px 6px rgba(0,0,0,.25)
-  }
-  .jad-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
-  .jad-btn[data-color="purple"]{--bg:#6d28d9;--bd:#7c3aed;--ink:#fff}
-  .jad-btn[data-color="mint"]  {--bg:#059669;--bd:#10b981;--ink:#fff} /* ミント復活 */
-  .jad-btn[data-color="blue"]  {--bg:#1d4ed8;--bd:#2563eb;--ink:#fff}
-  .jad-btn[data-color="cyan"]  {--bg:#0891b2;--bd:#06b6d4;--ink:#fff}
-  .jad-tip-bubble{
-    position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);
-    background:#0f172a;color:#e2e8f0;border:1px solid #1f2937;border-radius:12px;
-    padding:10px 12px;font-size:14px;line-height:1.35;white-space:pre-line;
-    box-shadow:0 12px 28px rgba(0,0,0,.4);z-index:9999;pointer-events:none;max-width:min(72ch, 80vw)
-  }
-  /* 404検出用バッジ */
-  .jad-badge{
-    position:absolute;top:-6px;right:-6px;display:inline-block;min-width:22px;height:22px;
-    padding:0 6px;border-radius:9999px;background:#ef4444;color:#fff;font-size:12px;
-    line-height:22px;text-align:center;border:2px solid #0b132b;box-shadow:0 2px 6px rgba(0,0,0,.35)
-  }
-</style>
+    .jad-btn:hover{ transform:translateY(-1px); filter:saturate(1.06); box-shadow:0 0 0 1px rgba(16,185,129,.75) inset, 0 14px 26px rgba(0,242,156,.30); }
+    .jad-btn:visited{ color:#071b12; }
 
-  
+    /* ツールチップ（CSSのみ） */
+    .jad-tip{ position:relative; }
+    .jad-tip::after{
+      content:attr(data-tooltip); position:absolute; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%);
+      writing-mode:horizontal-tb; display:block; width:max-content; min-width:18ch; max-width:min(72ch,80vw);
+      padding:10px 12px; font-size:14px; line-height:1.35; color:#e2e8f0; background:#0f172a; border:1px solid #1f2937; border-radius:12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35); white-space:pre-wrap; pointer-events:none; opacity:0; visibility:hidden;
+      transition:opacity .12s ease, transform .12s ease; z-index:1000;
+    }
+    .jad-tip::before{ content:""; position:absolute; left:50%; bottom:100%; transform:translateX(-50%); border:7px solid transparent; border-top-color:#1f2937; filter:drop-shadow(0 -1px 0 #0f172a); opacity:0; visibility:hidden; transition:opacity .12s ease; }
+    .jad-tip:hover::after, .jad-tip:focus-visible::after{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(-2px); }
+    .jad-tip:hover::before, .jad-tip:focus-visible::before{ opacity:1; visibility:visible; }
+  </style>
 </head>
-<body>
 
+<body>
   <!-- ===== NAV ===== -->
   <nav class="nav" aria-label="メインナビゲーション">
     <div class="nav-inner">
-      <a class="logo" href="#top">
-        <span class="logo-mark" aria-hidden="true"></span>
-        <span class="logo-text">ホームにQSY</span></a>
+      <a class="logo" href="#top"><span class="logo-mark" aria-hidden="true"></span><span class="logo-text">ホームにQSY</span></a>
       <div class="nav-links">
         <a class="link is-active" href="#about">概要</a>
         <a class="link" href="#plan">構成</a>
@@ -562,240 +177,21 @@ html{ scroll-behavior:smooth; }
       </div>
     </div>
   </section>
-　　
+
   <!-- ===== HERO ===== -->
   <header id="top" class="hero">
     <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
 
-<div class="jad-sisters" id="jad-sisters">
-  <a class="jad-btn jad-tip" data-color="purple" data-target="archive"
-     data-tooltip="💜 記憶力は抜群よ！ 忘れ物は私にお任せ！CQアーカイブ、59＋！">アーカイブちゃん</a>
-  <a class="jad-btn jad-tip" data-color="mint" data-target="manual"
-     data-tooltip="💚 解らない事があったらわたしに聞いて！">マニュアルちゃん</a>
-  <a class="jad-btn jad-tip" data-color="blue" data-target="photo"
-     data-tooltip="📷 スクショ置き場にQSY！">フォトちゃん</a>
-  <a class="jad-btn jad-tip" data-color="cyan" data-target="map"
-     data-tooltip="🗺 ぼぼマップへQSY！">マップちゃん</a>
-</div>
-   
-
-</div>
-<style>
-  .btn-group {
-    display:flex;
-    gap:.5rem;
-    flex-wrap:wrap;
-  }
-
-  /* 通常ボタン（長女・次女） */
-  .btn.solo {
-    border-radius:2rem;
-    padding:.6rem 1.2rem;
-    background:#1e293b;
-    color:#e5e7eb;
-    border:1px solid #334155;
-    text-decoration:none;
-    transition:background .2s;
-  }
-  .btn.solo:hover { background:#0f172a; }
-
-  /* 双子用カプセル */
-  .twin-pill {
-    display:flex;
-    border-radius:2rem;         
-    border:1px solid #334155;
-  }
-
-  .twin-pill .btn {
-    flex:1;
-    padding:.6rem 1.2rem;
-    background:#1e293b;
-    color:#e5e7eb;
-    text-decoration:none;
-    text-align:center;
-    transition:background .2s;
-  }
-  .twin-pill .btn:hover {
-    background:#0f172a;
-  }
-/* --- ツールチップ（jad-tip）最小セット --- */
-.jad-tip{ position:relative; }
-
-.jad-tip::after{
-  content:attr(data-tooltip);
-  position:absolute;
-  bottom:calc(100% + 8px);
-  left:50%;
-  transform:translateX(-50%);
-  background:#111827;
-  color:#e5e7eb;
-  padding:.5rem .7rem;
-  border-radius:.5rem;
-  white-space:pre-wrap;
-  max-width:260px;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .15s, transform .15s;
-  box-shadow:0 6px 20px rgba(0,0,0,.35);
-  z-index:1000;
-}
-.jad-tip::before{
-  content:"";
-  position:absolute;
-  bottom:100%;
-  left:50%;
-  transform:translateX(-50%);
-  border:6px solid transparent;
-  border-top-color:#111827;
-  margin-bottom:2px;
-  opacity:0;
-  transition:opacity .15s;
-  z-index:1001;
-}
-.jad-tip:hover::after,
-.jad-tip:hover::before,
-.jad-tip:focus::after,
-.jad-tip:focus::before{ opacity:1; }
-
-  /* 中央の境界＝濃いネオン青（常時） */
-  .twin-pill .btn + .btn {
-    border-left:1px solid rgba(14,165,233,0.6);  /* ネオン青線 */
-    box-shadow:
-      inset 6px 0 14px -6px rgba(14,165,233,0.9); /* 内側ぼかし光 */
-  }
-
-
-/* ホバー色は今のまま */
-.twin-pill .btn:hover{ background:#0f172a; }
-
-/* 中央の境界＝濃いネオン青（常時） */
-.twin-pill .btn + .btn{
-  border-left:1px solid rgba(14,165,233,.6);
-  box-shadow:inset 6px 0 14px -6px rgba(14,165,233,.9);
-}
-
-/* スマホで窮屈な場合の保険（幅が足りない時に自動縮小） */
-@media (max-width: 420px){
-  .twin-pill .btn{ min-width:auto; font-size:0.95rem; }
-}
-/* --- 迅速復旧パッチ：双子が色を上書きしないようにする --- */
-
-/* 1) twin は“形だけ”担当。色・背景は .btn 側に任せる */
-.twin-pill{ display:flex; border-radius:2rem; border:1px solid #334155; }
-
-/* 2) 余計な上書きを撤回（背景・文字色は継承） */
-.twin-pill > .btn{
-  flex:1;
-  /* ← これらは消す/書かない：background, color, border */
-  border:0;                 /* 枠は外側と中央線に任せる */
-  padding:.68rem 1.1rem;
-  text-align:center;
-  white-space:nowrap;       /* 折り返し防止 */
-}
-
-/* 3) 中央の“ネオン青”だけ付与（見た目はそのまま） */
-.twin-pill > .btn + .btn{
-  border-left:1px solid rgba(14,165,233,.6);
-  box-shadow:inset 6px 0 14px -6px rgba(14,165,233,.9);
-}
-
-/* 4) ホバー色も .btn の既存ルールを使う（twin では触らない） */
-
-
-</style>
-
-
-<div id="jad-line" role="status" aria-live="polite"></div>
-
-
-<style>
-.links-row{display:flex;gap:12px;flex-wrap:wrap}
-.pill{display:inline-block;padding:10px 14px;border-radius:999px;
-     background:#2a9d8f;color:#062d2a;font-weight:700;text-decoration:none;
-     box-shadow:0 4px 14px rgba(42,157,143,.35)}
-.pill:hover{filter:brightness(1.06);transform:translateY(-1px)}
-/* === 三兄弟ボタン：文字をど真ん中に === */
-.pill{
-  display: inline-flex;      /* 中身をフレックス化 */
-  align-items: center;       /* 垂直センター */
-  justify-content: center;   /* 水平センター */
-  min-height: 88px;          /* ボタンの背丈（72〜104pxで好み調整） */
-  padding: 0 28px;           /* 縦は0、横だけ余白 → 完全センター */
-  line-height: 1;            /* ベースラインのズレ防止 */
-  vertical-align: middle;    /* 並びの安定化 */
-  gap: 8px;                  /* アイコンと文字の間隔（任意） */
-}
-
-/* 先頭に📘などの絵文字を使っている場合の微調整（任意） */
-.pill .ico{ display:inline-block; line-height:1; transform: translateY(1px); }
-/* === JAD三姉妹ツールチップ ======================= */
-.jad-tip{
-  position:relative;
-  --tip-bg:#0b132b;     /* 背景（濃紺） */
-  --tip-fg:#e5fff7;     /* 文字（淡ミント） */
-  --tip-br:#2a9d8f;     /* 枠色（JADグリーン） */
-}
-
-/* 吹き出し本体 */
-.jad-tip::after{
-  content: attr(data-tooltip);
-  position:absolute;
-  left:50%;
-  bottom:calc(100% + 10px);
-  transform:translateX(-50%);
-  min-width:220px; max-width:320px;
-  padding:10px 12px;
-  font-size:14px; line-height:1.45;
-  color:var(--tip-fg);
-  background:var(--tip-bg);
-  border:1px solid var(--tip-br);
-  border-radius:12px;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-  white-space:pre-wrap;          /* 改行をそのまま表示 */
-  pointer-events:none;
-  opacity:0; visibility:hidden;
-  transition:opacity .15s ease, transform .15s ease, visibility .15s;
-  z-index:50;
-}
-
-/* 三角 */
-.jad-tip::before{
-  content:"";
-  position:absolute;
-  left:50%; bottom:100%;
-  transform:translateX(-50%);
-  border:8px solid transparent;
-  border-top-color:var(--tip-br);
-  filter:drop-shadow(0 -1px 0 var(--tip-bg));
-  opacity:0; visibility:hidden;
-  transition:opacity .15s ease;
-}
-
-/* ホバー＆表示中 */
-.jad-tip:hover::after,
-.jad-tip.is-tipshow::after{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(-2px); }
-.jad-tip:hover::before,
-.jad-tip.is-tipshow::before{ opacity:1; visibility:visible; }
-
-/* カラー別（担当色） */
-.jad-tip[data-color="purple"]{ --tip-br:#8b5cf6; }   /* 長女 */
-.jad-tip[data-color="emerald"]{ --tip-br:#10b981; }  /* 次女 */
-.jad-tip[data-color="red"]{ --tip-br:#ef4444; }      /* 三女 */
-
-/* アクセシビリティ（Tabで表示） */
-.jad-tip:focus-visible{ outline:2px dashed var(--tip-br); outline-offset:6px; }
-.jad-tip:focus-visible::after,
-.jad-tip:focus-visible::before{ opacity:1; visibility:visible; }
-/* ================================================ */
-/* --- アイドル風アイコン & ちょい浮き --- */
-.pill .ico{ display:inline-block; line-height:1; transform:translateY(1px); margin-right:.4em; }
-.btn.jad-tip{ transition: transform .15s ease; }
-.btn.jad-tip:hover{ transform: translateY(-1px); }
-.btn.jad-tip:active{ transform: translateY(0); }
-
-</style>
+    <!-- === 四姉妹（固定パス：/jad_home/...） === -->
+    <div id="jad-sisters">
+      <a class="jad-btn jad-tip" href="/jad_home/pdfs/index.html" data-tooltip="💜 記憶力は抜群よ！ 忘れ物は私にお任せ！CQアーカイブ、59＋！" data-line="💜 アーカイブ：忘れ物は私にお任せ！">アーカイブちゃん</a>
+      <a class="jad-btn jad-tip" href="/jad_home/docs/manual.html" data-tooltip="💚 解らない事があったらわたしに聞いて！" data-line="💚 マニュアル：困ったらここ！">マニュアルちゃん</a>
+      <a class="jad-btn jad-tip" href="/jad_home/images/index.html" data-tooltip="📷 スクショ置き場にQSY！" data-line="📷 フォト：スクショ置き場へQSY！">フォトちゃん</a>
+      <a class="jad-btn jad-tip" href="/jad_home/docs/bobo-map.html" data-tooltip="🗺 ぼぼマップへQSY！" data-line="🗺 マップ：ぼぼマップ出ます！">マップちゃん</a>
+    </div>
+    <div id="jad-line" role="status" aria-live="polite"></div>
 
     <div class="banter" aria-label="ふじさわ節コーナー">
       <div class="bubble"><strong>ボケ：</strong> 「index.html を置けば、勝手にかっこよくなるんでしょ？」</div>
@@ -806,18 +202,9 @@ html{ scroll-behavior:smooth; }
   <!-- ===== 右カラム 目次カード ===== -->
   <aside class="toc">
     <h2>前 〼</h2>
-    <a class="toc-card" href="#about">
-      <span>第１章 概要</span>
-      <small>まずは電源投入…ではなく概観</small>
-    </a>
-    <a class="toc-card" href="#plan">
-      <span>第２章 構成</span>
-      <small>フォルダとファイルの配線図</small>
-    </a>
-    <a class="toc-card" href="#progress">
-      <span>第３章 進捗</span>
-      <small>本日のレポート：59＋</small>
-    </a>
+    <a class="toc-card" href="#about"><span>第１章 概要</span><small>まずは電源投入…ではなく概観</small></a>
+    <a class="toc-card" href="#plan"><span>第２章 構成</span><small>フォルダとファイルの配線図</small></a>
+    <a class="toc-card" href="#progress"><span>第３章 進捗</span><small>本日のレポート：59＋</small></a>
   </aside>
 
   <!-- ===== ABOUT ===== -->
@@ -908,169 +295,33 @@ html{ scroll-behavior:smooth; }
     </div>
   </footer>
 
+  <!-- ===== Scripts ===== -->
+  <script> document.getElementById('y').textContent = new Date().getFullYear(); </script>
   <script>
-    // 年号を自動更新
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
-<script>
-(() => {
-  const HEADER_OFFSET_PX = 0; // 固定ヘッダーがあれば高さをここに
-  document.addEventListener('click', e => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const hash = a.getAttribute('href');
-    if (!hash || hash === '#') return;
-    const target = document.querySelector(hash);
-    if (!target) return;
-    e.preventDefault();
-    const y = Math.max(0, target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX);
-    window.scrollTo({ top: y, behavior: 'smooth' });
-    history.pushState(null, '', hash);
-  });
-})();
-</script>
-<script>
-/* === JAD三姉妹ツールチップ：タップ対応 + セリフ回転 ================= */
-(function(){
-  const tipsEls = document.querySelectorAll('.jad-tip');
-  let hideTimer = null;
-
-  function parseTips(el){
-    const raw = el.getAttribute('data-tips') || '';
-    const list = raw.split('｜').map(s=>s.trim()).filter(Boolean);
-    return list.length ? list : [el.getAttribute('data-tooltip') || ''];
-  }
-  function setNextLine(el){
-    const list = parseTips(el);
-    const i = parseInt(el.dataset.tipIdx || '0', 10) || 0;
-    el.setAttribute('data-tooltip', list[i] || '');
-    el.dataset.tipIdx = ((i + 1) % list.length).toString();
-  }
-  function showTip(el){
-    clearTimeout(hideTimer);
-    tipsEls.forEach(t=>t.classList.remove('is-tipshow'));
-    setNextLine(el);
-    el.classList.add('is-tipshow');
-    hideTimer = setTimeout(()=> el.classList.remove('is-tipshow'), 2000);
-  }
-
-  tipsEls.forEach(el=>{
-    el.dataset.tipIdx = el.dataset.tipIdx || '0';
-    el.addEventListener('click', function(e){
-      if(!el.classList.contains('is-tipshow')){
+    // アンカーのスムーズスクロール（固定ヘッダーがあれば高さ調整）
+    (()=>{
+      const HEADER_OFFSET_PX = 0;
+      document.addEventListener('click', e => {
+        const a = e.target.closest('a[href^="#"]'); if (!a) return;
+        const hash = a.getAttribute('href'); if (!hash || hash === '#') return;
+        const target = document.querySelector(hash); if (!target) return;
         e.preventDefault();
-        showTip(el);
-      }
-    }, {passive:false});
-    el.addEventListener('focus', ()=>{
-      setNextLine(el);
-      el.classList.add('is-tipshow');
+        const y = Math.max(0, target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET_PX);
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        history.pushState(null, '', hash);
+      });
+    })();
+  </script>
+  <script>
+    // 四姉妹：クリック時に一言出してから遷移（0.8秒）
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('#jad-sisters .jad-btn'); if(!a) return;
+      const msg = a.getAttribute('data-line'); if(!msg) return;
+      e.preventDefault();
+      const panel = document.getElementById('jad-line');
+      panel.textContent = msg; panel.classList.add('show');
+      setTimeout(()=>{ window.location.href = a.href; }, 800);
     });
-    el.addEventListener('blur',  ()=> el.classList.remove('is-tipshow'));
-  });
-
-  document.addEventListener('click', (ev)=>{
-    if(!ev.target.closest('.jad-tip')){
-      tipsEls.forEach(t=>t.classList.remove('is-tipshow'));
-    }
-  });
-})();
-</script>
-<script>
-document.addEventListener('click', function(e){
-  const a = e.target.closest('.jad-tip');
-  if(!a) return;
-
-  const line = a.getAttribute('data-line');
-  if(!line) return; // data-line が無いなら何もしない
-
-  // ページ遷移もしたい？ → 先にセリフを出してから遷移
-  // すぐ遷移すると読めないので、0.8秒だけ見せる
-  const targetHref = a.getAttribute('href');
-
-  const panel = document.getElementById('jad-line');
-  if(panel){
-    panel.textContent = line;
-    panel.classList.add('show');
-  }
-
-  // 既存のデフォルト動作を止めて、少し間を置いて遷移
-  e.preventDefault();
-  setTimeout(()=>{ window.location.href = targetHref; }, 800);
-});
-
-// モバイルの「ホバー問題」対策（タップでツールチップを一瞬見せたいなら任意で）
-document.querySelectorAll('.jad-tip').forEach(el=>{
-  el.addEventListener('touchstart', ()=> {
-    el.classList.add('touching');
-    setTimeout(()=> el.classList.remove('touching'), 500);
-  }, {passive:true});
-});
-</script>
-<script>
-(() => {
-  const $ = (sel, root=document) => root.querySelector(sel);
-  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-
-  // ホバーで吹き出し表示
-  function showTip(el){
-    const text = el.getAttribute('data-tooltip'); if(!text) return;
-    let tip = document.createElement('div');
-    tip.className = 'jad-tip-bubble';
-    tip.textContent = text;
-    el.appendChild(tip);
-    // 画面端ガード（はみ出しを軽減）
-    const r = tip.getBoundingClientRect();
-    if (r.right > window.innerWidth) tip.style.left = 'auto', tip.style.right = '8px', tip.style.transform = 'none';
-    if (r.left < 0) tip.style.left = '8px', tip.style.transform = 'none';
-  }
-  function hideTip(el){
-    const tip = el.querySelector('.jad-tip-bubble'); if(tip) tip.remove();
-  }
-
-  $$('.jad-tip').forEach(el => {
-    el.addEventListener('mouseenter', () => showTip(el));
-    el.addEventListener('mouseleave', () => hideTip(el));
-    // クリック時は“瞬間ボケ”→通常どおりリンク遷移
-    el.addEventListener('mousedown', () => {
-      const t = el.getAttribute('data-tooltip'); if(!t) return;
-      // 既存を一旦消して短く出し直す
-      hideTip(el);
-      const tip = document.createElement('div');
-      tip.className = 'jad-tip-bubble';
-      tip.textContent = t;
-      el.appendChild(tip);
-      setTimeout(() => tip.remove(), 700); // 0.7秒でフェードアウト
-    });
-  });
-})();
-</script>
-<script>
-(() => {
-  const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
-
-  // ……（既存の href 付与＆ツールチップ処理は残す）……
-
-  // === 404セルフ診断 v2（ディレクトリは index.html で確認） ===
-  (async ()=>{
-    for (const el of $$('.jad-btn[href]')) {
-      // ディレクトリURLなら index.html を付けて検査
-      const url = new URL(el.href);
-      const testURL = url.pathname.endsWith('/') ? new URL('index.html', url).href : url.href;
-      try {
-        // まず HEAD、NGなら GET にフォールバック
-        let r = await fetch(testURL, { method:'HEAD', cache:'no-store' });
-        if (!r.ok) r = await fetch(testURL, { method:'GET', cache:'no-store' });
-        const ok = r.ok; // 200台のみをOK扱い
-        if (!ok) el.insertAdjacentHTML('beforeend','<span class="jad-badge">404?</span>');
-      } catch {
-        el.insertAdjacentHTML('beforeend','<span class="jad-badge">NG</span>');
-      }
-    }
-  })();
-})();
-</script>
-
-
+  </script>
 </body>
 </html>

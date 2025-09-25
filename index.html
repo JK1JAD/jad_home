@@ -471,6 +471,39 @@ html{ scroll-behavior:smooth; }
 #jad-sisters .btn:visited{color:#071b12;} /* 紫化防止 */
 @media (max-width:560px){#jad-sisters .btn{min-width:100%}}
 </style>
+<style>
+  /* === JAD 四姉妹ボタン 基本 === */
+  .jad-sisters{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .jad-btn{
+    --bg:#1f2937; --ink:#e5e7eb; --bd:#334155; --hover:#10b98122;
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:12px 18px;border-radius:9999px;border:1px solid var(--bd);
+    background:var(--bg);color:var(--ink);text-decoration:none;
+    font-weight:600;letter-spacing:.02em;position:relative;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
+  }
+  .jad-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .jad-btn:active{transform:translateY(0)}
+  /* 色バリエーション（mint復活＆ネオン寄り） */
+  .jad-btn[data-color="purple"]{--bg:#6d28d9;--bd:#7c3aed;--ink:#fff}
+  .jad-btn[data-color="mint"]  {--bg:#059669;--bd:#10b981;--ink:#fff}
+  .jad-btn[data-color="blue"]  {--bg:#1d4ed8;--bd:#2563eb;--ink:#fff}
+  .jad-btn[data-color="cyan"]  {--bg:#0891b2;--bd:#06b6d4;--ink:#fff}
+  .jad-btn:hover::after{
+    content:"";position:absolute;inset:-2px;border-radius:inherit;
+    box-shadow:0 0 0 2px var(--bd), 0 0 36px var(--bd);
+    opacity:.25;pointer-events:none;
+  }
+  /* 吹き出し（ホバー用ツールチップ） */
+  .jad-tip-bubble{
+    position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);
+    background:#0f172a;color:#e2e8f0;border:1px solid #1f2937;border-radius:12px;
+    padding:10px 12px;font-size:14px;line-height:1.35;white-space:pre-line;
+    box-shadow:0 12px 28px rgba(0,0,0,.4);z-index:9999;pointer-events:none;
+    max-width:min(72ch, 80vw)
+  }
+</style>
 
   
 </head>
@@ -507,13 +540,36 @@ html{ scroll-behavior:smooth; }
     <span class="badge">📡 CQ CQ GitHub Pages — 59＋ 受信良好</span>
     <h1 class="title">黒×緑で行くぜ、<span style="color:#9ef7ec">JAD 劇場</span> 開幕。</h1>
     <p class="subtitle">ここは <strong>JK1JAD（ふじさわたけひこ）</strong> の GitHub Pages ホーム。初心者に優しく、ミスには優しくない（でもJADが全力フォロー）。「とりあえず押す」はハイリスク、「まずREADMEを読む」はローリスク。キュウリは畑へ、スクショは <code>images/</code> へ。</p>
-    
-<div id="jad-sisters">
-  <a class="btn" href="pdfs/" title="💜『記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！』">アーカイブちゃん</a>
-  <a class="btn" href="manual.html" title="💚『解らない事があったらわたしに聞いて！　ここ間違ってるよ！…って言いたいタイプ』">マニュアルちゃん</a>
-  <a class="btn" href="images/" title="📸『あっちゃ〜、また撮りすぎちゃった〜！』">フォトちゃん</a>
-  <a class="btn" href="bobo-map.html" title="🗾『全国どこでも案内するよ〜！QSY！』">マップちゃん</a>
+ <div class="jad-sisters" id="jad-sisters">
+  <!-- 長女：アーカイブちゃん -->
+  <a class="jad-btn jad-tip" data-color="purple"
+     href="/pdfs/"
+     data-tooltip="💜 記憶力は抜群よ！　忘れ物は私にお任せ！CQアーカイブ、59＋！">
+     アーカイブちゃん
+  </a>
+
+  <!-- 次女：マニュアルちゃん -->
+  <a class="jad-btn jad-tip" data-color="mint"
+     href="/docs/manual.html"
+     data-tooltip="💚 解らない事があったらわたしに聞いて！">
+     マニュアルちゃん
+  </a>
+
+  <!-- 三女：フォトちゃん（スクショ置き場） -->
+  <a class="jad-btn jad-tip" data-color="blue"
+     href="/images/"
+     data-tooltip="📷 スクショ置き場にQSY！">
+     フォトちゃん
+  </a>
+
+  <!-- 四女：マップちゃん（ぼぼマップ） -->
+  <a class="jad-btn jad-tip" data-color="cyan"
+     href="/docs/bobo-map.html"
+     data-tooltip="🗺 ぼぼマップへQSY！">
+     マップちゃん
+  </a>
 </div>
+   
 
 </div>
 <style>
@@ -940,6 +996,44 @@ document.querySelectorAll('.jad-tip').forEach(el=>{
     setTimeout(()=> el.classList.remove('touching'), 500);
   }, {passive:true});
 });
+</script>
+<script>
+(() => {
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
+
+  // ホバーで吹き出し表示
+  function showTip(el){
+    const text = el.getAttribute('data-tooltip'); if(!text) return;
+    let tip = document.createElement('div');
+    tip.className = 'jad-tip-bubble';
+    tip.textContent = text;
+    el.appendChild(tip);
+    // 画面端ガード（はみ出しを軽減）
+    const r = tip.getBoundingClientRect();
+    if (r.right > window.innerWidth) tip.style.left = 'auto', tip.style.right = '8px', tip.style.transform = 'none';
+    if (r.left < 0) tip.style.left = '8px', tip.style.transform = 'none';
+  }
+  function hideTip(el){
+    const tip = el.querySelector('.jad-tip-bubble'); if(tip) tip.remove();
+  }
+
+  $$('.jad-tip').forEach(el => {
+    el.addEventListener('mouseenter', () => showTip(el));
+    el.addEventListener('mouseleave', () => hideTip(el));
+    // クリック時は“瞬間ボケ”→通常どおりリンク遷移
+    el.addEventListener('mousedown', () => {
+      const t = el.getAttribute('data-tooltip'); if(!t) return;
+      // 既存を一旦消して短く出し直す
+      hideTip(el);
+      const tip = document.createElement('div');
+      tip.className = 'jad-tip-bubble';
+      tip.textContent = t;
+      el.appendChild(tip);
+      setTimeout(() => tip.remove(), 700); // 0.7秒でフェードアウト
+    });
+  });
+})();
 </script>
 
 </body>

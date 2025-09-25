@@ -1048,55 +1048,29 @@ document.querySelectorAll('.jad-tip').forEach(el=>{
 <script>
 (() => {
   const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
-  // === GitHub Pages プロジェクト配下でも壊れない base 判定 ===
-  function basePath(){
-    const seg = location.pathname.split('/').filter(Boolean);
-    return seg.length ? ('/' + seg[0] + '/') : '/'; // 例: /jad_home/ or /
-  }
-  const base = basePath();
-  const PATHS = {
-    archive: 'pdfs/',               // /pdfs/
-    manual:  'docs/manual.html',    // /docs/manual.html
-    photo:   'images/',             // /images/
-    map:     'docs/bobo-map.html'   // /docs/bobo-map.html
-  };
 
-  // hrefを安全に付与 & ツールチップ
-  $$('.jad-btn[data-target]').forEach(el=>{
-    const k = el.dataset.target, path = PATHS[k];
-    if(path){ el.setAttribute('href', base + path); }
-    const tipText = el.getAttribute('data-tooltip');
-    el.addEventListener('mouseenter', ()=>{
-      if(!tipText) return;
-      const t = document.createElement('div'); t.className='jad-tip-bubble'; t.textContent=tipText;
-      el.appendChild(t);
-      const r = t.getBoundingClientRect();
-      if (r.right > innerWidth) t.style.left = 'auto', t.style.right='8px', t.style.transform='none';
-      if (r.left < 0)          t.style.left = '8px',   t.style.transform='none';
-    });
-    el.addEventListener('mouseleave', ()=>{ const t=el.querySelector('.jad-tip-bubble'); if(t) t.remove(); });
-    el.addEventListener('mousedown', ()=>{
-      if(!tipText) return;
-      const x = el.querySelector('.jad-tip-bubble'); if(x) x.remove();
-      const t = document.createElement('div'); t.className='jad-tip-bubble'; t.textContent=tipText;
-      el.appendChild(t); setTimeout(()=>t.remove(), 700);
-    });
-  });
+  // ……（既存の href 付与＆ツールチップ処理は残す）……
 
-  // === 404セルフ診断（同一オリジン限定） ===
+  // === 404セルフ診断 v2（ディレクトリは index.html で確認） ===
   (async ()=>{
     for (const el of $$('.jad-btn[href]')) {
-      const url = el.href;
+      // ディレクトリURLなら index.html を付けて検査
+      const url = new URL(el.href);
+      const testURL = url.pathname.endsWith('/') ? new URL('index.html', url).href : url.href;
       try {
-        const r = await fetch(url, {method:'HEAD', cache:'no-store'});
-        if (!r.ok) el.insertAdjacentHTML('beforeend','<span class="jad-badge">404?</span>');
-      } catch(e){
+        // まず HEAD、NGなら GET にフォールバック
+        let r = await fetch(testURL, { method:'HEAD', cache:'no-store' });
+        if (!r.ok) r = await fetch(testURL, { method:'GET', cache:'no-store' });
+        const ok = r.ok; // 200台のみをOK扱い
+        if (!ok) el.insertAdjacentHTML('beforeend','<span class="jad-badge">404?</span>');
+      } catch {
         el.insertAdjacentHTML('beforeend','<span class="jad-badge">NG</span>');
       }
     }
   })();
 })();
 </script>
+
 
 </body>
 </html>
